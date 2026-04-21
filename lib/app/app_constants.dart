@@ -1,0 +1,4 @@
+class AppConstants {
+  static const String baseUrl = 'https://development.auctionmycar.online/api/v1';
+  static const Duration splashDuration = Duration(seconds: 4,milliseconds: 600);
+}
