@@ -12,7 +12,6 @@ import 'package:base_project/common/resources/app_router.dart';
 import 'package:base_project/common/resources/assets_manager.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/values_manager.dart';
-import 'package:base_project/local_notification_and_token.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -21,7 +20,8 @@ class SplashView extends StatefulWidget {
   State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView> with SingleTickerProviderStateMixin {
+class _SplashViewState extends State<SplashView>
+    with SingleTickerProviderStateMixin {
   final AppPreferences _appPreferences = instance<AppPreferences>();
   late Timer _timer;
   late AnimationController _animationController;
@@ -32,8 +32,8 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   }
 
   Future<void> setupInteractedMessage() async {
-    RemoteMessage? initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
 
     if (initialMessage != null) {
       _handleMessage(initialMessage);
@@ -47,7 +47,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   }
 
   _goNext() async {
-          context.go(AppRouters.onBoarding);
+    context.go(AppRouters.btmNav);
 
     // globalMethods.registerNotification(context);
     // setupInteractedMessage();
@@ -72,7 +72,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
       curve: Curves.easeIn,
     );
     _animationController.forward();
-    
+
     language = _appPreferences.getAppLanguage();
     userRole = _appPreferences.getRole();
     _startDelay();
@@ -84,7 +84,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
     precacheImage(AssetImage(GifsAssets.splashLogoGif), context);
     precacheImage(AssetImage(ImageAssets.logoSplash), context);
     _appPreferences.getLocale().then((locale) {
-      if(mounted) context.setLocale(locale);
+      if (mounted) context.setLocale(locale);
     });
   }
 
@@ -115,4 +115,3 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
     super.dispose();
   }
 }
-

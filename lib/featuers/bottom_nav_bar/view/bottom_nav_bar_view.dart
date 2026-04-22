@@ -16,7 +16,7 @@ import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/values_manager.dart';
 import 'package:base_project/featuers/auth/signup/models/signup_model.dart';
 import 'package:base_project/featuers/home/view/home_view.dart';
-import 'package:base_project/featuers/profile/view/profile_view.dart';
+import 'package:base_project/featuers/profile/main%20profile/view/profile_view.dart';
 
 class BottomNavBarView extends StatefulWidget {
   final int pageIndex;
@@ -44,13 +44,10 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.pageIndex;
-    _pageController = PageController(initialPage: _selectedIndex);
-    
     if(instance<AppPreferences>().getToken().isNotEmpty){
       if(userRole == UserRole.captain){
         FirebaseMessaging.instance.subscribeToTopic("sellers");
-      }else{
+      } else {
         FirebaseMessaging.instance.subscribeToTopic("buyers");
       }
     }
@@ -88,70 +85,131 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
       bottomNavigationBar: Container(
         height: 72.h,
         decoration: BoxDecoration(
-          color: ColorManager.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.r),
-            topRight: Radius.circular(30.r),
-          ),
+          color: Colors.white,
+          border: Border(top: BorderSide(color: ColorManager.greyBorder)),
           boxShadow: [
             BoxShadow(
-              color: ColorManager.primary.withValues(alpha: 0.08),
-              blurRadius: 25.r,
-              offset: Offset(0, -5.h),
+              color: Colors.black.withValues(alpha: 0.08),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.r),
-            topRight: Radius.circular(30.r),
-          ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(0, Icons.grid_view_rounded, AppStrings.home.tr()),
-                _buildNavItem(1, Icons.confirmation_number_rounded, AppStrings.myTrips.tr()),
-                _buildNavItem(2, Icons.person_rounded, AppStrings.profile.tr()),
-              ],
+        child: BottomNavigationBar(
+          backgroundColor: ColorManager.white,
+          elevation: 4,
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            if(
+            (index == 2 || (index == 1 && userRole == UserRole.captain)) && instance<AppPreferences>().getToken().isEmpty){
+              AppFunctions.showsToast(AppStrings.loginFirst.tr(), ColorManager.red, context);
+              context.push(AppRouters.login,extra: {
+                "pageIndex": index,
+              });
+              return;
+            }
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: ColorManager.primary,
+          unselectedItemColor: ColorManager.grey,
+          selectedLabelStyle: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600),
+          unselectedLabelStyle: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w400),
+          items: [
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                IconAssets.home,
+                width: 20.w,
+                height: 20.h,
+                color: ColorManager.greyTextColor,
+              ),
+              activeIcon: SvgPicture.asset(
+                IconAssets.home,
+                width: 20.w,
+                height: 20.h,
+                color: ColorManager.primary,
+              ),
+              label: AppStrings.home.tr(),
             ),
-          ),
-        ),
-      ),
-    );
-  }
+            if(userRole == UserRole.passenger)
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  IconAssets.brands,
+                  width: 20.w,
+                  height: 20.h,
+                  color: ColorManager.greyTextColor,
+                ),
+                activeIcon: SvgPicture.asset(
+                  IconAssets.brands,
+                  width: 20.w,
+                  height: 20.h,
+                  color: ColorManager.primary,
+                ),
+                label: AppStrings.brands.tr(),
+              ),
+            if(userRole == UserRole.passenger)
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                IconAssets.auctions,
+                width: 20.w,
+                height: 20.h,
+                color: ColorManager.greyTextColor,
+              ),
+              activeIcon: SvgPicture.asset(
+                IconAssets.auctions,
+                width: 20.w,
+                height: 20.h,
+                color: ColorManager.primary,
+              ),
+              label: AppStrings.myAuctions.tr(),
+            ),
+            if(userRole == UserRole.captain)
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                IconAssets.add,
+                width: 20.w,
+                height: 20.h,
+                color: ColorManager.greyTextColor,
+              ),
+              activeIcon: SvgPicture.asset(
+                IconAssets.add,
+                width: 20.w,
+                height: 20.h,
+                color: ColorManager.primary,
+              ),
+              label: AppStrings.addAnnouncement.tr(),
+            ),
+            if(userRole == UserRole.captain )
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                IconAssets.myAuctions,
+                width: 18.w,
+                height: 18.h,
+                color: ColorManager.greyTextColor,
+              ),
+              activeIcon: SvgPicture.asset(
+                IconAssets.myAuctions,
+                width: 18.w,
+                height: 18.h,
+                color: ColorManager.primary,
+              ),
+              label: AppStrings.myAnnouncements.tr(),
+            ),
 
-  Widget _buildNavItem(int index, IconData icon, String label) {
-    bool isSelected = _selectedIndex == index;
-    return GestureDetector(
-      onTap: () => _onItemTapped(index),
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: isSelected ? ColorManager.primary : Colors.transparent,
-            width: 1.w,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              color: isSelected ? ColorManager.primary : ColorManager.greyText,
-              size: isSelected ? 26.r : 24.r,
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              label,
-              style: isSelected
-                  ? getBoldStyle(color: ColorManager.primary, fontSize: 11.sp)
-                  : getMediumStyle(color: ColorManager.greyText, fontSize: 11.sp),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                IconAssets.profile,
+                width: 20.w,
+                height: 20.h,
+                color: ColorManager.greyTextColor,
+              ),
+              activeIcon: SvgPicture.asset(
+                IconAssets.profile,
+                width: 20.w,
+                height: 20.h,
+                color: ColorManager.primary,
+              ),
+              label: AppStrings.profile.tr(),
             ),
           ],
         ),

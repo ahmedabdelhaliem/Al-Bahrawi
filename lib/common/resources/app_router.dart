@@ -1,4 +1,13 @@
+
 import 'package:base_project/featuers/my_trips/view/my_trips_view.dart';
+
+import 'package:base_project/featuers/profile/help/view/help_view.dart';
+import 'package:base_project/featuers/profile/technical_support/common%20question/view/common_question_view.dart';
+import 'package:base_project/featuers/profile/technical_support/main%20%20technical%20support/view/technical_support_view.dart';
+import 'package:base_project/featuers/profile/terms_and_conditions/view/terms_and_conditions_view.dart';
+import 'package:base_project/featuers/profile/tripslog/view/travel_log_view.dart';
+import 'package:base_project/featuers/profile/wallet/view/wallet_view.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:base_project/featuers/auth/forget_password/view/forget_password_view.dart';
@@ -29,10 +38,23 @@ abstract class AppRouters {
   static const String publishAnnouncement = '/publishAnnouncement';
   static const String digitalPayment = '/digitalPayment';
   static const String notifications = '/notifications';
+  static const String commonQuestion = '/commonQuestion';
+
   static const String images = '/images';
   static const String signupSuccess = '/signupSuccess';
   static const String signupLocation = '/signupLocation';
   static const String myTrips = '/myTrips';
+
+  static const String userInformation = '/userInformation';
+  static const String tripsLog = '/tripsLog';
+  static const String wallet = '/wallet';
+  static const String technicalSupport = '/technicalSupport';
+  static const String settings = '/settings';
+  static const String termsAndConditions = '/termsAndConditions';
+  static const String help = '/help';
+  static const String switchToAdmin = '/switchToAdmin';
+  // faqs route
+  static const String faqs = '/faqs';
 
   static final GoRouter router = GoRouter(
     navigatorKey: navigatorKey,
@@ -54,18 +76,22 @@ abstract class AppRouters {
         path: login,
         pageBuilder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return CupertinoPage(child: LoginView(
-              pageIndex: extra?['pageIndex']??0,
-              pop: extra?['pop']??false,
-              showLoginFirstToast: extra?['showLoginFirstToast']??false,
-          ));
+          return CupertinoPage(
+            child: LoginView(
+              pageIndex: extra?['pageIndex'] ?? 0,
+              pop: extra?['pop'] ?? false,
+              showLoginFirstToast: extra?['showLoginFirstToast'] ?? false,
+            ),
+          );
         },
       ),
       GoRoute(
         path: signup,
         pageBuilder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return CupertinoPage(child: SignUpView(isBuyer: extra?["isBuyer"]??false,));
+          return CupertinoPage(
+            child: SignUpView(isBuyer: extra?["isBuyer"] ?? false),
+          );
         },
       ),
       GoRoute(
@@ -135,7 +161,7 @@ abstract class AppRouters {
           final extra = state.extra as Map<String, dynamic>?;
           return CupertinoPage(
             child: ImagesView(
-              images: extra?['images']??[],
+              images: extra?['images'] ?? [],
               initialPage: extra?['initialPage'] ?? 0,
             ),
           );
@@ -158,6 +184,49 @@ abstract class AppRouters {
         path: signupLocation,
         pageBuilder: (context, state) {
           return const CupertinoPage(child: SignUpLocationView());
+        },
+      ),
+      GoRoute(
+        path: tripsLog,
+        pageBuilder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return CupertinoPage(
+            child: TravelLogView(title: extra?['title'] ?? 'Trips Log'),
+          );
+        },
+      ),
+      GoRoute(
+        path: wallet,
+        pageBuilder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return CupertinoPage(
+            child: WalletView(title: extra?['title'] ?? 'Wallet'),
+          );
+        },
+      ),
+      GoRoute(
+        path: termsAndConditions,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: TermsAndConditionsView());
+        },
+      ),
+      GoRoute(
+        path: technicalSupport,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: TechnicalSupportView());
+        },
+      ),
+      GoRoute(
+        path: commonQuestion,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: CommonQuestionView());
+        },
+      ),
+
+      GoRoute(
+        path: help,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: HelpView());
         },
       ),
     ],
