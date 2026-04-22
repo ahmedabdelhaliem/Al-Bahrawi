@@ -7,6 +7,7 @@ TextStyle _getTextStyle(
   Color color,
   double? height,
   TextDecoration? decoration,
+  double? letterSpacing,
 ) {
   return TextStyle(
     fontSize: fontSize,
@@ -14,6 +15,7 @@ TextStyle _getTextStyle(
     fontWeight: fontWeight,
     height: height,
     decoration: decoration,
+    letterSpacing: letterSpacing,
   );
 }
 
@@ -24,6 +26,7 @@ TextStyle getLightStyle({
   required Color color,
   double? height,
   TextDecoration? decoration,
+  double? letterSpacing,
 }) {
   return _getTextStyle(
     fontSize,
@@ -31,6 +34,7 @@ TextStyle getLightStyle({
     color,
     height,
     decoration,
+    letterSpacing,
   );
 }
 
@@ -41,6 +45,7 @@ TextStyle getRegularStyle({
   required Color color,
   double? height,
   TextDecoration? decoration,
+  double? letterSpacing,
 }) {
   return _getTextStyle(
     fontSize,
@@ -48,6 +53,7 @@ TextStyle getRegularStyle({
     color,
     height,
     decoration,
+    letterSpacing,
   );
 }
 
@@ -58,6 +64,7 @@ TextStyle getMediumStyle({
   required Color color,
   double? height,
   TextDecoration? decoration,
+  double? letterSpacing,
 }) {
   return _getTextStyle(
     fontSize,
@@ -65,6 +72,7 @@ TextStyle getMediumStyle({
     color,
     height,
     decoration,
+    letterSpacing,
   );
 }
 
@@ -75,6 +83,7 @@ TextStyle getSemiBoldStyle({
   required Color color,
   double? height,
   TextDecoration? decoration,
+  double? letterSpacing,
 }) {
   return _getTextStyle(
     fontSize,
@@ -82,6 +91,7 @@ TextStyle getSemiBoldStyle({
     color,
     height,
     decoration,
+    letterSpacing,
   );
 }
 
@@ -92,6 +102,7 @@ TextStyle getBoldStyle({
   required Color color,
   double? height,
   TextDecoration? decoration,
+  double? letterSpacing,
 }) {
   return _getTextStyle(
     fontSize,
@@ -99,5 +110,6 @@ TextStyle getBoldStyle({
     color,
     height,
     decoration,
+    letterSpacing,
   );
 }

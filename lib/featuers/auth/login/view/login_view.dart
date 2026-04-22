@@ -151,29 +151,34 @@ class _LoginViewState extends State<LoginView> {
       child: BlocConsumer<LoginCubit, BaseState<LoginModel>>(
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
-          if (state.status == Status.failure) {
-            AppFunctions.showsToast(state.errorMessage!, ColorManager.red, context);
-            if (state.failure is ActiveAccountFailure) {
-              context.push(
-                AppRouters.verifyOtp,
-                extra: {
-                  'phone': _countryCode + _phoneController.text.trim(),
-                  // 'email': _emailController.text,
-                  'isForgetPassword': false,
-                },
-              );
-            }
-          }
-          if (state.status == Status.success) {
-            if (widget.pop) {
-              context.pop();
-            } else {
-              context.go(
-                AppRouters.btmNav,
-                extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
-              );
-            }
-          }
+          context.go(
+            AppRouters.btmNav,
+            extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
+          );
+
+          // if (state.status == Status.failure) {
+          //   AppFunctions.showsToast(state.errorMessage!, ColorManager.red, context);
+          //   if (state.failure is ActiveAccountFailure) {
+          //     context.push(
+          //       AppRouters.verifyOtp,
+          //       extra: {
+          //         'phone': _countryCode + _phoneController.text.trim(),
+          //         // 'email': _emailController.text,
+          //         'isForgetPassword': false,
+          //       },
+          //     );
+          //   }
+          // }
+          // if (state.status == Status.success) {
+          //   if (widget.pop) {
+          //     context.pop();
+          //   } else {
+          //     context.go(
+          //       AppRouters.btmNav,
+          //       extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
+          //     );
+          //   }
+          // }
         },
         builder: (context, state) {
           return DefaultButtonWidget(

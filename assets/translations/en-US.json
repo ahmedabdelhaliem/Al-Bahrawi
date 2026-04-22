@@ -464,5 +464,14 @@
   "minIncrement": "Minimum Increment",
   "minIncrementHint": "Example: 1000",
   "sellingPrice": "Selling Price",
-  "sellingPriceHint": "Example: 55000"
+  "sellingPriceHint": "Example: 55000",
+  "chooseGovernorate": "Choose Governorate",
+  "routeCapital": "Route entry/exit to the capital",
+  "chooseArea": "Choose Area",
+  "chooseMeetingPoint": "Choose Meeting Point",
+  "travelDate": "Travel Date",
+  "welcome": "Welcome",
+  "confirmed": "Confirmed",
+  "octoberLine": "October Line",
+  "cancelBooking": "Cancel Booking"
 }

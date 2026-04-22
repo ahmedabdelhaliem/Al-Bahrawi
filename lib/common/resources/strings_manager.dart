@@ -64,6 +64,7 @@ class AppStrings {
   static const String district = "district";
   static const String pickupPoint = "pickupPoint";
   static const String address = "address";
+  static const String residentialArea = "residentialArea";
   static const String registerNow = "registerNow";
 
   // signup page
@@ -84,16 +85,31 @@ class AppStrings {
   static const String subscribePrice = "subscribePrice";
   static const String qualification = "qualification";
   static const String terms = "terms";
-  static const String byCreatingAccountYouAgreeWith =
-      "byCreatingAccountYouAgreeWith";
+  static const String byCreatingAccountYouAgreeWith = "byCreatingAccountYouAgreeWith";
   static const String chooseUserType = "chooseUserType";
   static const String seller = "seller";
   static const String buyer = "buyer";
 
   // home page
   static const String hello = "hello";
+  static const String welcome = "welcome";
+  static const String confirmed = "confirmed";
+  static const String octoberLine = "octoberLine";
+  static const String chooseGovernorate = "chooseGovernorate";
+  static const String routeCapital = "routeCapital";
+  static const String chooseArea = "chooseArea";
+  static const String chooseMeetingPoint = "chooseMeetingPoint";
+  static const String travelDate = "travelDate";
+  static const String view = "view";
+  static const String cancelBooking = "cancelBooking";
   static const String goodMorning = "goodMorning";
   static const String search = "search";
+  static const String searchForMaterials = "searchForMaterials";
+  static const String categories = "categories";
+  static const String viewAll = "viewAll";
+  static const String bestSelling = "bestSelling";
+  static const String discountOffer = "discountOffer";
+  static const String woodTypes = "woodTypes";
   static const String suggestionTrips = "suggestionTrips";
   static const String trips = "trips";
   static const String details = "details";
@@ -123,7 +139,7 @@ class AppStrings {
   static const String aboutTheTeacher = "aboutTheTeacher";
   static const String teacherCourses = "teacherCourses";
   static const String by = "by";
-  static const String view = "view";
+  // static const String view = "view";
   static const String choose = "choose";
   static const String numberOfPassengers = "numberOfPassengers";
   static const String choosePickupPoint = "choosePickupPoint";
@@ -147,8 +163,7 @@ class AppStrings {
   static const String homeworkPhoto = "homeworkPhoto";
   static const String uploadYourAnswer = "uploadYourAnswer";
   static const String submit = "submit";
-  static const String alreadyGaveTheHomeworkOffline =
-      "alreadyGaveTheHomeworkOffline";
+  static const String alreadyGaveTheHomeworkOffline = "alreadyGaveTheHomeworkOffline";
   static const String homework = "homework";
   static const String submissions = "submissions";
   static const String submittedAt = "submittedAt";
@@ -231,8 +246,7 @@ class AppStrings {
 
   // verify code page
   static const String verifyCode = "verifyCode";
-  static const String enterTheCodeWeSentToYourPhone =
-      "enterTheCodeWeSentToYourPhone";
+  static const String enterTheCodeWeSentToYourPhone = "enterTheCodeWeSentToYourPhone";
   static const String resendCode = "resendCode";
   static const String resendIn = "resendIn";
 
@@ -245,8 +259,7 @@ class AppStrings {
   static const String newPassword = "newPassword";
   static const String newPasswordConfirmation = "newPasswordConfirmation";
   static const String resetPassword = "resetPassword";
-  static const String yourNewPasswordMustBeDifferent =
-      "yourNewPasswordMustBeDifferent";
+  static const String yourNewPasswordMustBeDifferent = "yourNewPasswordMustBeDifferent";
 
   // exam details page
   static const String orderDetails = "orderDetails";
@@ -291,8 +304,7 @@ class AppStrings {
   // trip details page
   static const String boardingPoint = "boardingPoint";
   static const String landingPoint = "landingPoint";
-  static const String pleaseSelectPickupAndDropOffPoints =
-      "pleaseSelectPickupAndDropOffPoints";
+  static const String pleaseSelectPickupAndDropOffPoints = "pleaseSelectPickupAndDropOffPoints";
   static const String pleaseSelectDay = "pleaseSelectDay";
   static const String rest = "rest";
   static const String currentStation = "currentStation";
@@ -323,8 +335,7 @@ class AppStrings {
   static const String tripPrice = "tripPrice";
   static const String tripDateTime = "tripDateTime";
   static const String tripStartTime = "tripStartTime";
-  static const String cancelBeforeStartTripWarning =
-      "cancelBeforeStartTripWarning";
+  static const String cancelBeforeStartTripWarning = "cancelBeforeStartTripWarning";
   static const String upCode = "upCode";
   static const String chat = "chat";
   static const String visa = "visa";
@@ -437,8 +448,7 @@ class AppStrings {
   static const yourCarImage = 'yourCarImage';
   // static const vehicleInformation = 'vehicleInformation';
   static const vehiclePlateNumber = 'vehiclePlateNumber';
-  static const vehicleRegistrationCertificate =
-      'vehicleRegistrationCertificate';
+  static const vehicleRegistrationCertificate = 'vehicleRegistrationCertificate';
   static const requestSubmitted = 'requestSubmitted';
   static const requestSubmittedMessage = 'requestSubmittedMessage';
   static const preferencesTrip = 'preferencesTrip';
@@ -479,6 +489,8 @@ class AppStrings {
 
   // bottom nav bar
   static const String home = "home";
+  static const String myTrips = "myTrips";
+  static const String wallet = "wallet";
   static const String myAuctions = "myAuctions";
   static const String addAnnouncement = "addAnnouncement";
   static const String myAnnouncements = "myAnnouncements";

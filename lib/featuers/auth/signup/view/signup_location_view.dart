@@ -69,8 +69,8 @@ class _SignUpLocationViewState extends State<SignUpLocationView> {
             DefaultFormField(
               controller: _addressDetailController,
               borderColor: ColorManager.greyBorder,
-              hintText: AppStrings.address.tr(),
-              title: AppStrings.address.tr(),
+              hintText: AppStrings.residentialArea.tr(),
+              title: AppStrings.residentialArea.tr(),
             ),
             SizedBox(height: 48.h),
             DefaultButtonWidget(

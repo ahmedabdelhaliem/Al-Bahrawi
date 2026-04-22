@@ -1,3 +1,4 @@
+import 'package:base_project/featuers/my_trips/view/my_trips_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:base_project/featuers/auth/forget_password/view/forget_password_view.dart';
@@ -31,6 +32,7 @@ abstract class AppRouters {
   static const String images = '/images';
   static const String signupSuccess = '/signupSuccess';
   static const String signupLocation = '/signupLocation';
+  static const String myTrips = '/myTrips';
 
   static final GoRouter router = GoRouter(
     navigatorKey: navigatorKey,
@@ -143,6 +145,13 @@ abstract class AppRouters {
         path: signupSuccess,
         pageBuilder: (context, state) {
           return const CupertinoPage(child: SignupSuccessView());
+        },
+      ),
+      //MyTripsView
+      GoRoute(
+        path: myTrips,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: MyTripsView());
         },
       ),
       GoRoute(

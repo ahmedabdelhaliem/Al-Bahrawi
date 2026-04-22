@@ -118,6 +118,7 @@ class DefaultButtonWidget extends StatelessWidget {
     return Container(
       width: width,
       height: height,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: gradient == null ? (isLoading ? ColorManager.greyBorder : color) : null,
         gradient: isLoading ? null : gradient,

@@ -20,6 +20,7 @@ class ImageAssets {
   static const String onBoarding1 = '$imagesPath/on_boarding_1.png';
   static const String onBoarding2 = '$imagesPath/on_boarding_2.png';
   static const String onBoarding3 = '$imagesPath/on_boarding_3.png';
+  static const String bus = '$imagesPath/bus.png';
 }
 
 class IconAssets {
