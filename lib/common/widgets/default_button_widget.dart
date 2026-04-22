@@ -102,16 +102,16 @@ class DefaultButtonWidget extends StatelessWidget {
     this.isExpanded = true,
     this.overlayColor,
     this.loadingColor,
-  })  : iconBuilder = const CircleAvatar(
-          radius: 20,
-          backgroundColor: ColorManager.white,
-          child: Icon(Icons.arrow_forward),
-        ),
-        isIcon = true,
-        isText = true,
-        textFirst = true,
-        verticalPadding = 5,
-        horizontalPadding = 5;
+  }) : iconBuilder = const CircleAvatar(
+         radius: 20,
+         backgroundColor: ColorManager.white,
+         child: Icon(Icons.arrow_forward),
+       ),
+       isIcon = true,
+       isText = true,
+       textFirst = true,
+       verticalPadding = 5,
+       horizontalPadding = 5;
 
   @override
   Widget build(BuildContext context) {
@@ -119,17 +119,23 @@ class DefaultButtonWidget extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
-        color: gradient == null ? (isLoading ? ColorManager.greyBorder : color) : null,
+        color: gradient == null
+            ? (isLoading ? ColorManager.greyBorder : color)
+            : null,
         gradient: isLoading ? null : gradient,
         borderRadius: BorderRadius.circular(radius ?? 12.sp),
-        border: withBorder ? Border.all(color: borderColor ?? ColorManager.green) : null,
-        boxShadow: (elevation ?? 3) > 0 ? [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: elevation ?? 3,
-            offset: const Offset(0, 2),
-          )
-        ] : null,
+        border: withBorder
+            ? Border.all(color: borderColor ?? ColorManager.green)
+            : null,
+        boxShadow: (elevation ?? 3) > 0
+            ? [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: elevation ?? 3,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Material(
         color: Colors.transparent,
@@ -147,7 +153,8 @@ class DefaultButtonWidget extends StatelessWidget {
               vertical: verticalPadding ?? 8.h,
               horizontal: horizontalPadding ?? 10.w,
             ),
-            child: child ??
+            child:
+                child ??
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -169,15 +176,22 @@ class DefaultButtonWidget extends StatelessWidget {
                                   ),
                                 )
                               : Flexible(
-                                  fit: isExpanded ? FlexFit.tight : FlexFit.loose,
+                                  fit: isExpanded
+                                      ? FlexFit.tight
+                                      : FlexFit.loose,
                                   child: Text(
                                     text,
-                                    textAlign: isTextCenter ? TextAlign.center : null,
-                                    style: textStyle ??
+                                    textAlign: isTextCenter
+                                        ? TextAlign.center
+                                        : null,
+                                    style:
+                                        textStyle ??
                                         getBoldStyle(
-                                            fontSize: fontSize ?? 13.sp,
-                                            color: textColor ?? ColorManager.primary,
-                                            height: textHeight),
+                                          fontSize: fontSize ?? 13.sp,
+                                          color:
+                                              textColor ?? ColorManager.primary,
+                                          height: textHeight,
+                                        ),
                                   ),
                                 ),
                         if (isIcon && textFirst) SizedBox(width: 10.w),

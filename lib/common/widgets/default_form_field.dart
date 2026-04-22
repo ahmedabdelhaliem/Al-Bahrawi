@@ -162,26 +162,31 @@ class _DefaultFormFieldState extends State<DefaultFormField> {
           ),
         if (widget.title != null) SizedBox(height: 8.h),
         Directionality(
-          textDirection: widget.textDirection ?? (language == "en" ? TextDirection.ltr : TextDirection.rtl),
+          textDirection:
+              widget.textDirection ??
+              (language == "en" ? TextDirection.ltr : TextDirection.rtl),
           child: Container(
             height: widget.height,
             decoration: BoxDecoration(
               boxShadow: [
-                if(widget.withElevation)
-                BoxShadow(
-                  color: ColorManager.greyBorder.withValues(alpha: 0.3),
-                  blurRadius: 5.r,
-                  spreadRadius: 3.r,
-                ),
+                if (widget.withElevation)
+                  BoxShadow(
+                    color: ColorManager.greyBorder.withValues(alpha: 0.3),
+                    blurRadius: 5.r,
+                    spreadRadius: 3.r,
+                  ),
               ],
             ),
             child: TextFormField(
               readOnly: widget.readOnly,
-              textAlign: widget.textAlign??(language == 'en' ? TextAlign.left : TextAlign.right),
+              textAlign:
+                  widget.textAlign ??
+                  (language == 'en' ? TextAlign.left : TextAlign.right),
               focusNode: _focusNode,
               autofocus: widget.autofocus,
               enableInteractiveSelection: !widget.readOnly,
-              maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds,
+              maxLengthEnforcement:
+                  MaxLengthEnforcement.truncateAfterCompositionEnds,
               maxLength: widget.maxLength,
               onTap: widget.onTap,
               enabled: widget.enabled,
@@ -290,25 +295,26 @@ class _DefaultFormFieldState extends State<DefaultFormField> {
                           fit: BoxFit.contain,
                         ),
                       )
-                    : widget.controller.text.isNotEmpty &&
-                    widget.withRemove
-                    ?
-                InkWell(
-                  onTap: () {
-                    widget.controller.clear();
-                    if (widget.onRemove != null) widget.onRemove!.call();
-                    if (widget.onChanged != null) widget.onChanged!.call('');
-                    setState(() {});
-                  },
-                  child: Icon(
-                    Icons.close_rounded,
-                    size: 22.r,
-                    color: ColorManager.grey,
-                  ),
-                ) :
-                widget.suffixIcon,
+                    : widget.controller.text.isNotEmpty && widget.withRemove
+                    ? InkWell(
+                        onTap: () {
+                          widget.controller.clear();
+                          if (widget.onRemove != null) widget.onRemove!.call();
+                          if (widget.onChanged != null)
+                            widget.onChanged!.call('');
+                          setState(() {});
+                        },
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 22.r,
+                          color: ColorManager.grey,
+                        ),
+                      )
+                    : widget.suffixIcon,
                 hintText: widget.hintText,
-                hintTextDirection: widget.hintTextDirection ?? (language == "en" ? TextDirection.ltr : TextDirection.rtl),
+                hintTextDirection:
+                    widget.hintTextDirection ??
+                    (language == "en" ? TextDirection.ltr : TextDirection.rtl),
                 hintStyle:
                     widget.hintStyle ??
                     getRegularStyle(fontSize: 12.sp, color: ColorManager.grey),
@@ -399,9 +405,7 @@ class _DefaultFormFieldState extends State<DefaultFormField> {
       return widget.borderColor!;
     }
     if (_focusNode.hasFocus) {
-      return widget.controller.text.isNotEmpty
-          ? ColorManager.primary.withValues(alpha: .5)
-          : widget.borderColor ?? ColorManager.greyBorder;
+      return ColorManager.primary;
     } else if (widget.controller.text.isNotEmpty) {
       return ColorManager.primary.withValues(alpha: .5);
     } else {

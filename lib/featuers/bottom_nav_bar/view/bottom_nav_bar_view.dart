@@ -14,7 +14,7 @@ import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/values_manager.dart';
 import 'package:base_project/featuers/auth/signup/models/signup_model.dart';
 import 'package:base_project/featuers/home/view/home_view.dart';
-import 'package:base_project/featuers/profile/view/profile_view.dart';
+import 'package:base_project/featuers/profile/main%20profile/view/profile_view.dart';
 
 class BottomNavBarView extends StatefulWidget {
   final int pageIndex;
@@ -41,10 +41,10 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
   @override
   void initState() {
     super.initState();
-    if(instance<AppPreferences>().getToken().isNotEmpty){
-      if(userRole == UserRole.captain){
+    if (instance<AppPreferences>().getToken().isNotEmpty) {
+      if (userRole == UserRole.captain) {
         FirebaseMessaging.instance.subscribeToTopic("sellers");
-      }else{
+      } else {
         FirebaseMessaging.instance.subscribeToTopic("buyers");
       }
     }
@@ -61,23 +61,21 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border(top: BorderSide(color: ColorManager.greyBorder)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.08))],
         ),
         child: BottomNavigationBar(
           backgroundColor: ColorManager.white,
           elevation: 4,
           currentIndex: _selectedIndex,
           onTap: (index) {
-            if(
-            (index == 2 || (index == 1 && userRole == UserRole.captain)) && instance<AppPreferences>().getToken().isEmpty){
-              AppFunctions.showsToast(AppStrings.loginFirst.tr(), ColorManager.red, context);
-              context.push(AppRouters.login,extra: {
-                "pageIndex": index,
-              });
+            if ((index == 2 || (index == 1 && userRole == UserRole.captain)) &&
+                instance<AppPreferences>().getToken().isEmpty) {
+              AppFunctions.showsToast(
+                AppStrings.loginFirst.tr(),
+                ColorManager.red,
+                context,
+              );
+              context.push(AppRouters.login, extra: {"pageIndex": index});
               return;
             }
             setState(() {
@@ -87,8 +85,14 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: ColorManager.primary,
           unselectedItemColor: ColorManager.grey,
-          selectedLabelStyle: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600),
-          unselectedLabelStyle: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w400),
+          selectedLabelStyle: TextStyle(
+            fontSize: 10.sp,
+            fontWeight: FontWeight.w600,
+          ),
+          unselectedLabelStyle: TextStyle(
+            fontSize: 10.sp,
+            fontWeight: FontWeight.w400,
+          ),
           items: [
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
@@ -105,7 +109,7 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
               ),
               label: AppStrings.home.tr(),
             ),
-            if(userRole == UserRole.passenger)
+            if (userRole == UserRole.passenger)
               BottomNavigationBarItem(
                 icon: SvgPicture.asset(
                   IconAssets.brands,
@@ -121,54 +125,54 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
                 ),
                 label: AppStrings.brands.tr(),
               ),
-            if(userRole == UserRole.passenger)
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                IconAssets.auctions,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.greyTextColor,
+            if (userRole == UserRole.passenger)
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  IconAssets.auctions,
+                  width: 20.w,
+                  height: 20.h,
+                  color: ColorManager.greyTextColor,
+                ),
+                activeIcon: SvgPicture.asset(
+                  IconAssets.auctions,
+                  width: 20.w,
+                  height: 20.h,
+                  color: ColorManager.primary,
+                ),
+                label: AppStrings.myAuctions.tr(),
               ),
-              activeIcon: SvgPicture.asset(
-                IconAssets.auctions,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.primary,
+            if (userRole == UserRole.captain)
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  IconAssets.add,
+                  width: 20.w,
+                  height: 20.h,
+                  color: ColorManager.greyTextColor,
+                ),
+                activeIcon: SvgPicture.asset(
+                  IconAssets.add,
+                  width: 20.w,
+                  height: 20.h,
+                  color: ColorManager.primary,
+                ),
+                label: AppStrings.addAnnouncement.tr(),
               ),
-              label: AppStrings.myAuctions.tr(),
-            ),
-            if(userRole == UserRole.captain)
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                IconAssets.add,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.greyTextColor,
+            if (userRole == UserRole.captain)
+              BottomNavigationBarItem(
+                icon: SvgPicture.asset(
+                  IconAssets.myAuctions,
+                  width: 18.w,
+                  height: 18.h,
+                  color: ColorManager.greyTextColor,
+                ),
+                activeIcon: SvgPicture.asset(
+                  IconAssets.myAuctions,
+                  width: 18.w,
+                  height: 18.h,
+                  color: ColorManager.primary,
+                ),
+                label: AppStrings.myAnnouncements.tr(),
               ),
-              activeIcon: SvgPicture.asset(
-                IconAssets.add,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.primary,
-              ),
-              label: AppStrings.addAnnouncement.tr(),
-            ),
-            if(userRole == UserRole.captain )
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                IconAssets.myAuctions,
-                width: 18.w,
-                height: 18.h,
-                color: ColorManager.greyTextColor,
-              ),
-              activeIcon: SvgPicture.asset(
-                IconAssets.myAuctions,
-                width: 18.w,
-                height: 18.h,
-                color: ColorManager.primary,
-              ),
-              label: AppStrings.myAnnouncements.tr(),
-            ),
 
             BottomNavigationBarItem(
               icon: SvgPicture.asset(
