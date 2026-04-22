@@ -581,7 +581,6 @@ class AppStrings {
   static const String myAccount = "myAccount";
   static const String tripsLog = "trips_log";
   static const String userInformation = "userInformation";
-  static const String wallet = "wallet";
   static const String technicalSupport = "technicalSupport";
   static const String switchToAdmin = "switchToAdmin";
   static const String help = "help";

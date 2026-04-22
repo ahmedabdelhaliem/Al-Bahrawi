@@ -26,49 +26,11 @@ class _TravelLogViewState extends State<TravelLogView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(title: widget.title.tr()),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-            sliver: SliverToBoxAdapter(
-              child: Row(
-                children: List.generate(_status.length, (index) {
-                  final bool isSelected = _selectedIndex == index;
-                  return Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        left: index == 0 ? 0 : 4.w,
-                        right: index == _status.length - 1 ? 0 : 4.w,
-                      ),
-                      child: DefaultButtonWidget(
-                        radius: 50.r,
-                        verticalPadding: 12.h,
-                        color: isSelected
-                            ? ColorManager.primary
-                            : ColorManager.greyButtonColor,
-                        text: _status[index].tr(),
-                        textColor: isSelected
-                            ? ColorManager.white
-                            : ColorManager.greyText,
-                        onPressed: () {
-                          setState(() {
-                            _selectedIndex = index;
-                          });
-                        },
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => TravelLogItem(),
-            ),
-          ),
-        ],
+      body: ListView.builder(
+        padding: EdgeInsets.symmetric(vertical: 10.h),
+        itemBuilder: (context, index) => const TravelLogItem(),
       ),
     );
   }

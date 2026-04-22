@@ -28,27 +28,35 @@ class _ProfileViewState extends State<ProfileView> {
 
           slivers: [
             SliverAppBar(
+              backgroundColor: ColorManager.white,
+              elevation: 0,
+              pinned: true,
               centerTitle: true,
               title: Text(
                 AppStrings.myAccount.tr(),
-                style: getSemiBoldStyle(
-                  fontSize: 20,
+                style: getBoldStyle(
+                  fontSize: 22.sp,
                   color: ColorManager.black,
                 ),
               ),
             ),
-            // _buildHeader(),
-            SliverList(
-              delegate: SliverChildBuilderDelegate((context, index) {
-                final item = ProfileData.profileItems[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 8.h,
-                  ),
-                  child: AccountActionButton(model: item),
-                );
-              }, childCount: ProfileData.profileItems.length),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(vertical: 20.h),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final item = ProfileData.profileItems[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24.w,
+                        vertical: 10.h,
+                      ),
+                      child: AccountActionButton(model: item),
+                    );
+                  },
+                  childCount: ProfileData.profileItems.length,
+                ),
+              ),
             ),
           ],
         ),

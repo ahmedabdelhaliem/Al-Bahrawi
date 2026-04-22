@@ -1,21 +1,20 @@
 import 'package:base_project/common/helper/spacer.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/styles_manager.dart';
-import 'package:base_project/common/widgets/svg_icon.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class SupportActionButton extends StatelessWidget {
   final String title;
-  final String iconPath;
+  final IconData icon;
   final VoidCallback onTap;
   final bool isWhatsApp;
 
   const SupportActionButton({
     super.key,
     required this.title,
-    required this.iconPath,
+    required this.icon,
     required this.onTap,
     this.isWhatsApp = false,
   });
@@ -25,39 +24,30 @@ class SupportActionButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(50.r),
-
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: isWhatsApp
-              ? ColorManager.successGreen.withValues(alpha: 0.1)
-              : ColorManager.white,
+          color: ColorManager.white,
           borderRadius: BorderRadius.circular(50.r),
-          border: isWhatsApp
-              ? null
-              : Border.all(color: ColorManager.greyBorder, width: 1),
+          border: Border.all(color: ColorManager.greyBorder, width: 1),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SvgIcon(
-              url: iconPath,
-              width: 24.w,
-              height: 24.w,
-              color: isWhatsApp
-                  ? ColorManager.successGreen
-                  : ColorManager.black.withValues(alpha: 0.6),
-            ),
-            horizontalSpace(16),
+            // Text on the left
             Text(
               title,
               style: getMediumStyle(
                 fontSize: 16.sp,
-                color: isWhatsApp
-                    ? ColorManager.successGreen
-                    : ColorManager.black.withValues(alpha: 0.6),
+                color: ColorManager.black.withValues(alpha: 0.6),
               ),
             ),
-            horizontalSpace(12),
+            // Icon on the right
+            Icon(
+              icon,
+              size: 24.r,
+              color: ColorManager.black.withValues(alpha: 0.6),
+            ),
           ],
         ),
       ),

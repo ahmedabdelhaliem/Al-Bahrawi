@@ -1,5 +1,5 @@
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
+import '../../../../../../common/resources/color_manager.dart';
+import '../../../../../../common/resources/styles_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -54,7 +54,7 @@ class _CommonQuestionExpansionTileState
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: EdgeInsets.symmetric(vertical: 6.h),
       child: Column(
         children: [
           // ── Question pill ──────────────────────────────────────────
@@ -64,39 +64,27 @@ class _CommonQuestionExpansionTileState
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
               decoration: BoxDecoration(
                 color: ColorManager.white,
-                borderRadius: BorderRadius.circular(50.r),
-                border: Border.all(color: ColorManager.greyBorder),
-                boxShadow: [
-                  BoxShadow(
-                    color: ColorManager.black.withValues(alpha: 0.04),
-                    blurRadius: 10.r,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(24.r),
+                border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.5)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Arrow on the left (RTL layout: visually left = start)
-
-                  // Question text on the right
-                  Text(
-                    widget.question,
-                    textDirection: TextDirection.rtl,
-                    style: getMediumStyle(
-                      fontSize: 16.sp,
-                      color: ColorManager.textColor,
-                    ),
+                  // Chevron Icon on the left
+                  Icon(
+                    _isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                    color: ColorManager.primary,
+                    size: 24.r,
                   ),
-                  AnimatedRotation(
-                    turns: _isExpanded ? 0 : 0.5,
-                    duration: const Duration(milliseconds: 300),
-                    child: Icon(
-                      Icons.keyboard_arrow_up,
-                      color: _isExpanded
-                          ? ColorManager.primary
-                          : ColorManager.greyText,
-                      size: 22.r,
+                  // Question text on the right
+                  Expanded(
+                    child: Text(
+                      widget.question,
+                      textAlign: TextAlign.end,
+                      style: getMediumStyle(
+                        fontSize: 14.sp,
+                        color: const Color(0xFFB0BEC5), // Light grey text like image
+                      ),
                     ),
                   ),
                 ],
@@ -108,29 +96,21 @@ class _CommonQuestionExpansionTileState
           SizeTransition(
             sizeFactor: _expandAnimation,
             child: Container(
-              margin: EdgeInsets.only(top: 8.h, bottom: 16.h),
+              margin: EdgeInsets.only(top: 4.h),
               padding: EdgeInsets.all(16.w),
-              constraints: BoxConstraints(minHeight: 120.h),
+              width: double.infinity,
               decoration: BoxDecoration(
                 color: ColorManager.white,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: ColorManager.greyBorder),
-                boxShadow: [
-                  BoxShadow(
-                    color: ColorManager.black.withValues(alpha: 0.04),
-                    blurRadius: 10.r,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.5)),
               ),
-              alignment: Alignment.topRight,
               child: Text(
                 widget.answer,
-                textDirection: TextDirection.rtl,
+                textAlign: TextAlign.end,
                 style: getRegularStyle(
-                  fontSize: 14.sp,
-                  color: ColorManager.greyText,
-                  height: 1.6,
+                  fontSize: 13.sp,
+                  color: const Color(0xFFB0BEC5), // Light grey text like image
+                  height: 1.5,
                 ),
               ),
             ),

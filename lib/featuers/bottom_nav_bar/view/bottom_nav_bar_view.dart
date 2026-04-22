@@ -44,8 +44,11 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
   @override
   void initState() {
     super.initState();
-    if(instance<AppPreferences>().getToken().isNotEmpty){
-      if(userRole == UserRole.captain){
+    _selectedIndex = widget.pageIndex;
+    _pageController = PageController(initialPage: _selectedIndex);
+
+    if (instance<AppPreferences>().getToken().isNotEmpty) {
+      if (userRole == UserRole.captain) {
         FirebaseMessaging.instance.subscribeToTopic("sellers");
       } else {
         FirebaseMessaging.instance.subscribeToTopic("buyers");
@@ -79,142 +82,76 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
             _selectedIndex = index;
           });
         },
-        physics: const NeverScrollableScrollPhysics(), // Only navigate via bar
+        physics: const NeverScrollableScrollPhysics(),
         children: _views,
       ),
-      bottomNavigationBar: Container(
-        height: 72.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: ColorManager.greyBorder)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 10.h),
+          child: Container(
+            height: 65.h,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 20.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
             ),
-          ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(0, Icons.grid_view_rounded, AppStrings.home.tr()),
+                _buildNavItem(1, Icons.confirmation_number_rounded, AppStrings.myTrips.tr()),
+                _buildNavItem(2, Icons.person_rounded, AppStrings.profile.tr()),
+              ],
+            ),
+          ),
         ),
-        child: BottomNavigationBar(
-          backgroundColor: ColorManager.white,
-          elevation: 4,
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            if(
-            (index == 2 || (index == 1 && userRole == UserRole.captain)) && instance<AppPreferences>().getToken().isEmpty){
-              AppFunctions.showsToast(AppStrings.loginFirst.tr(), ColorManager.red, context);
-              context.push(AppRouters.login,extra: {
-                "pageIndex": index,
-              });
-              return;
-            }
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: ColorManager.primary,
-          unselectedItemColor: ColorManager.grey,
-          selectedLabelStyle: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w600),
-          unselectedLabelStyle: TextStyle(fontSize: 10.sp, fontWeight: FontWeight.w400),
-          items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                IconAssets.home,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.greyTextColor,
-              ),
-              activeIcon: SvgPicture.asset(
-                IconAssets.home,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.primary,
-              ),
-              label: AppStrings.home.tr(),
-            ),
-            if(userRole == UserRole.passenger)
-              BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  IconAssets.brands,
-                  width: 20.w,
-                  height: 20.h,
-                  color: ColorManager.greyTextColor,
-                ),
-                activeIcon: SvgPicture.asset(
-                  IconAssets.brands,
-                  width: 20.w,
-                  height: 20.h,
-                  color: ColorManager.primary,
-                ),
-                label: AppStrings.brands.tr(),
-              ),
-            if(userRole == UserRole.passenger)
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                IconAssets.auctions,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.greyTextColor,
-              ),
-              activeIcon: SvgPicture.asset(
-                IconAssets.auctions,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.primary,
-              ),
-              label: AppStrings.myAuctions.tr(),
-            ),
-            if(userRole == UserRole.captain)
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                IconAssets.add,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.greyTextColor,
-              ),
-              activeIcon: SvgPicture.asset(
-                IconAssets.add,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.primary,
-              ),
-              label: AppStrings.addAnnouncement.tr(),
-            ),
-            if(userRole == UserRole.captain )
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                IconAssets.myAuctions,
-                width: 18.w,
-                height: 18.h,
-                color: ColorManager.greyTextColor,
-              ),
-              activeIcon: SvgPicture.asset(
-                IconAssets.myAuctions,
-                width: 18.w,
-                height: 18.h,
-                color: ColorManager.primary,
-              ),
-              label: AppStrings.myAnnouncements.tr(),
-            ),
+      ),
+    );
+  }
 
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                IconAssets.profile,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.greyTextColor,
-              ),
-              activeIcon: SvgPicture.asset(
-                IconAssets.profile,
-                width: 20.w,
-                height: 20.h,
-                color: ColorManager.primary,
-              ),
-              label: AppStrings.profile.tr(),
+  Widget _buildNavItem(int index, IconData icon, String label) {
+    bool isSelected = _selectedIndex == index;
+    return GestureDetector(
+      onTap: () => _onItemTapped(index),
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          gradient: isSelected ? ColorManager.primaryGradient : null,
+          color: isSelected ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? Colors.white : ColorManager.grey,
+              size: 24.r,
             ),
+            if (isSelected) ...[
+              SizedBox(width: 8.w),
+              Text(
+                label,
+                style: getBoldStyle(
+                  color: Colors.white,
+                  fontSize: 12.sp,
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 }
+
 

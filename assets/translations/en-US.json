@@ -515,6 +515,14 @@
   "yourName": "Your Name",
   "yourEmail": "Your Email",
   "yourPhone": "Your Contact Number",
-  "yourMessage": "Your Message"
-
+  "yourMessage": "Your Message",
+  "myAccount": "My Account",
+  "trips_log": "Trips Log",
+  "userInformation": "User Information",
+  "technicalSupport": "Technical Support",
+  "switchToAdmin": "Switch to Admin",
+  "help": "Help",
+  "notifications": "Notifications",
+  "termsAndConditions": "Terms and Conditions",
+  "wallet": "Wallet"
 }

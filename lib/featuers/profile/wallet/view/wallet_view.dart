@@ -21,16 +21,16 @@ class _WalletViewState extends State<WalletView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorManager.bg,
+      backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: AppStrings.wallet.tr(),
-        backgroundColor: ColorManager.bg,
+        backgroundColor: Colors.white,
       ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverPadding(
-            padding: EdgeInsets.fromLTRB(16.w, 24.h, 16.w, 8.h),
+            padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 8.h),
             sliver: SliverToBoxAdapter(
               child: const WalletBalanceCard(balance: 0.00),
             ),
@@ -39,11 +39,12 @@ class _WalletViewState extends State<WalletView> {
             padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 12.h),
             sliver: SliverToBoxAdapter(
               child: Text(
-                AppStrings.recent_transactions.tr(),
+                'اخر المعاملات', // AppStrings.recent_transactions.tr()
                 style: getBoldStyle(
-                  fontSize: 18.sp,
+                  fontSize: 15.sp,
                   color: ColorManager.textColor,
                 ),
+                textAlign: TextAlign.end,
               ),
             ),
           ),
@@ -53,10 +54,10 @@ class _WalletViewState extends State<WalletView> {
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
                   return Padding(
-                    padding: EdgeInsets.only(bottom: 16.h),
-                    child: WalletTransactionItem(
-                      amount: '+200.00 ${AppStrings.egp.tr()}',
-                      date: '02/02/2020 16:00AM',
+                    padding: EdgeInsets.only(bottom: 12.h),
+                    child: const WalletTransactionItem(
+                      amount: '+200.00',
+                      date: '12:00AM 02/12/2026',
                     ),
                   );
                 },
