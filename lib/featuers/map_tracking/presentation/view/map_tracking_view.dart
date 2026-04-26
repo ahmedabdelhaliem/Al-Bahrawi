@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:base_project/common/base/base_state.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 
 import 'package:base_project/app/di.dart';
@@ -60,7 +62,7 @@ class _MapTrackingViewContent extends StatelessWidget {
                   const Icon(Icons.error_outline, color: ColorManager.red, size: 60),
                   const SizedBox(height: 16),
                   Text(
-                    state.errorMessage ?? 'حدث خطأ ما',
+                    state.errorMessage ?? AppStrings.errorOccurred.tr(),
                     style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 16),
@@ -68,7 +70,7 @@ class _MapTrackingViewContent extends StatelessWidget {
                     onPressed: () {
                       context.read<MapTrackingCubit>().initialize(state.selectedPickup!);
                     },
-                    child: const Text('إعادة المحاولة'),
+                    child: Text(AppStrings.tryAgain.tr()),
                   ),
                 ],
               ),
@@ -84,7 +86,7 @@ class _MapTrackingViewContent extends StatelessWidget {
                 markerId: const MarkerId('pickup_point'),
                 position: LatLng(state.selectedPickup!.lat, state.selectedPickup!.lng),
                 icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
-                infoWindow: InfoWindow(title: state.selectedPickup!.name, snippet: 'نقطة الركوب (محطة الباص)'),
+                infoWindow: InfoWindow(title: state.selectedPickup!.name, snippet: AppStrings.pickupPoint.tr()),
               ),
             );
           }
@@ -95,7 +97,7 @@ class _MapTrackingViewContent extends StatelessWidget {
               markerId: const MarkerId('destination_new_capital'),
               position: const LatLng(30.0101, 31.6705), // Approximate New Capital coordinates
               icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-              infoWindow: const InfoWindow(title: 'العاصمة الإدارية', snippet: 'الوجهة النهائية'),
+              infoWindow: InfoWindow(title: AppStrings.administrativeCapital.tr(), snippet: AppStrings.finalDestination.tr()),
             ),
           );
 
@@ -143,8 +145,8 @@ class _MapTrackingViewContent extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(
                         bottom: 16,
-                        left: Directionality.of(context) == TextDirection.rtl ? 16 : 0,
-                        right: Directionality.of(context) == TextDirection.rtl ? 0 : 16,
+                        left: context.locale.languageCode == 'ar' ? 16 : 0,
+                        right: context.locale.languageCode == 'ar' ? 0 : 16,
                       ),
                       child: Align(
                         alignment: AlignmentDirectional.centerEnd,

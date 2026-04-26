@@ -39,7 +39,7 @@ class _WalletViewState extends State<WalletView> {
             padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 12.h),
             sliver: SliverToBoxAdapter(
               child: Text(
-                'اخر المعاملات', // AppStrings.recent_transactions.tr()
+                AppStrings.recent_transactions.tr(),
                 style: getBoldStyle(
                   fontSize: 15.sp,
                   color: ColorManager.textColor,

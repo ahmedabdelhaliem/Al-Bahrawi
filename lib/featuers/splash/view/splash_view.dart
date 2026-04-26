@@ -7,6 +7,7 @@ import 'package:base_project/common/resources/app_router.dart';
 import 'package:base_project/common/resources/assets_manager.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/values_manager.dart';
+import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +163,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                     ),
                     SizedBox(height: 24.h),
                     Text(
-                      'جاري التحميل...',
+                      AppStrings.loading.tr(),
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: 14.sp,

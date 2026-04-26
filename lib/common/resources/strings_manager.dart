@@ -622,4 +622,36 @@ class AppStrings {
   static const String yourEmail = "yourEmail";
   static const String yourPhone = "yourPhone";
   static const String yourMessage = "yourMessage";
+
+  // map tracking
+  static const String errorOccurred = "errorOccurred";
+  static const String administrativeCapital = "administrativeCapital";
+  static const String startTracking = "startTracking";
+  static const String headingTo = "headingTo";
+  static const String remainingDistance = "remainingDistance";
+  static const String estimatedTime = "estimatedTime";
+  static const String status = "status";
+  static const String arrived = "arrived";
+  static const String onTheWay = "onTheWay";
+  static const String stopTracking = "stopTracking";
+  static const String lessThanMinute = "lessThanMinute";
+  static const String meters = "meters";
+  // static const String km = "km";
+  static const String minuteUnit = "minuteUnit";
+  static const String finalDestination = "finalDestination";
+
+  // onboarding
+  static const String onBoardingDesc1 = "onBoardingDesc1";
+  static const String onBoardingTitle2 = "onBoardingTitle2";
+  static const String onBoardingDesc2 = "onBoardingDesc2";
+  static const String onBoardingTitle3 = "onBoardingTitle3";
+  static const String onBoardingDesc3 = "onBoardingDesc3";
+
+  // wallet
+  static const String yourPoints = "yourPoints";
+  static const String newSystem = "newSystem";
+  static const String pointsAddedToAccount = "pointsAddedToAccount";
+
+  // travel log
+  static const String busShape = "busShape";
 }

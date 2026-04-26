@@ -1,4 +1,6 @@
 import 'package:base_project/common/resources/color_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entities/tracking_info.dart';
@@ -15,7 +17,7 @@ class TrackingBottomSheet extends StatelessWidget {
       builder: (context, state) {
         final trackingInfo = state.data;
         final isTracking = state.isTracking;
-        final pickupName = state.selectedPickup?.name ?? 'نقطة الركوب';
+        final pickupName = state.selectedPickup?.name ?? AppStrings.pickupPoint.tr();
 
         return Container(
           decoration: const BoxDecoration(
@@ -49,7 +51,7 @@ class TrackingBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Text(
-                'متجه إلى: $pickupName',
+                AppStrings.headingTo.tr(args: [pickupName]),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -60,22 +62,22 @@ class TrackingBottomSheet extends StatelessWidget {
               const SizedBox(height: 16),
               if (trackingInfo != null) ...[
                 _buildInfoRow(
-                  'المسافة المتبقية',
+                  AppStrings.remainingDistance.tr(),
                   _formatDistance(trackingInfo.distanceInMeters),
                   Icons.map_outlined,
                 ),
                 const SizedBox(height: 12),
                 _buildInfoRow(
-                  'الوقت المتوقع',
+                  AppStrings.estimatedTime.tr(),
                   _formatDuration(trackingInfo.etaSeconds),
                   Icons.timer_outlined,
                 ),
                 const SizedBox(height: 12),
                 _buildInfoRow(
-                  'الحالة',
+                  AppStrings.status.tr(),
                   trackingInfo.status == TrackingStatus.arrived
-                      ? 'وصلت ✅'
-                      : 'في الطريق 🚌',
+                      ? AppStrings.arrived.tr()
+                      : AppStrings.onTheWay.tr(),
                   Icons.info_outline,
                   valueColor: trackingInfo.status == TrackingStatus.arrived
                       ? ColorManager.successGreen
@@ -101,9 +103,9 @@ class TrackingBottomSheet extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'إيقاف التتبع',
-                    style: TextStyle(
+                  child: Text(
+                    AppStrings.stopTracking.tr(),
+                    style: const TextStyle(
                       color: ColorManager.red,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -144,14 +146,14 @@ class TrackingBottomSheet extends StatelessWidget {
 
   String _formatDistance(double meters) {
     if (meters < 1000) {
-      return '${meters.toInt()} متر';
+      return '${meters.toInt()} ${AppStrings.meters.tr()}';
     }
-    return '${(meters / 1000).toStringAsFixed(1)} كم';
+    return '${(meters / 1000).toStringAsFixed(1)} ${AppStrings.km.tr()}';
   }
 
   String _formatDuration(int seconds) {
     final minutes = seconds ~/ 60;
-    if (minutes < 1) return 'أقل من دقيقة';
-    return '$minutes دقيقة';
+    if (minutes < 1) return AppStrings.lessThanMinute.tr();
+    return '$minutes ${AppStrings.minuteUnit.tr()}';
   }
 }

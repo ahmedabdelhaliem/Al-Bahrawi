@@ -33,21 +33,19 @@ class _OnBoardingViewState extends State<OnBoardingView> {
       OnBoardingItemModel(
         banner: null,
         title: '',
-        description:
-            'متتعبش نفسك في البحث على الجروبات معانا حتختار الباص اللى يريحك وتحجز كرسيك بكل سهوله',
+        description: AppStrings.onBoardingDesc1.tr(),
         image: ImageAssets.logo,
       ),
       OnBoardingItemModel(
         banner: null,
-        title: 'رحلات آمنة ومريحة',
-        description:
-            'نضمن لك رحلات مريحة وآمنة مع أفضل السائقين\nراحتك وأمانك هي أولوية مشوار العاصمة.',
+        title: AppStrings.onBoardingTitle2.tr(),
+        description: AppStrings.onBoardingDesc2.tr(),
         image: ImageAssets.logo,
       ),
       OnBoardingItemModel(
         banner: null,
-        title: 'تتبع مسارك لحظة بلحظة',
-        description: 'تابع خط سير رحلتك مباشرة على الخريطة\nحتى تصل لوجهتك بالسلامة.',
+        title: AppStrings.onBoardingTitle3.tr(),
+        description: AppStrings.onBoardingDesc3.tr(),
         image: ImageAssets.logo,
       ),
     ];

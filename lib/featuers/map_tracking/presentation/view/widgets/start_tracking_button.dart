@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 
 class StartTrackingButton extends StatelessWidget {
@@ -19,10 +21,10 @@ class StartTrackingButton extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: onPressed,
-          child: const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Text(
-              'ابدأ التتبع',
+              AppStrings.startTracking.tr(),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,

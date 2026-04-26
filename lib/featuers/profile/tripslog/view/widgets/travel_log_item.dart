@@ -1,5 +1,7 @@
 import 'package:base_project/common/resources/color_manager.dart';
+import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -63,7 +65,7 @@ class TravelLogItem extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'الى',
+                        AppStrings.to.tr(),
                         style: getLightStyle(color: Colors.black54, fontSize: 11.sp),
                       ),
                       Row(
@@ -130,7 +132,7 @@ class TravelLogItem extends StatelessWidget {
                         ),
                         SizedBox(width: 6.w),
                         Text(
-                          'شكل الباص',
+                          AppStrings.busShape.tr(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: getBoldStyle(color: const Color(0xFF455A64), fontSize: 12.sp),

@@ -1,3 +1,4 @@
+import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/styles_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -31,7 +32,7 @@ class WalletBalanceCard extends StatelessWidget {
         children: [
           // "نقاطك" Label
           Text(
-            'نقاطك', // Hardcoded for now as per image or use tr() if key exists
+            AppStrings.yourPoints.tr(),
             style: getBoldStyle(
               fontSize: 18.sp,
               color: Colors.white,

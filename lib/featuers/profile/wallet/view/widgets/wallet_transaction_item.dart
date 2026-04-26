@@ -1,5 +1,7 @@
 import 'package:base_project/common/resources/color_manager.dart';
+import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 
 import 'package:flutter/material.dart';
@@ -34,7 +36,7 @@ class WalletTransactionItem extends StatelessWidget {
               border: Border.all(color: Colors.red.withValues(alpha: 0.5)),
             ),
             child: Text(
-              'نظام جديد',
+              AppStrings.newSystem.tr(),
               style: getMediumStyle(color: Colors.red, fontSize: 10.sp),
             ),
           ),
@@ -47,7 +49,7 @@ class WalletTransactionItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'تم اضافة $amount نقطة الى حسابك',
+                  AppStrings.pointsAddedToAccount.tr(args: [amount]),
                   style: getBoldStyle(
                     fontSize: 14.sp,
                     color: ColorManager.primary,
@@ -56,7 +58,7 @@ class WalletTransactionItem extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'تاريخ العملية - $date',
+                  AppStrings.transactionDate.tr(args: [date]),
                   style: getMediumStyle(
                     fontSize: 12.sp,
                     color: ColorManager.greyText,
