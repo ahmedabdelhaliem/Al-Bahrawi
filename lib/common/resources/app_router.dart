@@ -11,6 +11,7 @@ import 'package:base_project/featuers/profile/tripslog/view/travel_log_view.dart
 import 'package:base_project/featuers/profile/wallet/view/wallet_view.dart';
 
 import 'package:base_project/featuers/offers/view/offers_view.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:base_project/featuers/auth/forget_password/view/forget_password_view.dart';
@@ -57,7 +58,7 @@ abstract class AppRouters {
   static const String termsAndConditions = '/termsAndConditions';
   static const String help = '/help';
   static const String mapTracking = '/mapTracking';
-  static const String switchToAdmin = '/switchToAdmin';
+  static const String switchToAdminRoute = '/switchToAdminRoute';
   // faqs route
   static const String faqs = '/faqs';
 
@@ -245,6 +246,13 @@ abstract class AppRouters {
         pageBuilder: (context, state) {
           final pickup = state.extra as PickupPointModel;
           return CupertinoPage(child: MapTrackingView(pickup: pickup));
+        },
+      ),
+      GoRoute(
+        path: switchToAdminRoute,
+        pageBuilder: (context, state) {
+          // TODO: Add SwitchToAdminView
+          return const CupertinoPage(child: Scaffold(body: Center(child: Text('Switch to Admin'))));
         },
       ),
     ],

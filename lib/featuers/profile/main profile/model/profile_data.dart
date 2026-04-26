@@ -43,7 +43,7 @@ class ProfileData {
     ProfileModel(
       icon: Icons.admin_panel_settings_outlined,
       title: AppStrings.switchToAdmin,
-      route: AppRouters.switchToAdmin,
+      route: AppRouters.switchToAdminRoute,
     ),
   ];
 }
