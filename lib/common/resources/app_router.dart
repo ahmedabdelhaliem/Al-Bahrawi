@@ -1,4 +1,6 @@
 
+import 'package:base_project/featuers/map_tracking/data/models/pickup_point_model.dart';
+import 'package:base_project/featuers/map_tracking/presentation/view/map_tracking_view.dart';
 import 'package:base_project/featuers/my_trips/view/my_trips_view.dart';
 
 import 'package:base_project/featuers/profile/help/view/help_view.dart';
@@ -8,6 +10,7 @@ import 'package:base_project/featuers/profile/terms_and_conditions/view/terms_an
 import 'package:base_project/featuers/profile/tripslog/view/travel_log_view.dart';
 import 'package:base_project/featuers/profile/wallet/view/wallet_view.dart';
 
+import 'package:base_project/featuers/offers/view/offers_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:base_project/featuers/auth/forget_password/view/forget_password_view.dart';
@@ -38,6 +41,7 @@ abstract class AppRouters {
   static const String publishAnnouncement = '/publishAnnouncement';
   static const String digitalPayment = '/digitalPayment';
   static const String notifications = '/notifications';
+  static const String offers = '/offers';
   static const String commonQuestion = '/commonQuestion';
 
   static const String images = '/images';
@@ -52,6 +56,7 @@ abstract class AppRouters {
   static const String settings = '/settings';
   static const String termsAndConditions = '/termsAndConditions';
   static const String help = '/help';
+  static const String mapTracking = '/mapTracking';
   static const String switchToAdmin = '/switchToAdmin';
   // faqs route
   static const String faqs = '/faqs';
@@ -156,6 +161,12 @@ abstract class AppRouters {
         },
       ),
       GoRoute(
+        path: offers,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: OffersView());
+        },
+      ),
+      GoRoute(
         path: images,
         pageBuilder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
@@ -227,6 +238,13 @@ abstract class AppRouters {
         path: help,
         pageBuilder: (context, state) {
           return const CupertinoPage(child: HelpView());
+        },
+      ),
+      GoRoute(
+        path: mapTracking,
+        pageBuilder: (context, state) {
+          final pickup = state.extra as PickupPointModel;
+          return CupertinoPage(child: MapTrackingView(pickup: pickup));
         },
       ),
     ],

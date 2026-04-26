@@ -12,7 +12,7 @@ class OngoingTripCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      // margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
         color: ColorManager.white,
         borderRadius: BorderRadius.circular(24.r),
@@ -37,7 +37,9 @@ class OngoingTripCard extends StatelessWidget {
                 // Track Location Button
                 GestureDetector(
                   onTap: () async {
-                    final Uri url = Uri.parse('https://www.google.com/maps/search/?api=1&query=30.0444,31.2357');
+                    final Uri url = Uri.parse(
+                      'https://www.google.com/maps/search/?api=1&query=30.0444,31.2357',
+                    );
                     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
                       // Handle error if needed
                     }
@@ -179,4 +181,3 @@ class OngoingTripCard extends StatelessWidget {
     );
   }
 }
- 

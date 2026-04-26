@@ -25,6 +25,13 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(":app")
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
+        kotlinOptions {
+            freeCompilerArgs = freeCompilerArgs + listOf("-Xskip-metadata-version-check")
+            languageVersion = "1.9"
+            apiVersion = "1.9"
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {

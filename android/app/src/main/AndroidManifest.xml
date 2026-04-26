@@ -11,6 +11,11 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <!-- Permissions for flutter_local_notifications -->
 
+    <!-- Permissions for geolocator -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <!-- Permissions for url launcher -->
     <queries>
         <!-- If your app checks for SMS support -->
@@ -105,6 +110,11 @@
 <!--                tools:replace="android:resource" />-->
 <!--        </provider>-->
         <!-- Permissions for open_filex -->
+
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_GOOGLE_MAPS_API_KEY_HERE" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

@@ -31,9 +31,9 @@ class BottomNavBarView extends StatefulWidget {
   State<BottomNavBarView> createState() => _BottomNavBarViewState();
 }
 
-class _BottomNavBarViewState extends State<BottomNavBarView> {
+class _BottomNavBarViewState extends State<BottomNavBarView> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  late PageController _pageController;
+  late AnimationController _fadeController;
 
   final List<Widget> _views = <Widget>[
     const HomeView(),
@@ -45,7 +45,10 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
   void initState() {
     super.initState();
     _selectedIndex = widget.pageIndex;
-    _pageController = PageController(initialPage: _selectedIndex);
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    )..forward();
 
     if (instance<AppPreferences>().getToken().isNotEmpty) {
       if (userRole == UserRole.captain) {
@@ -58,32 +61,29 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
   void _onItemTapped(int index) {
-    // Access allowed to all tabs without login for now
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOutCubic,
-    );
+    if (_selectedIndex != index) {
+      setState(() {
+        _selectedIndex = index;
+      });
+      _fadeController.forward(from: 0.0);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        physics: const NeverScrollableScrollPhysics(),
-        children: _views,
+      body: FadeTransition(
+        opacity: _fadeController,
+        child: IndexedStack(
+          index: _selectedIndex,
+          children: _views,
+        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
@@ -101,13 +101,59 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
                 ),
               ],
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavItem(0, Icons.grid_view_rounded, AppStrings.home.tr()),
-                _buildNavItem(1, Icons.confirmation_number_rounded, AppStrings.myTrips.tr()),
-                _buildNavItem(2, Icons.person_rounded, AppStrings.profile.tr()),
-              ],
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Sliding background pill
+                  AnimatedAlign(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    alignment: _selectedIndex == 0
+                        ? Alignment.centerRight
+                        : _selectedIndex == 1
+                            ? Alignment.center
+                            : Alignment.centerLeft,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                      decoration: BoxDecoration(
+                        gradient: ColorManager.primaryGradient,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.grid_view_rounded, size: 24.r, color: Colors.transparent),
+                          SizedBox(width: 6.w),
+                          Text(
+                            _selectedIndex == 0
+                                ? AppStrings.home.tr()
+                                : _selectedIndex == 1
+                                    ? AppStrings.myTrips.tr()
+                                    : AppStrings.profile.tr(),
+                            style: getBoldStyle(
+                              color: Colors.transparent,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Navigation Items
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildNavItem(0, Icons.grid_view_rounded, AppStrings.home.tr()),
+                      _buildNavItem(1, Icons.confirmation_number_rounded, AppStrings.myTrips.tr()),
+                      _buildNavItem(2, Icons.person_rounded, AppStrings.profile.tr()),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -120,33 +166,35 @@ class _BottomNavBarViewState extends State<BottomNavBarView> {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          gradient: isSelected ? ColorManager.primaryGradient : null,
-          color: isSelected ? null : Colors.transparent,
-          borderRadius: BorderRadius.circular(20.r),
-        ),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         child: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               icon,
               color: isSelected ? Colors.white : ColorManager.grey,
               size: 24.r,
             ),
-            if (isSelected) ...[
-              SizedBox(width: 8.w),
-              Text(
-                label,
-                style: getBoldStyle(
-                  color: Colors.white,
-                  fontSize: 12.sp,
-                ),
-              ),
-            ],
+            AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              child: isSelected
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(width: 6.w),
+                        Text(
+                          label,
+                          style: getBoldStyle(
+                            color: Colors.white,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+            ),
           ],
         ),
       ),

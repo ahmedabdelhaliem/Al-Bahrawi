@@ -1,5 +1,6 @@
 import 'package:base_project/app/app_prefs.dart';
 import 'package:base_project/app/di.dart';
+import 'package:base_project/common/resources/app_router.dart';
 import 'package:base_project/common/resources/assets_manager.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/strings_manager.dart';
@@ -8,15 +9,16 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class TransportHeaderWidget extends StatelessWidget {
   final double height;
   final String? title;
   final bool showBackButton;
-  
+
   const TransportHeaderWidget({
-    super.key, 
-    required this.height, 
+    super.key,
+    required this.height,
     this.title,
     this.showBackButton = false,
   });
@@ -81,18 +83,23 @@ class TransportHeaderWidget extends StatelessWidget {
                     fit: BoxFit.contain,
                   )
                 else
-                  Container(
-                    padding: EdgeInsets.all(8.r),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
-                    ),
-                    child: SvgPicture.asset(
-                      IconAssets.notification,
-                      width: 24.w,
-                      height: 24.w,
-                      colorFilter: const ColorFilter.mode(ColorManager.white, BlendMode.srcIn),
+                  GestureDetector(
+                    onTap: () {
+                      context.push(AppRouters.offers);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8.r),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+                      ),
+                      child: SvgPicture.asset(
+                        IconAssets.notification,
+                        width: 24.w,
+                        height: 24.w,
+                        colorFilter: const ColorFilter.mode(ColorManager.white, BlendMode.srcIn),
+                      ),
                     ),
                   ),
 
@@ -181,11 +188,7 @@ class TransportHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return TransportHeaderWidget(
-      height: maxExtent, 
-      title: title,
-      showBackButton: showBackButton,
-    );
+    return TransportHeaderWidget(height: maxExtent, title: title, showBackButton: showBackButton);
   }
 
   @override

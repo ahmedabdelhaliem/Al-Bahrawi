@@ -1,14 +1,17 @@
+import 'package:base_project/common/resources/app_router.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/widgets/default_button_widget.dart';
 import 'package:base_project/featuers/home/view/widgets/booking_selector_field.dart';
-import 'package:base_project/featuers/home/view/widgets/ongoing_trip_card.dart';
-import 'package:base_project/featuers/home/view/widgets/transport_header_widget.dart';
 import 'package:base_project/featuers/home/view/widgets/custom_selector_bottom_sheet.dart';
+import 'package:base_project/featuers/home/view/widgets/ongoing_trip_card.dart';
 import 'package:base_project/featuers/home/view/widgets/transport_date_picker.dart';
+import 'package:base_project/featuers/home/view/widgets/transport_header_widget.dart';
+import 'package:base_project/featuers/map_tracking/data/models/pickup_point_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -97,7 +100,18 @@ class _HomeViewState extends State<HomeView> {
             sliver: SliverToBoxAdapter(
               child: DefaultButtonWidget(
                 text: AppStrings.view.tr(),
-                onPressed: () {},
+                onPressed: () {
+                  if (_selectedMeetingPoint != null) {
+                    // Map the selected string to a model (in real app, this comes from API)
+                    final pickup = PickupPointModel(
+                      id: "1",
+                      name: _selectedMeetingPoint!,
+                      lat: 30.0444, // Placeholder for Cairo/New Capital region
+                      lng: 31.2357,
+                    );
+                    context.push(AppRouters.mapTracking, extra: pickup);
+                  }
+                },
                 gradient: ColorManager.primaryGradient,
                 textColor: ColorManager.white,
                 radius: 30.r,
