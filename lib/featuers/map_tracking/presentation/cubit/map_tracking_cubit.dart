@@ -1,9 +1,10 @@
 import 'dart:async';
+
+import 'package:base_project/common/base/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:base_project/common/base/base_state.dart';
 
 import '../../data/models/pickup_point_model.dart';
 import '../../data/services/location_service.dart';
@@ -17,7 +18,7 @@ class MapTrackingCubit extends Cubit<MapTrackingState> {
   final PolylinePoints _polylinePoints = PolylinePoints();
 
   // Replace this with a real key or fetch from config
-  final String _googleMapsApiKey = "YOUR_GOOGLE_MAPS_API_KEY_HERE";
+  final String _googleMapsApiKey = "AIzaSyAnrDFvSZOco-K8vE67NqaQNCXoWi4BJfs";
 
   MapTrackingCubit(this._locationService) : super(const MapTrackingState());
 
@@ -26,41 +27,40 @@ class MapTrackingCubit extends Cubit<MapTrackingState> {
 
     final hasPermission = await _locationService.requestPermission();
     if (!hasPermission) {
-      emit(state.copyWith(
-        status: Status.failure,
-        errorMessage: 'Location permission denied. Cannot track your trip.',
-      ));
+      emit(
+        state.copyWith(
+          status: Status.failure,
+          errorMessage: 'Location permission denied. Cannot track your trip.',
+        ),
+      );
       return;
     }
 
     final position = await _locationService.getCurrentPosition();
     if (position != null) {
       final userLatLng = LatLng(position.latitude, position.longitude);
-      
-      emit(state.copyWith(
-        status: Status.success,
-        userPosition: userLatLng,
-      ));
+
+      emit(state.copyWith(status: Status.success, userPosition: userLatLng));
 
       await _fetchPolyline(userLatLng, LatLng(pickup.lat, pickup.lng));
       _recalculateTrackingInfo(userLatLng, LatLng(pickup.lat, pickup.lng));
     } else {
-      emit(state.copyWith(
-        status: Status.failure,
-        errorMessage: 'Could not get current location.',
-      ));
+      emit(state.copyWith(status: Status.failure, errorMessage: 'Could not get current location.'));
     }
   }
 
   void startTracking() {
     emit(state.copyWith(isTracking: true));
-    
+
     _positionSubscription?.cancel();
     _positionSubscription = _locationService.positionStream.listen((Position position) {
       final userLatLng = LatLng(position.latitude, position.longitude);
-      
+
       emit(state.copyWith(userPosition: userLatLng));
-      
+
+      // Animate camera to follow user while tracking with a close zoom level (18.0)
+      mapController?.animateCamera(CameraUpdate.newLatLngZoom(userLatLng, 18.0));
+
       if (state.selectedPickup != null) {
         final pickupLatLng = LatLng(state.selectedPickup!.lat, state.selectedPickup!.lng);
         _recalculateTrackingInfo(userLatLng, pickupLatLng);
@@ -75,10 +75,10 @@ class MapTrackingCubit extends Cubit<MapTrackingState> {
 
   void recenterCamera() {
     if (mapController == null || state.userPosition == null || state.selectedPickup == null) return;
-    
+
     final pickup = state.selectedPickup!;
     final userPos = state.userPosition!;
-    
+
     LatLngBounds bounds;
     if (userPos.latitude > pickup.lat && userPos.longitude > pickup.lng) {
       bounds = LatLngBounds(southwest: LatLng(pickup.lat, pickup.lng), northeast: userPos);
@@ -95,7 +95,7 @@ class MapTrackingCubit extends Cubit<MapTrackingState> {
     } else {
       bounds = LatLngBounds(southwest: userPos, northeast: LatLng(pickup.lat, pickup.lng));
     }
-    
+
     mapController!.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
   }
 
@@ -133,9 +133,11 @@ class MapTrackingCubit extends Cubit<MapTrackingState> {
 
     // Assuming average speed of 40 km/h (11.11 m/s)
     final int etaSeconds = (distanceInMeters / 11.11).round();
-    
-    final TrackingStatus trackingStatus = distanceInMeters < 50 ? TrackingStatus.arrived : TrackingStatus.onTheWay;
-    
+
+    final TrackingStatus trackingStatus = distanceInMeters < 50
+        ? TrackingStatus.arrived
+        : TrackingStatus.onTheWay;
+
     final TrackingInfo info = TrackingInfo(
       distanceInMeters: distanceInMeters,
       etaSeconds: etaSeconds,

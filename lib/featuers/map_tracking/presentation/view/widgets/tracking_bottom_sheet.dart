@@ -37,81 +37,82 @@ class TrackingBottomSheet extends StatelessWidget {
           padding: const EdgeInsets.all(24.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Container(
                   width: 40,
                   height: 4,
+                  margin: const EdgeInsets.only(bottom: 20),
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
-              Text(
-                AppStrings.headingTo.tr(args: [pickupName]),
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorManager.textColor,
-                ),
-                textAlign: TextAlign.right,
+              // Header Row: Name
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          pickupName,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: ColorManager.textColor,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          AppStrings.pickupPoint.tr(),
+                          style: const TextStyle(color: ColorManager.grey, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              if (trackingInfo != null) ...[
-                _buildInfoRow(
-                  AppStrings.remainingDistance.tr(),
-                  _formatDistance(trackingInfo.distanceInMeters),
-                  Icons.map_outlined,
-                ),
-                const SizedBox(height: 12),
-                _buildInfoRow(
-                  AppStrings.estimatedTime.tr(),
-                  _formatDuration(trackingInfo.etaSeconds),
-                  Icons.timer_outlined,
-                ),
-                const SizedBox(height: 12),
-                _buildInfoRow(
-                  AppStrings.status.tr(),
-                  trackingInfo.status == TrackingStatus.arrived
-                      ? AppStrings.arrived.tr()
-                      : AppStrings.onTheWay.tr(),
-                  Icons.info_outline,
-                  valueColor: trackingInfo.status == TrackingStatus.arrived
-                      ? ColorManager.successGreen
-                      : ColorManager.primary,
-                ),
-                const SizedBox(height: 24),
-              ],
-              if (!isTracking)
-                StartTrackingButton(
-                  onPressed: () {
-                    context.read<MapTrackingCubit>().startTracking();
-                  },
-                )
-              else
-                OutlinedButton(
-                  onPressed: () {
-                    context.read<MapTrackingCubit>().stopTracking();
-                  },
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    side: const BorderSide(color: ColorManager.red),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    AppStrings.stopTracking.tr(),
-                    style: const TextStyle(
-                      color: ColorManager.red,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+              const Divider(height: 32),
+              // Info Pills Row
+              if (trackingInfo != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Row(
+                    children: [
+                      _buildInfoPill(
+                        _formatDistance(trackingInfo.distanceInMeters),
+                        Icons.directions_bus_filled_outlined,
+                      ),
+                      const SizedBox(width: 8),
+                      _buildInfoPill(
+                        _formatDuration(trackingInfo.etaSeconds),
+                        Icons.access_time_rounded,
+                      ),
+                    ],
                   ),
                 ),
+              // Action Button (Full Width)
+              SizedBox(
+                width: double.infinity,
+                child: !isTracking
+                    ? StartTrackingButton(
+                        onPressed: () {
+                          context.read<MapTrackingCubit>().startTracking();
+                        },
+                      )
+                    : _buildSecondaryButton(
+                        label: AppStrings.stopTracking.tr(),
+                        icon: Icons.stop_circle_outlined,
+                        color: ColorManager.red,
+                        onTap: () {
+                          context.read<MapTrackingCubit>().stopTracking();
+                        },
+                      ),
+              ),
             ],
           ),
         );
@@ -119,28 +120,78 @@ class TrackingBottomSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, IconData icon, {Color? valueColor}) {
-    return Row(
-      children: [
-        Icon(icon, color: ColorManager.grey, size: 20),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            color: ColorManager.grey,
-          ),
+  Widget _buildHeaderCircleIcon(IconData icon, {required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          shape: BoxShape.circle,
         ),
-        const Spacer(),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: valueColor ?? ColorManager.textColor,
+        child: Icon(icon, color: ColorManager.primary, size: 22),
+      ),
+    );
+  }
+
+  Widget _buildInfoPill(String label, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: ColorManager.primary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: ColorManager.primary.withOpacity(0.2)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: ColorManager.primary),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              color: ColorManager.primary,
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSecondaryButton(
+      {required String label,
+      required IconData icon,
+      required Color color,
+      required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withOpacity(0.5)),
         ),
-      ],
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 20, color: color),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

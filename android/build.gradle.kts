@@ -28,8 +28,8 @@ subprojects {
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
         kotlinOptions {
             freeCompilerArgs = freeCompilerArgs + listOf("-Xskip-metadata-version-check")
-            languageVersion = "2.0"
-            apiVersion = "2.0"
+            languageVersion = "2.1"
+            apiVersion = "2.1"
         }
     }
 }

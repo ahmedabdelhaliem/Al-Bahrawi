@@ -127,7 +127,8 @@ class _MapTrackingViewContent extends StatelessWidget {
                 polylines: polylines,
                 myLocationEnabled: true,
                 myLocationButtonEnabled: false,
-                padding: const EdgeInsets.only(bottom: 300), // Adjusts map center and Google logo above the bottom sheet
+                mapToolbarEnabled: false, // Prevents opening the external Google Maps app
+                padding: const EdgeInsets.only(bottom: 350), // Adjusts map center and Google logo above the bottom sheet
                 onMapCreated: (controller) {
                   context.read<MapTrackingCubit>().mapController = controller;
                   Future.delayed(const Duration(milliseconds: 500), () {

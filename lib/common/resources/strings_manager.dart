@@ -13,6 +13,8 @@ class AppStrings {
   static const String textFieldError = "textFieldError";
   static const String chooseValidValue = "chooseValidValue";
   static const String save = "save";
+  static const String share = "share";
+  static const String directions = "directions";
   static const String cancel = "cancel";
   static const String add = "add";
   static const String showMore = "showMore";

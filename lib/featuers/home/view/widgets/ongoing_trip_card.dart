@@ -1,10 +1,11 @@
 import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:base_project/featuers/map_tracking/data/models/pickup_point_model.dart';
+import 'package:base_project/featuers/map_tracking/presentation/view/map_tracking_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class OngoingTripCard extends StatelessWidget {
   const OngoingTripCard({super.key});
@@ -36,13 +37,19 @@ class OngoingTripCard extends StatelessWidget {
               children: [
                 // Track Location Button
                 GestureDetector(
-                  onTap: () async {
-                    final Uri url = Uri.parse(
-                      'https://www.google.com/maps/search/?api=1&query=30.0444,31.2357',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MapTrackingView(
+                          pickup: PickupPointModel(
+                            id: "1",
+                            name: "مدينة نصر",
+                            lat: 30.0444,
+                            lng: 31.2357,
+                          ),
+                        ),
+                      ),
                     );
-                    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-                      // Handle error if needed
-                    }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
