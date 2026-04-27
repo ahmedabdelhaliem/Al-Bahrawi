@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import '../../../../common/resources/app_router.dart';
 import '../../../../common/resources/strings_manager.dart';
 import '../model/profile_model.dart';
@@ -6,9 +7,9 @@ import '../model/profile_model.dart';
 class ProfileData {
   static List<ProfileModel> profileItems = [
     ProfileModel(
-      icon: Icons.person_outline_rounded,
-      title: AppStrings.userInformation,
-      route: AppRouters.userInformation,
+      icon: Iconsax.user,
+      title: AppStrings.myAccount,
+      route: AppRouters.myAccount,
     ),
     ProfileModel(
       icon: Icons.history_rounded,
@@ -39,11 +40,6 @@ class ProfileData {
       icon: Icons.headset_mic_rounded,
       title: AppStrings.technicalSupport,
       route: AppRouters.technicalSupport,
-    ),
-    ProfileModel(
-      icon: Icons.admin_panel_settings_outlined,
-      title: AppStrings.switchToAdmin,
-      route: AppRouters.switchToAdminRoute,
     ),
   ];
 }

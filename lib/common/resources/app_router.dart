@@ -9,6 +9,7 @@ import 'package:base_project/featuers/profile/technical_support/main%20%20techni
 import 'package:base_project/featuers/profile/terms_and_conditions/view/terms_and_conditions_view.dart';
 import 'package:base_project/featuers/profile/tripslog/view/travel_log_view.dart';
 import 'package:base_project/featuers/profile/wallet/view/wallet_view.dart';
+import 'package:base_project/featuers/profile/main%20profile/view/personal_data_view.dart';
 
 import 'package:base_project/featuers/offers/view/offers_view.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,7 @@ abstract class AppRouters {
   static const String help = '/help';
   static const String mapTracking = '/mapTracking';
   static const String switchToAdminRoute = '/switchToAdminRoute';
+  static const String myAccount = '/myAccount';
   // faqs route
   static const String faqs = '/faqs';
 
@@ -246,6 +248,13 @@ abstract class AppRouters {
         pageBuilder: (context, state) {
           final pickup = state.extra as PickupPointModel;
           return CupertinoPage(child: MapTrackingView(pickup: pickup));
+        },
+      ),
+      //my account
+      GoRoute(
+        path: myAccount,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: PersonalDataView());
         },
       ),
       GoRoute(
