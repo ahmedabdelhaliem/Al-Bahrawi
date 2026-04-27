@@ -9,7 +9,6 @@ class EndPoints {
   static const String resendOTPForgetPassword = '/forgot/resend-otp';
   static const String resetPassword = '/forgot/reset-password';
   static const String banners = '/banners';
-  static String auctions({required String type, String brandId = '', String search = '', String status = '',}) => '/auctions?type=$type&brand_id=$brandId&search=$search&status=$status';
 
   static const String logout = '/logout';
   static const String profile = '/profile';
@@ -27,3 +26,4 @@ class EndPoints {
   static const String deleteAccount = '/delete/account';
   static const String contactUs = '/contact';
 }
+

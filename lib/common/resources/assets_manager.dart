@@ -12,16 +12,12 @@ class ImageAssets {
   static const String logo = '$imagesPath/logo.png';
   static const String logoSplash = '$imagesPath/logo_splash.png';
   static const String profile = '$imagesPath/profile.jpeg';
-  static const String brandTest = '$imagesPath/brand_test.png';
   static const String banner1 = '$imagesPath/banner1.png';
   static const String banner2 = '$imagesPath/banner2.png';
   static const String banner3 = '$imagesPath/banner3.png';
-  static const String unSubscribed = '$imagesPath/unsupscribed.png';
   static const String onBoarding1 = '$imagesPath/on_boarding_1.png';
   static const String onBoarding2 = '$imagesPath/on_boarding_2.png';
   static const String onBoarding3 = '$imagesPath/on_boarding_3.png';
-
-  static const String bus = '$imagesPath/bus.png';
 
   static const String helpBg = '$imagesPath/help_bg.png';
 }
@@ -29,18 +25,13 @@ class ImageAssets {
 class IconAssets {
   static const String aboutUs = '$iconsPath/about_us.svg';
   static const String add = '$iconsPath/add.svg';
-  static const String addAnnounceFieldIcon = '$iconsPath/add_announce_field_icon.svg';
   static const String addImage = '$iconsPath/add_image.svg';
-  static const String auctions = '$iconsPath/auctions.svg';
-  static const String auctionsNumber = '$iconsPath/auctions_number.svg';
-  static const String brands = '$iconsPath/brands.svg';
-  static const String bus = '$iconsPath/bus.svg';
   static const String call = '$iconsPath/call.svg';
   static const String camera = '$iconsPath/camera.svg';
   static const String cash = '$iconsPath/cash.svg';
   static const String clock = '$iconsPath/clock.svg';
   static const String date = '$iconsPath/date.svg';
-  static const String delete = '$iconsPath/delete.svg'; // TODO: This file is missing in assets/icons
+  static const String delete = '$iconsPath/delete.svg';
   static const String deleteAccount = '$iconsPath/delete_account.svg';
   static const String discord = '$iconsPath/discord.svg';
   static const String email = '$iconsPath/email.svg';
@@ -55,18 +46,14 @@ class IconAssets {
   static const String logout = '$iconsPath/logout.svg';
   static const String message = '$iconsPath/message.svg';
   static const String money = '$iconsPath/money.svg';
-  static const String myAuctions = '$iconsPath/my_auctions.svg';
   static const String notification = '$iconsPath/notification.svg';
-  static const String notificationCopy = '$iconsPath/notification copy.svg';
   static const String privacyPolicy = '$iconsPath/privacy_policy.svg';
   static const String profile = '$iconsPath/profile.svg';
   static const String question = '$iconsPath/question.svg';
   static const String safty = '$iconsPath/safty.svg';
   static const String search = '$iconsPath/search.svg';
   static const String settings = '$iconsPath/settings.svg';
-  static const String subscription = '$iconsPath/subscription.svg';
   static const String timer = '$iconsPath/timer.svg';
-  static const String travle = '$iconsPath/travle.svg';
   static const String twetter = '$iconsPath/twetter.svg';
   static const String userInformation = '$iconsPath/user_information.svg';
   static const String view = '$iconsPath/view.svg';
