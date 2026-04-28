@@ -1,16 +1,13 @@
 import 'package:base_project/app/app_functions.dart';
 import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/network/failure.dart';
 import 'package:base_project/common/resources/app_router.dart';
 import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/styles_manager.dart';
-import 'package:base_project/common/widgets/default_app_bar.dart';
 import 'package:base_project/common/widgets/default_button_widget.dart';
 import 'package:base_project/common/widgets/default_form_field.dart';
 import 'package:base_project/features/auth/login/cubit/login_cubit.dart';
 import 'package:base_project/features/auth/login/models/login_model.dart';
-import 'package:base_project/features/auth/login/view/widgets/auth_logo_widget.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
@@ -61,86 +58,205 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorManager.white,
-      appBar: DefaultAppBar(height: 0),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          children: [
-            SizedBox(height: 40.h),
-            const AuthLogoWidget(),
-            SizedBox(height: 24.h),
-            Text(
-              AppStrings.login.tr(),
-              style: getBoldStyle(fontSize: 22.sp, color: ColorManager.textColor),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              AppStrings.enterEmailAndPass.tr(),
-              style: getRegularStyle(fontSize: 13.sp, color: ColorManager.greyTextColor),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 32.h),
-            DefaultFormField(
-              keyboardType: TextInputType.phone,
-              controller: _phoneController,
-              fillColor: ColorManager.white,
-              borderColor: ColorManager.greyBorder,
-              borderRadius: 8.r,
-              hintText: AppStrings.enterYourPhoneNumber.tr(),
-              title: AppStrings.phoneNumber.tr(),
-              prefixIcon: CountryCodePicker(
-                padding: EdgeInsets.zero,
-                margin: EdgeInsets.zero,
-                onChanged: (value) {
-                  if (value.dialCode != null) _countryCode = value.dialCode!;
-                },
-                initialSelection: 'EG',
-                favorite: const ['EG', 'SA'],
-                showCountryOnly: false,
-                showOnlyCountryWhenClosed: false,
-                alignLeft: false,
-                dialogTextStyle: getBoldStyle(fontSize: 13.sp, color: ColorManager.black),
-                showDropDownButton: true,
+      backgroundColor: const Color(0xfff5f5f5), // Light grey background
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+              decoration: BoxDecoration(
+                color: ColorManager.white,
+                borderRadius: BorderRadius.circular(30.r),
               ),
-            ),
-            SizedBox(height: 16.h),
-            DefaultFormField(
-              controller: _passwordController,
-              fillColor: ColorManager.white,
-              borderColor: ColorManager.greyBorder,
-              borderRadius: 8.r,
-              hintText: AppStrings.password.tr(),
-              title: AppStrings.password.tr(),
-              obscureText: true,
-            ),
-            SizedBox(height: 12.h),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: InkWell(
-                onTap: () {
-                  context.push(AppRouters.forgetPass);
-                },
-                borderRadius: BorderRadius.circular(8.r),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-                  child: Text(
-                    AppStrings.forgotPassword.tr(),
-                    style: getSemiBoldStyle(fontSize: 12.sp, color: ColorManager.primary),
-                  ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Welcome Texts
+                    Text(
+                      "مرحبا بك",
+                      style: getBoldStyle(fontSize: 26.sp, color: const Color(0xff4a5677)),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 6.h),
+                    Text(
+                      "أنشئ حساباً أو قم بتسجيل الدخول لاستكشاف تطبيقنا",
+                      style: getRegularStyle(fontSize: 12.sp, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    SizedBox(height: 30.h),
+
+                    // Login Title
+                    Text(
+                      "تسجيل الدخول",
+                      style: getBoldStyle(fontSize: 18.sp, color: ColorManager.black),
+                      textAlign: TextAlign.right,
+                    ),
+                    SizedBox(height: 15.h),
+
+                    // Phone Field Label
+                    _fieldLabel("رقم الهاتف"),
+                    DefaultFormField(
+                      keyboardType: TextInputType.phone,
+                      controller: _phoneController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "ادخل رقم الهاتف",
+                      prefixIcon: CountryCodePicker(
+                        padding: EdgeInsets.zero,
+                        margin: EdgeInsets.zero,
+                        onChanged: (value) {
+                          if (value.dialCode != null) _countryCode = value.dialCode!;
+                        },
+                        initialSelection: 'EG',
+                        favorite: const ['EG', 'SA'],
+                        showCountryOnly: false,
+                        showOnlyCountryWhenClosed: false,
+                        alignLeft: false,
+                        dialogTextStyle: getBoldStyle(fontSize: 13.sp, color: ColorManager.black),
+                        showDropDownButton: true,
+                      ),
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    // Password Field Label
+                    _fieldLabel("كلمة المرور"),
+                    DefaultFormField(
+                      controller: _passwordController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "****",
+                      obscureText: true,
+                      suffixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
+                      prefixIcon: const Icon(Icons.visibility_off_outlined, color: Colors.grey),
+                    ),
+
+                    SizedBox(height: 25.h),
+
+                    // Login Button
+                    _loginButton(context),
+
+                    SizedBox(height: 12.h),
+
+                    // Remember Me & Forgot Password
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () => context.push(AppRouters.forgetPass),
+                          child: Text(
+                            "نسيت كلمة المرور ؟",
+                            style: getMediumStyle(fontSize: 12.sp, color: ColorManager.primary),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              "تذكرني دائماً",
+                              style: getMediumStyle(fontSize: 12.sp, color: Colors.grey),
+                            ),
+                            Checkbox(
+                              value: true,
+                              onChanged: (v) {},
+                              activeColor: ColorManager.primary,
+                              visualDensity: VisualDensity.compact,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.r),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    // Divider
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: Colors.grey.shade300)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Text(
+                            "أو",
+                            style: getRegularStyle(fontSize: 14.sp, color: Colors.grey),
+                          ),
+                        ),
+                        Expanded(child: Divider(color: Colors.grey.shade300)),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
+
+                    // Social Buttons
+                    _socialButton("تسجيل الدخول بواسطة حساب جوجل", Icons.g_mobiledata, Colors.red),
+                    SizedBox(height: 10.h),
+                    _socialButton("تسجيل الدخول بواسطة فيسبوك", Icons.facebook, Colors.blue),
+
+                    SizedBox(height: 20.h),
+
+                    // Footer
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () => context.push(AppRouters.signup),
+                          child: Text(
+                            "انشاء حساب جديد",
+                            style: getBoldStyle(fontSize: 14.sp, color: ColorManager.primary),
+                          ),
+                        ),
+                        SizedBox(width: 5.w),
+                        Text(
+                          "لا تمتلك حساب؟",
+                          style: getMediumStyle(fontSize: 14.sp, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: 32.h),
-            _loginButton(context),
-            SizedBox(height: 24.h),
-            _signupWidget(),
-            SizedBox(height: 16.h),
-            // _guestWidget(),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _fieldLabel(String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h),
+      child: Text(
+        text,
+        style: getBoldStyle(fontSize: 14.sp, color: const Color(0xff4a5677)),
+        textAlign: TextAlign.right,
+      ),
+    );
+  }
+
+  Widget _socialButton(String text, IconData icon, Color iconColor) {
+    return Container(
+      height: 50.h,
+      decoration: BoxDecoration(
+        color: ColorManager.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            text,
+            style: getMediumStyle(fontSize: 13.sp, color: const Color(0xff4a5677)),
+          ),
+          SizedBox(width: 10.w),
+          Icon(icon, color: iconColor, size: 28),
+        ],
       ),
     );
   }
@@ -192,7 +308,7 @@ class _LoginViewState extends State<LoginView> {
               }
             },
             text: AppStrings.login.tr(),
-            gradient: ColorManager.primaryGradient,
+
             textColor: ColorManager.white,
             radius: 40.r,
             verticalPadding: 14.h,

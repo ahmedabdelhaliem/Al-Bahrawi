@@ -9,7 +9,7 @@ class JsonAssets {
 }
 
 class ImageAssets {
-  static const String logo = '$imagesPath/logo.png';
+  static const String logo = '$imagesPath/logo_splash.png';
   static const String logoSplash = '$imagesPath/logo_splash.png';
   static const String profile = '$imagesPath/profile.jpeg';
   static const String banner1 = '$imagesPath/banner1.png';

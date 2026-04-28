@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "147335979279",
-    "project_id": "mazad-3arabety",
-    "storage_bucket": "mazad-3arabety.firebasestorage.app"
+    "project_number": "1012444985183",
+    "project_id": "al-bahrawi-92034",
+    "storage_bucket": "al-bahrawi-92034.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:147335979279:android:4889173cca29428a211e7a",
+        "mobilesdk_app_id": "1:1012444985183:android:b6784f5e882c4cf716e8ea",
         "android_client_info": {
           "package_name": "tech.brmja.baseProject"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDmVsoi2dX9BP7lGjzMA9lSBNiBwPW1CPs"
+          "current_key": "AIzaSyAn4iZ-oA_gHTSbVsT2QBff6T2CD6mxD2Q"
         }
       ],
       "services": {

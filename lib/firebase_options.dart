@@ -37,19 +37,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: "AIzaSyDmVsoi2dX9BP7lGjzMA9lSBNiBwPW1CPs",
-    appId: "1:147335979279:android:4889173cca29428a211e7a",
-    messagingSenderId: "147335979279",
-    projectId: "mazad-3arabety",
-    storageBucket: "mazad-3arabety.firebasestorage.app",
+    apiKey: 'AIzaSyAn4iZ-oA_gHTSbVsT2QBff6T2CD6mxD2Q',
+    appId: '1:1012444985183:android:b6784f5e882c4cf716e8ea',
+    messagingSenderId: '1012444985183',
+    projectId: 'al-bahrawi-92034',
+    storageBucket: 'al-bahrawi-92034.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: "AIzaSyA4Cf8iE9l7uS-VijFYJiiAR_4-oLpMmbM",
-    appId: "1:147335979279:ios:acd0a050e7ebb3c2211e7a",
-    messagingSenderId: "147335979279",
-    projectId: "mazad-3arabety",
-    storageBucket: "mazad-3arabety.firebasestorage.app",
-    iosBundleId: "tech.brmja.baseProject",
+    apiKey: 'AIzaSyAMu4YiztFTfBitwjbgxR8xUIXZJLZLcoY',
+    appId: '1:1012444985183:ios:9e6bd8261464868c16e8ea',
+    messagingSenderId: '1012444985183',
+    projectId: 'al-bahrawi-92034',
+    storageBucket: 'al-bahrawi-92034.firebasestorage.app',
+    iosBundleId: 'tech.brmja.baseProject',
   );
+
 }

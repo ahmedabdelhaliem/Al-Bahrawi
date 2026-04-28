@@ -2,7 +2,9 @@ import 'package:base_project/common/base/base_state.dart';
 import 'package:base_project/common/network/dio_helper.dart';
 import 'package:base_project/common/network/end_points.dart';
 import 'package:base_project/common/resources/assets_manager.dart';
+import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/features/on_boarding/model/on_boarding_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'on_boarding_state.dart';
@@ -44,8 +46,10 @@ class OnBoardingCubit extends Cubit<BaseState<OnBoardingModel>> {
   }
 
   bool isLast = false;
+  int currentIndex = 0;
 
   goNext(int index,int length) {
+    currentIndex = index;
     emit(UpdateOnBoardingLoadingState());
     if (index == length - 1) {
       isLast = true;
@@ -56,26 +60,23 @@ class OnBoardingCubit extends Cubit<BaseState<OnBoardingModel>> {
   }
 
   List<OnBoardingItemModel> _getMockOnBoardingItems() {
-    return const [
+    return [
       OnBoardingItemModel(
         banner: null,
-        title: 'مزايدة من هاتفك',
-        description:
-            '“ قدّم عروضك في ثوانٍ , تابع المزاد من أي مكان.\n تحكُّم كامل بدون حضور فعلي “',
+        title: AppStrings.onBoardingTitle1.tr(),
+        description: AppStrings.onBoardingDesc1.tr(),
         image: ImageAssets.onBoarding1,
       ),
       OnBoardingItemModel(
         banner: null,
-        title: 'عروض مزايدة شفافة',
-        description:
-            ' “راقب ارتفاع الأسعار في الوقت الحقيقي\n اطّلع على تفاصيل كل سيارة قبل المزايدة\n اتخذ قرارك بثقة ووضوح  “',
+        title: AppStrings.onBoardingTitle2.tr(),
+        description: AppStrings.onBoardingDesc2.tr(),
         image: ImageAssets.onBoarding2,
       ),
       OnBoardingItemModel(
         banner: null,
-        title: 'شارك في المزادات في أي وقت ومن أي مكان',
-        description:
-            '“ تابع أحدث المزادات مباشرة وشاهد السيارات المعروضة بوضوح،\n وشارك في المنافسة لحظة بلحظة بسهولة وسرعة “',
+        title: AppStrings.onBoardingTitle3.tr(),
+        description: AppStrings.onBoardingDesc3.tr(),
         image: ImageAssets.onBoarding3,
       ),
     ];

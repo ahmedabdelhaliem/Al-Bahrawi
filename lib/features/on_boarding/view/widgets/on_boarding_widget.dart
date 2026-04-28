@@ -37,48 +37,29 @@ class _OnBoardingWidgetState extends State<OnBoardingWidget> {
       );
     }
 
-    return Column(
-      children: [
-        // Spacer to push content down past the 0.35.sh wavy header
-        const Spacer(flex: 7), 
-        
-        // Logo Section
-        Flexible(
-          flex: 4,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 40.w),
-            child: imageWidget,
-          ),
-        ),
-        
-        SizedBox(height: 0.02.sh), // Small relative gap
-        
-        // Text Section
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 40.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.item.title != null && widget.item.title!.isNotEmpty) ...[
-                Text(
-                  widget.item.title!,
-                  style: getBoldStyle(fontSize: 22.sp, color: ColorManager.textColor),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 0.01.sh),
-              ],
-              Text(
-                widget.item.description ?? '',
-                style: getMediumStyle(fontSize: 15.sp, color: ColorManager.greyTextColor),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-        
-        // Bottom Spacer to anchor content near the buttons
-        SizedBox(height: 0.1.sh), 
-      ],
+    return ClipPath(
+      clipper: BottomArcClipper(),
+      child: SizedBox(
+        width: double.infinity,
+        height: 0.6.sh,
+        child: imageWidget,
+      ),
     );
   }
+}
+
+class BottomArcClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+    path.lineTo(0, size.height - 40);
+    path.quadraticBezierTo(
+        size.width / 2, size.height, size.width, size.height - 40);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

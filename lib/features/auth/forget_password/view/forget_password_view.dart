@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:base_project/features/auth/login/view/widgets/auth_logo_widget.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 class ForgetPasswordView extends StatefulWidget {
   const ForgetPasswordView({
@@ -43,50 +44,90 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
       child: Builder(builder: (context) {
         _forgetPasswordBloc = context.read<ForgetPasswordCubit>();
         return Scaffold(
-          backgroundColor: ColorManager.white,
-          appBar: const DefaultAppBar(height: 0),
-          body: Form(
-            key: _formKey,
-            child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              children: [
-                SizedBox(height: 40.h),
-                const AuthLogoWidget(),
-                SizedBox(height: 32.h),
-                Text(
-                  AppStrings.forgotPassword.tr(),
-                  style: getBoldStyle(
-                    fontSize: 22.sp,
-                    color: ColorManager.textColor,
+          backgroundColor: const Color(0xfff5f5f5),
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+                  decoration: BoxDecoration(
+                    color: ColorManager.white,
+                    borderRadius: BorderRadius.circular(30.r),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  AppStrings.enterYourPhoneNumber.tr(),
-                  style: getRegularStyle(
-                    fontSize: 13.sp,
-                    color: ColorManager.greyTextColor,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "نسيت كلمة المرور",
+                          style: getBoldStyle(fontSize: 22.sp, color: const Color(0xff4a5677)),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          "ادخل رقم هاتفك لتلقي رمز التحقق",
+                          style: getRegularStyle(fontSize: 13.sp, color: Colors.grey),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 30.h),
+                        
+                        _fieldLabel("رقم الهاتف"),
+                        DefaultFormField(
+                          keyboardType: TextInputType.phone,
+                          controller: _phoneController,
+                          fillColor: ColorManager.white,
+                          borderColor: ColorManager.greyBorder,
+                          borderRadius: 12.r,
+                          hintText: "ادخل رقم الهاتف",
+                          prefixIcon: CountryCodePicker(
+                            padding: EdgeInsets.zero,
+                            margin: EdgeInsets.zero,
+                            onChanged: (value) {
+                              // We can add _countryCode logic if needed here too
+                            },
+                            initialSelection: 'EG',
+                            favorite: const ['EG', 'SA'],
+                            showCountryOnly: false,
+                            showOnlyCountryWhenClosed: false,
+                            alignLeft: false,
+                            dialogTextStyle: getBoldStyle(fontSize: 13.sp, color: ColorManager.black),
+                            showDropDownButton: true,
+                          ),
+                        ),
+                        
+                        SizedBox(height: 30.h),
+                        _activeAccountContent(),
+                        
+                        SizedBox(height: 15.h),
+                        TextButton(
+                          onPressed: () => context.pop(),
+                          child: Text(
+                            "العودة لتسجيل الدخول",
+                            style: getBoldStyle(fontSize: 14.sp, color: ColorManager.primary),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 32.h),
-                DefaultFormField(
-                  keyboardType: TextInputType.phone,
-                  controller: _phoneController,
-                  fillColor: ColorManager.white,
-                  borderColor: ColorManager.greyBorder,
-                  borderRadius: 12.r,
-                  hintText: AppStrings.phoneNumber.tr(),
-                  title: AppStrings.phoneNumber.tr(),
-                ),
-                SizedBox(height: 40.h),
-                _activeAccountContent(),
-              ],
+              ),
             ),
           ),
         );
       }),
+    );
+  }
+
+  Widget _fieldLabel(String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h),
+      child: Text(
+        text,
+        style: getBoldStyle(fontSize: 14.sp, color: const Color(0xff4a5677)),
+        textAlign: TextAlign.right,
+      ),
     );
   }
 
@@ -113,10 +154,9 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
             }
           },
           text: AppStrings.sendCode.tr(),
-          gradient: ColorManager.primaryGradient,
           textColor: ColorManager.white,
-          radius: 40.r,
-          verticalPadding: 14.h,
+          radius: 12.r,
+          verticalPadding: 16.h,
           isLoading: state.status == Status.loading,
         );
       },

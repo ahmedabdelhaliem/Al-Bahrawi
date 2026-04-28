@@ -39,57 +39,87 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorManager.white,
-      appBar: const DefaultAppBar(height: 0),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          children: [
-            SizedBox(height: 40.h),
-            const AuthLogoWidget(),
-            SizedBox(height: 32.h),
-            Text(
-              AppStrings.resetPassword.tr(),
-              style: getBoldStyle(
-                fontSize: 22.sp,
-                color: ColorManager.textColor,
+      backgroundColor: const Color(0xfff5f5f5),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+              decoration: BoxDecoration(
+                color: ColorManager.white,
+                borderRadius: BorderRadius.circular(30.r),
               ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              AppStrings.yourNewPasswordMustBeDifferent.tr(),
-              style: getRegularStyle(
-                fontSize: 13.sp,
-                color: ColorManager.greyTextColor,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      "تعيين كلمة مرور جديدة",
+                      style: getBoldStyle(fontSize: 22.sp, color: const Color(0xff4a5677)),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 10.h),
+                    Text(
+                      "يرجى إدخال كلمة المرور الجديدة الخاصة بك",
+                      style: getRegularStyle(fontSize: 13.sp, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 30.h),
+                    
+                    _fieldLabel("كلمة المرور الجديدة"),
+                    DefaultFormField(
+                      controller: _passwordController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "ادخل كلمة المرور",
+                      obscureText: true,
+                      suffixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
+                    ),
+                    
+                    SizedBox(height: 15.h),
+                    
+                    _fieldLabel("تأكيد كلمة المرور"),
+                    DefaultFormField(
+                      controller: _confirmPasswordController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "اعد كتابة كلمة المرور",
+                      obscureText: true,
+                      suffixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
+                    ),
+                    
+                    SizedBox(height: 30.h),
+                    _resetPasswordButton(context),
+                    
+                    SizedBox(height: 15.h),
+                    TextButton(
+                      onPressed: () => context.go(AppRouters.login),
+                      child: Text(
+                        "العودة لتسجيل الدخول",
+                        style: getBoldStyle(fontSize: 14.sp, color: ColorManager.primary),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              textAlign: TextAlign.center,
             ),
-            SizedBox(height: 32.h),
-            DefaultFormField(
-              controller: _passwordController,
-              fillColor: ColorManager.white,
-              borderColor: ColorManager.greyBorder,
-              borderRadius: 12.r,
-              hintText: AppStrings.newPassword.tr(),
-              title: AppStrings.newPassword.tr(),
-              obscureText: true,
-            ),
-            SizedBox(height: 16.h),
-            DefaultFormField(
-              controller: _confirmPasswordController,
-              fillColor: ColorManager.white,
-              borderColor: ColorManager.greyBorder,
-              borderRadius: 12.r,
-              hintText: AppStrings.newPasswordConfirmation.tr(),
-              title: AppStrings.newPasswordConfirmation.tr(),
-              obscureText: true,
-            ),
-            SizedBox(height: 40.h),
-            _resetPasswordButton(context),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _fieldLabel(String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h),
+      child: Text(
+        text,
+        style: getBoldStyle(fontSize: 14.sp, color: const Color(0xff4a5677)),
+        textAlign: TextAlign.right,
       ),
     );
   }
@@ -120,10 +150,9 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
               }
             },
             text: AppStrings.save.tr(),
-            gradient: ColorManager.primaryGradient,
             textColor: ColorManager.white,
-            radius: 40.r,
-            verticalPadding: 14.h,
+            radius: 12.r,
+            verticalPadding: 16.h,
             isLoading: state.status == Status.loading,
           );
         },

@@ -5,11 +5,10 @@ import 'package:base_project/common/resources/color_manager.dart';
 import 'package:base_project/common/resources/strings_manager.dart';
 import 'package:base_project/common/resources/styles_manager.dart';
 import 'package:base_project/common/widgets/custom_shimmer_widget.dart';
-import 'package:base_project/common/widgets/default_app_bar.dart';
 import 'package:base_project/common/widgets/default_button_widget.dart';
 import 'package:base_project/common/widgets/default_dropdown_menu_widget.dart';
 import 'package:base_project/common/widgets/default_form_field.dart';
-import 'package:base_project/common/widgets/default_radio_button.dart';
+import 'package:base_project/features/auth/login/view/widgets/auth_logo_widget.dart';
 import 'package:base_project/features/auth/signup/cubit/country_and_city_cubit/country_and_city_cubit.dart';
 import 'package:base_project/features/auth/signup/cubit/signup_cubit/signup_cubit.dart';
 import 'package:base_project/features/auth/signup/models/countries_cities_model.dart';
@@ -67,115 +66,151 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DefaultAppBar(height: 0),
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          children: [
-            const SizedBox(height: 16),
-            Text(
-              AppStrings.createNewAccount.tr(),
-              style: getBoldStyle(fontSize: 22.sp, color: ColorManager.textColor),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              AppStrings.enterRequiredData.tr(),
-              style: getRegularStyle(fontSize: 14.sp, color: ColorManager.greyTextColor),
-            ),
-            SizedBox(height: 24.h),
-            _image(),
-            SizedBox(height: 16.h),
-            DefaultFormField(
-              controller: _fullNameController,
-              isUnderLine: true,
-              hintText: "محمد أحمد كمال",
-              title: AppStrings.fullName.tr(),
-              titleStyle: getRegularStyle(fontSize: 13.sp, color: ColorManager.greyTextColor),
-              textStyle: getBoldStyle(fontSize: 15.sp, color: ColorManager.textColor),
-            ),
-            SizedBox(height: 16.h),
-            DefaultFormField(
-              controller: _phoneController,
-              isUnderLine: true,
-              keyboardType: TextInputType.phone,
-              hintText: "01000022222222",
-              title: AppStrings.phoneNumber.tr(),
-              titleStyle: getRegularStyle(fontSize: 13.sp, color: ColorManager.greyTextColor),
-              textStyle: getBoldStyle(fontSize: 15.sp, color: ColorManager.textColor),
-              prefixIcon: CountryCodePicker(
-                padding: EdgeInsets.zero,
-                onChanged: (value) {
-                  if (value.dialCode != null) _countryCode = value.dialCode!;
-                },
-                initialSelection: 'EG',
-                favorite: const ['EG'],
-                showCountryOnly: false,
-                showOnlyCountryWhenClosed: false,
-                alignLeft: false,
-                textStyle: getBoldStyle(fontSize: 15.sp, color: ColorManager.textColor),
+      backgroundColor: const Color(0xfff5f5f5),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 25.h),
+              decoration: BoxDecoration(
+                color: ColorManager.white,
+                borderRadius: BorderRadius.circular(30.r),
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const AuthLogoWidget(),
+                    SizedBox(height: 20.h),
+
+                    // Full Name
+                    _fieldLabel("الاسم الكامل"),
+                    DefaultFormField(
+                      controller: _fullNameController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "ادخل الاسم بالكامل",
+                      prefixIcon: const Icon(Icons.person_outline, color: Colors.grey),
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    // Email
+                    _fieldLabel("البريد الالكتروني"),
+                    DefaultFormField(
+                      controller: _workPlaceController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "ادخل البريد الالكتروني",
+                      prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    // Phone Field
+                    _fieldLabel("رقم الهاتف"),
+                    DefaultFormField(
+                      keyboardType: TextInputType.phone,
+                      controller: _phoneController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "ادخل رقم الهاتف",
+                      prefixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(width: 12.w),
+                          const Icon(Icons.phone_outlined, color: Colors.grey),
+                          CountryCodePicker(
+                            padding: EdgeInsets.zero,
+                            margin: EdgeInsets.zero,
+                            onChanged: (value) {
+                              if (value.dialCode != null) _countryCode = value.dialCode!;
+                            },
+                            initialSelection: 'EG',
+                            favorite: const ['EG', 'SA'],
+                            showCountryOnly: false,
+                            showOnlyCountryWhenClosed: false,
+                            alignLeft: false,
+                            dialogTextStyle: getBoldStyle(
+                              fontSize: 13.sp,
+                              color: ColorManager.black,
+                            ),
+                            showDropDownButton: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5.h),
+                      child: Text(
+                        "يرجى ادخال رقم هاتف فعال لمساعدتنا في التواصل معك",
+                        style: getRegularStyle(fontSize: 10.sp, color: Colors.red),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    // Password
+                    _fieldLabel("كلمة السر"),
+                    DefaultFormField(
+                      controller: _passwordController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "ادخل كلمة السر",
+                      obscureText: true,
+                      prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
+                      suffixIcon: const Icon(Icons.visibility_off_outlined, color: Colors.grey),
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    // Confirm Password
+                    _fieldLabel("تأكيد كلمة السر"),
+                    DefaultFormField(
+                      controller: _confirmPasswordController,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "ادخل كلمة السر",
+                      obscureText: true,
+                      prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
+                      suffixIcon: const Icon(Icons.visibility_off_outlined, color: Colors.grey),
+                    ),
+
+                    SizedBox(height: 25.h),
+
+                    // Signup Button
+                    _signupButton(context),
+
+                    SizedBox(height: 15.h),
+
+                    // Login Footer
+                    _loginWidgetRedesigned(),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 16.h),
-            DefaultDropdownMenuWidget<String>(
-              onSelected: (value) => setState(() => _selectedWorkplace = value),
-              items: const ["الداون تاون", "التجمع الخامس", "العاصمة الإدارية"],
-              hintText: "اختر جهة العمل",
-              title: AppStrings.workPlace.tr(),
-              titleStyle: getRegularStyle(fontSize: 13.sp, color: ColorManager.greyTextColor),
-              selectedValue: _selectedWorkplace,
-              optionTitle: (item) => item ?? '',
-              searchOptionTitle: (item) => item ?? '',
-              borderColor: Colors.transparent,
-              fillColor: Colors.transparent,
-              borderRadius: 0,
-            ),
-            _buildUnderline(),
-            SizedBox(height: 16.h),
-            _countriesAndCitiesWidget(),
-            SizedBox(height: 16.h),
-            DefaultFormField(
-              controller: _addressController,
-              isUnderLine: true,
-              hintText: "القاهرة، المنيب",
-              title: AppStrings.address.tr(),
-              titleStyle: getRegularStyle(fontSize: 13.sp, color: ColorManager.greyTextColor),
-              textStyle: getBoldStyle(fontSize: 15.sp, color: ColorManager.textColor),
-            ),
-            SizedBox(height: 16.h),
-            DefaultFormField(
-              controller: _pickupPointController,
-              isUnderLine: true,
-              hintText: "القاهرة، المنيب",
-              title: AppStrings.pickupPoint.tr(),
-              titleStyle: getRegularStyle(fontSize: 13.sp, color: ColorManager.greyTextColor),
-              textStyle: getBoldStyle(fontSize: 15.sp, color: ColorManager.textColor),
-            ),
-            SizedBox(height: 16.h),
-            DefaultFormField(
-              controller: _passwordController,
-              isUnderLine: true,
-              obscureText: true,
-              title: AppStrings.password.tr(),
-              titleStyle: getRegularStyle(fontSize: 13.sp, color: ColorManager.greyTextColor),
-              textStyle: getBoldStyle(fontSize: 15.sp, color: ColorManager.textColor),
-            ),
-            SizedBox(height: 16.h),
-            DefaultFormField(
-              controller: _confirmPasswordController,
-              isUnderLine: true,
-              obscureText: true,
-              title: AppStrings.confirmPassword.tr(),
-              titleStyle: getRegularStyle(fontSize: 13.sp, color: ColorManager.greyTextColor),
-              textStyle: getBoldStyle(fontSize: 15.sp, color: ColorManager.textColor),
-            ),
-            SizedBox(height: 24.h),
-            _agreementWidget(),
-            SizedBox(height: 32.h),
-            _signupButton(context),
-            SizedBox(height: 32.h),
-          ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _fieldLabel(String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h),
+      child: Text(
+        text,
+        style: getBoldStyle(fontSize: 14.sp, color: const Color(0xff4a5677)),
+        textAlign: TextAlign.right,
       ),
     );
   }
@@ -200,9 +235,9 @@ class _SignUpViewState extends State<SignUpView> {
               Icon(Icons.camera_alt_outlined, color: ColorManager.greyTextColor, size: 38.w),
               SizedBox(height: 4.h),
               Text(
-                "رفع صورة",
+                AppStrings.uploadImage.tr(),
                 style: getRegularStyle(fontSize: 11.sp, color: ColorManager.greyTextColor),
-              ).tr(),
+              ),
             ],
           ),
         ),
@@ -210,60 +245,60 @@ class _SignUpViewState extends State<SignUpView> {
     );
   }
 
-  StatefulBuilder _chooseUserType() {
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: DefaultRadioButton(
-                selected: _userRole == UserRole.passenger,
-                title: AppStrings.customer.tr(), // Using customer string for passenger
-                onTap: () {
-                  _userRole = UserRole.passenger;
-                  setState(() {});
-                },
-                containerBorderColor: ColorManager.greyBorder,
-                backgroundColor: _userRole == UserRole.passenger
-                    ? ColorManager.primary
-                    : ColorManager.white,
-                borderColor: _userRole == UserRole.passenger
-                    ? ColorManager.white
-                    : ColorManager.grey,
-                fillColor: _userRole == UserRole.passenger ? ColorManager.white : null,
-                titleStyle: getSemiBoldStyle(
-                  fontSize: 14.sp,
-                  color: _userRole == UserRole.passenger ? ColorManager.white : ColorManager.black,
-                ),
-              ),
-            ),
-            SizedBox(width: 15.w),
-            Expanded(
-              child: DefaultRadioButton(
-                selected: _userRole == UserRole.captain,
-                title: AppStrings.captain.tr(),
-                onTap: () {
-                  _userRole = UserRole.captain;
-                  setState(() {});
-                },
-                containerBorderColor: ColorManager.greyBorder,
-                backgroundColor: _userRole == UserRole.captain
-                    ? ColorManager.primary
-                    : ColorManager.white,
-                borderColor: _userRole == UserRole.captain ? ColorManager.white : ColorManager.grey,
-                fillColor: _userRole == UserRole.captain ? ColorManager.white : null,
-                titleStyle: getSemiBoldStyle(
-                  fontSize: 14.sp,
-                  color: _userRole == UserRole.captain ? ColorManager.white : ColorManager.black,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // StatefulBuilder _chooseUserType() {
+  //   return StatefulBuilder(
+  //     builder: (context, setState) {
+  //       return Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //         children: [
+  //           Expanded(
+  //             child: DefaultRadioButton(
+  //               selected: _userRole == UserRole.passenger,
+  //               title: AppStrings.customer.tr(), // Using customer string for passenger
+  //               onTap: () {
+  //                 _userRole = UserRole.passenger;
+  //                 setState(() {});
+  //               },
+  //               containerBorderColor: ColorManager.greyBorder,
+  //               backgroundColor: _userRole == UserRole.passenger
+  //                   ? ColorManager.primary
+  //                   : ColorManager.white,
+  //               borderColor: _userRole == UserRole.passenger
+  //                   ? ColorManager.white
+  //                   : ColorManager.grey,
+  //               fillColor: _userRole == UserRole.passenger ? ColorManager.white : null,
+  //               titleStyle: getSemiBoldStyle(
+  //                 fontSize: 14.sp,
+  //                 color: _userRole == UserRole.passenger ? ColorManager.white : ColorManager.black,
+  //               ),
+  //             ),
+  //           ),
+  //           SizedBox(width: 15.w),
+  //           Expanded(
+  //             child: DefaultRadioButton(
+  //               selected: _userRole == UserRole.captain,
+  //               title: AppStrings.captain.tr(),
+  //               onTap: () {
+  //                 _userRole = UserRole.captain;
+  //                 setState(() {});
+  //               },
+  //               containerBorderColor: ColorManager.greyBorder,
+  //               backgroundColor: _userRole == UserRole.captain
+  //                   ? ColorManager.primary
+  //                   : ColorManager.white,
+  //               borderColor: _userRole == UserRole.captain ? ColorManager.white : ColorManager.grey,
+  //               fillColor: _userRole == UserRole.captain ? ColorManager.white : null,
+  //               titleStyle: getSemiBoldStyle(
+  //                 fontSize: 14.sp,
+  //                 color: _userRole == UserRole.captain ? ColorManager.white : ColorManager.black,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _signupButton(BuildContext context) {
     return BlocProvider(
@@ -284,32 +319,40 @@ class _SignUpViewState extends State<SignUpView> {
         builder: (context, state) {
           return DefaultButtonWidget(
             onPressed: () {
-              if (_userRole == null)
-                AppFunctions.showsToast(AppStrings.chooseUserType.tr(), ColorManager.red, context);
-              if ((_formKey.currentState?.validate() ?? false) && (_userRole != null)) {
-                context.read<SignupCubit>().signup(
-                  name: _fullNameController.text.trim(),
-                  email: "", // Email removed from UI as per design
-                  phone: _countryCode + _phoneController.text.trim(),
-                  password: _passwordController.text.trim(),
-                  passwordConfirmation: _confirmPasswordController.text.trim(),
-                  imagePath: _selectedImagePath,
-                  cityId: _selectedCity?.id,
-                  countryId: _selectedCountry?.id,
-                  userRole: _userRole!,
-                  workPlace: _workPlaceController.text.trim(),
-                  address: _addressController.text.trim(),
-                  pickupPoint: _pickupPointController.text.trim(),
-                  governorateId: _selectedCountry?.id, // Temporary mapping if needed
-                  districtId: _selectedCity?.id, // Temporary mapping if needed
-                );
-              }
+              context.go(
+                AppRouters.verifyOtp,
+                extra: {
+                  'phone': '01234567890',
+                  'isForgetPassword': false,
+                  'isSignup': true,
+                },
+              );
+              // if (_userRole == null) {
+              //   AppFunctions.showsToast(AppStrings.chooseUserType.tr(), ColorManager.red, context);
+              // }
+              // if ((_formKey.currentState?.validate() ?? false) && (_userRole != null)) {
+              //   context.read<SignupCubit>().signup(
+              //         name: _fullNameController.text.trim(),
+              //         email: "", // Email removed from UI as per design
+              //         phone: _countryCode + _phoneController.text.trim(),
+              //         password: _passwordController.text.trim(),
+              //         passwordConfirmation: _confirmPasswordController.text.trim(),
+              //         imagePath: _selectedImagePath,
+              //         cityId: _selectedCity?.id,
+              //         countryId: _selectedCountry?.id,
+              //         userRole: _userRole!,
+              //         workPlace: _workPlaceController.text.trim(),
+              //         address: _addressController.text.trim(),
+              //         pickupPoint: _pickupPointController.text.trim(),
+              //         governorateId: _selectedCountry?.id, // Temporary mapping if needed
+              //         districtId: _selectedCity?.id, // Temporary mapping if needed
+              //       );
+              // }
             },
             text: AppStrings.signupNow.tr(),
-            gradient: ColorManager.primaryGradient,
             textColor: ColorManager.white,
-            radius: 40.r,
-            verticalPadding: 14.h,
+            radius: 12.r,
+            verticalPadding: 16.h,
             isLoading: state.status == Status.loading,
           );
         },
@@ -465,17 +508,16 @@ class _SignUpViewState extends State<SignUpView> {
         text: TextSpan(
           style: getRegularStyle(fontSize: 12.sp, color: ColorManager.textColor),
           children: [
-            const TextSpan(text: "بمتابعتك، فإنك توافق على "),
+            TextSpan(text: AppStrings.byContinuingYouAgreeToOur.tr()),
             TextSpan(
-              text: "شروط الخدمة",
+              text: AppStrings.termsOfService.tr(),
               style: getBoldStyle(fontSize: 12.sp, color: ColorManager.primary),
             ),
-            const TextSpan(text: " و "),
+            TextSpan(text: AppStrings.and.tr()),
             TextSpan(
-              text: "سياسة الخصوصية",
+              text: AppStrings.ourPrivacyPolicy.tr(),
               style: getBoldStyle(fontSize: 12.sp, color: ColorManager.primary),
             ),
-            const TextSpan(text: " الخاصة بنا."),
           ],
         ),
       ),
@@ -487,14 +529,14 @@ class _SignUpViewState extends State<SignUpView> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "هل لديك حساب بالفعل؟",
+          AppStrings.alreadyHaveAccount.tr(),
           style: getRegularStyle(fontSize: 13.sp, color: ColorManager.textColor),
         ),
         SizedBox(width: 4.w),
         InkWell(
           onTap: () => context.pop(),
           child: Text(
-            "تسجيل الدخول",
+            AppStrings.login.tr(),
             style: getBoldStyle(fontSize: 13.sp, color: ColorManager.primary),
           ),
         ),

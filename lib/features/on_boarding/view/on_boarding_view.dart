@@ -32,21 +32,21 @@ class _OnBoardingViewState extends State<OnBoardingView> {
     return [
       OnBoardingItemModel(
         banner: null,
-        title: '',
+        title: AppStrings.onBoardingTitle1.tr(),
         description: AppStrings.onBoardingDesc1.tr(),
-        image: ImageAssets.logo,
+        image: ImageAssets.onBoarding1,
       ),
       OnBoardingItemModel(
         banner: null,
         title: AppStrings.onBoardingTitle2.tr(),
         description: AppStrings.onBoardingDesc2.tr(),
-        image: ImageAssets.logo,
+        image: ImageAssets.onBoarding2,
       ),
       OnBoardingItemModel(
         banner: null,
         title: AppStrings.onBoardingTitle3.tr(),
         description: AppStrings.onBoardingDesc3.tr(),
-        image: ImageAssets.logo,
+        image: ImageAssets.onBoarding3,
       ),
     ];
   }
@@ -59,68 +59,129 @@ class _OnBoardingViewState extends State<OnBoardingView> {
 
   @override
   Widget build(BuildContext context) {
+    _onBoardingCubit = instance<OnBoardingCubit>();
     return BlocProvider(
-      create: (context) => instance<OnBoardingCubit>(),
-      // create: (context) => instance<OnBoardingCubit>()..getOnBoarding(),
+      create: (context) => _onBoardingCubit,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            ClipPath(
-              clipper: OnBoardingClipper(),
-              child: Container(
-                height: 0.35.sh, // Responsive height (35% of screen height)
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      ColorManager.primary,
-                      ColorManager.blue,
-                    ],
+        backgroundColor: ColorManager.bg,
+        body: BlocBuilder<OnBoardingCubit, BaseState<OnBoardingModel>>(
+          builder: (context, state) {
+            final items = _getMockOnBoardingItems();
+            return Stack(
+              children: [
+                // Image Section
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 0.65.sh,
+                  child: PageView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    controller: onBoardingController,
+                    onPageChanged: (int index) {
+                      _onBoardingCubit.goNext(index, items.length);
+                    },
+                    itemBuilder: (context, index) => OnBoardingWidget(item: items[index]),
+                    itemCount: items.length,
                   ),
                 ),
-              ),
-            ),
-            BlocBuilder<OnBoardingCubit, BaseState<OnBoardingModel>>(
-              builder: (context, state) {
-                _onBoardingCubit = instance<OnBoardingCubit>();
-                if (state.status == Status.loading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return Column(
-                  children: [
-                    if (state.status == Status.failure)
-                      Expanded(child: Center(child: Text(state.errorMessage ?? '')))
-                    else ...[
-                      _onBoardingData(_getMockOnBoardingItems()),
-                      SizedBox(height: 16.h),
-                      _indicator(_getMockOnBoardingItems().length),
-                    ],
-                    SizedBox(height: 24.h),
-                    _startButton(),
-                    SizedBox(height: 24.h),
-                  ],
-                );
-              },
-            ),
-          ],
+                
+                // Content Card
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.fromLTRB(30.w, 40.h, 30.w, 30.h),
+                    decoration: BoxDecoration(
+                      color: ColorManager.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40.r),
+                        topRight: Radius.circular(40.r),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 20,
+                          offset: const Offset(0, -10),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _indicator(items.length),
+                        SizedBox(height: 35.h),
+                        
+                        // Animated Title & Description
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 400),
+                          transitionBuilder: (Widget child, Animation<double> animation) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(0, 0.1),
+                                  end: Offset.zero,
+                                ).animate(CurvedAnimation(
+                                  parent: animation,
+                                  curve: Curves.easeOutCubic,
+                                )),
+                                child: child,
+                              ),
+                            );
+                          },
+                          child: Column(
+                            key: ValueKey<int>(_onBoardingCubit.currentIndex),
+                            children: [
+                              Text(
+                                items[_onBoardingCubit.currentIndex].title ?? '',
+                                style: getBoldStyle(fontSize: 20.sp, color: ColorManager.textColor),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(height: 15.h),
+                              Text(
+                                items[_onBoardingCubit.currentIndex].description ?? '',
+                                style: getRegularStyle(
+                                  fontSize: 15.sp, 
+                                  color: ColorManager.greyText,
+                                  height: 1.5,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        
+                        SizedBox(height: 45.h),
+                        
+                        // Navigation Buttons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _onBoardingCubit.isLast 
+                              ? Expanded(
+                                  child: DefaultButtonWidget(
+                                    onPressed: () => context.go(AppRouters.login),
+                                    text: AppStrings.requestConsultation.tr(),
+                                    textColor: ColorManager.white,
+                                    radius: 15.r,
+                                    elevation: 4,
+                                  ),
+                                )
+                              : _nextButton(),
+                              
+                            _skipButton(),
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
-      ),
-    );
-  }
-
-  _onBoardingData(List<OnBoardingItemModel> items) {
-    return Expanded(
-      flex: 2,
-      child: PageView.builder(
-        physics: const BouncingScrollPhysics(),
-        controller: onBoardingController,
-        onPageChanged: (int index) {
-          _onBoardingCubit.goNext(index, items.length);
-        },
-        itemBuilder: (context, index) => OnBoardingWidget(item: items[index]),
-        itemCount: items.length,
       ),
     );
   }
@@ -128,65 +189,56 @@ class _OnBoardingViewState extends State<OnBoardingView> {
   _indicator(int length) {
     return SmoothPageIndicator(
       controller: onBoardingController,
-      effect: WormEffect(
-        dotColor: ColorManager.lightColor,
-        dotHeight: 6.w,
-        dotWidth: 6.w,
-        spacing: 3.0.w,
+      effect: ExpandingDotsEffect(
+        dotColor: ColorManager.greyBorder,
         activeDotColor: ColorManager.primary,
+        dotHeight: 4.h,
+        dotWidth: 12.w,
+        expansionFactor: 1.1,
+        spacing: 5.w,
       ),
       count: length,
     );
   }
 
-  _startButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: _onBoardingCubit.isLast
-          ? DefaultButtonWidget(
-              onPressed: () {
-                // context.go(AppRouters.btmNav);
-                context.go(AppRouters.login);
-              },
-              text: AppStrings.startNow.tr(),
-              gradient: ColorManager.primaryGradient,
-              textColor: ColorManager.white,
-              radius: 40.r,
-              verticalPadding: 16.h,
-            )
-          : DefaultButtonWidget(
-              onPressed: () {
-                if (!_onBoardingCubit.isLast) {
-                  onBoardingController.nextPage(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-                } else {
-                  onBoardingController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              text: AppStrings.next.tr(),
-              gradient: ColorManager.primaryGradient,
-              textColor: ColorManager.white,
-              verticalPadding: 16.h,
-              radius: 40.r,
+  _nextButton() {
+    return InkWell(
+      onTap: () {
+        onBoardingController.nextPage(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      },
+      child: Container(
+        width: 55.w,
+        height: 55.w,
+        decoration: BoxDecoration(
+          color: ColorManager.primary,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: ColorManager.primary.withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
+          ],
+        ),
+        child: const Icon(
+          Icons.arrow_back,
+          color: ColorManager.white,
+          size: 24,
+        ),
+      ),
     );
   }
 
   _skipButton() {
-    return DefaultButtonWidget(
-      onPressed: () {
-        context.go(AppRouters.btmNav);
-      },
-      text: "\t\t${AppStrings.skip.tr()}",
-      elevation: 0,
-      radius: 8.r,
-      textStyle: getLightStyle(fontSize: 12.sp, color: ColorManager.black),
+    return TextButton(
+      onPressed: () => context.go(AppRouters.login),
+      child: Text(
+        _onBoardingCubit.isLast ? AppStrings.back.tr() : AppStrings.skip.tr(),
+        style: getMediumStyle(fontSize: 16.sp, color: ColorManager.greyText),
+      ),
     );
   }
 }

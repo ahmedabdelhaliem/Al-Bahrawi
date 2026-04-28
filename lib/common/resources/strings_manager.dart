@@ -90,6 +90,8 @@ class AppStrings {
   static const String transactionDate = "transactionDate";
 
   // contact us page
+  static const String contactUsTitle = "contactUsTitle";
+  static const String contactUsSubtitle = "contactUsSubtitle";
   static const String name = "name";
   static const String email = "email";
   static const String message = "message";
@@ -106,4 +108,61 @@ class AppStrings {
   static const String onBoardingDesc2 = "onBoardingDesc2";
   static const String onBoardingTitle3 = "onBoardingTitle3";
   static const String onBoardingDesc3 = "onBoardingDesc3";
+
+  // new strings
+  static const String verifyYourAccount = "verifyYourAccount";
+  static const String contactSubject = "contactSubject";
+  static const String messageSentSuccessfully = "messageSentSuccessfully";
+  static const String verifyCode = "verifyCode";
+  static const String enterTheCodeWeSentToYourPhone = "enterTheCodeWeSentToYourPhone";
+  static const String resendCode = "resendCode";
+  static const String resendIn = "resendIn";
+  static const String enterYourPhoneNumber = "enterYourPhoneNumber";
+  static const String sendCode = "sendCode";
+  static const String bidFromYourPhone = "bidFromYourPhone";
+  static const String transparentBidOffers = "transparentBidOffers";
+  static const String participateInAuctionsAnytime = "participateInAuctionsAnytime";
+  static const String fullNameHint = "fullNameHint";
+  static const String phoneNumberHint = "phoneNumberHint";
+  static const String selectEmployer = "selectEmployer";
+  static const String addressHint = "addressHint";
+  static const String downTown = "downTown";
+  static const String fifthSettlement = "fifthSettlement";
+  static const String newAdministrativeCapital = "newAdministrativeCapital";
+  static const String byContinuingYouAgreeToOur = "byContinuingYouAgreeToOur";
+  static const String termsOfService = "termsOfService";
+  static const String and = "and";
+  static const String ourPrivacyPolicy = "ourPrivacyPolicy";
+  static const String saveChanges = "saveChanges";
+  static const String resetPassword = "resetPassword";
+  static const String yourNewPasswordMustBeDifferent = "yourNewPasswordMustBeDifferent";
+  static const String newPassword = "newPassword";
+  static const String newPasswordConfirmation = "newPasswordConfirmation";
+  static const String chooseYourLocation = "chooseYourLocation";
+  static const String enableLocationStayUpdated = "enableLocationStayUpdated";
+  static const String workPlace = "workPlace";
+  static const String residentialArea = "residentialArea";
+  static const String continueAsAGuest = "continueAsAGuest";
+  static const String chooseFile = "chooseFile";
+  static const String pleaseAddImage = "pleaseAddImage";
+  static const String selectYear = "selectYear";
+  static const String searchForCar = "searchForCar";
+  static const String byCreatingAccountYouAgreeWith = "byCreatingAccountYouAgreeWith";
+  static const String selectCountry = "selectCountry";
+  static const String selectCity = "selectCity";
+  static const String governorate = "governorate";
+  static const String district = "district";
+  static const String noFileSelected = "noFileSelected";
+  static const String download = "download";
+  static const String view = "view";
+  static const String pickupPoint = "pickupPoint";
+  static const String customer = "customer";
+  static const String captain = "captain";
+  static const String chooseUserType = "chooseUserType";
+  static const String myCarAuction = "myCarAuction";
+  static const String chooseLanguage = "chooseLanguage";
+  static const String arabic = "arabic";
+  static const String english = "english";
+  // static const String next = "next";
+  static const String requestConsultation = "requestConsultation";
 }

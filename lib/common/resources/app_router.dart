@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:base_project/features/auth/forget_password/view/forget_password_view.dart';
 import 'package:base_project/features/auth/login/view/login_view.dart';
 import 'package:base_project/features/auth/reset_password/view/reset_password_view.dart';
-import 'package:base_project/features/auth/signup/view/signup_location_view.dart';
 import 'package:base_project/features/auth/signup/view/signup_success_view.dart';
 import 'package:base_project/features/auth/signup/view/signup_view.dart';
 import 'package:base_project/features/auth/verify_otp/view/verify_otp_view.dart';
@@ -13,6 +12,7 @@ import 'package:base_project/features/images/view/images_view.dart';
 import 'package:base_project/features/notifications/view/notifications_view.dart';
 import 'package:base_project/features/on_boarding/view/on_boarding_view.dart';
 import 'package:base_project/features/splash/view/splash_view.dart';
+import 'package:base_project/features/splash/view/language_view.dart';
 import 'package:base_project/features/profile/help/view/help_view.dart';
 import 'package:base_project/features/profile/technical_support/common%20question/view/common_question_view.dart';
 import 'package:base_project/features/profile/technical_support/main%20%20technical%20support/view/technical_support_view.dart';
@@ -41,6 +41,7 @@ abstract class AppRouters {
   static const String termsAndConditions = '/termsAndConditions';
   static const String help = '/help';
   static const String myAccount = '/myAccount';
+  static const String language = '/language';
 
   static final GoRouter router = GoRouter(
     navigatorKey: navigatorKey,
@@ -89,12 +90,12 @@ abstract class AppRouters {
       GoRoute(
         path: verifyOtp,
         pageBuilder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>;
+          final extra = state.extra as Map<String, dynamic>?;
           return CupertinoPage(
             child: VerifyOtpView(
-              phone: extra["phone"],
-              isForgetPassword: extra["isForgetPassword"],
-              isSignup: extra["isSignup"] ?? false,
+              phone: extra?["phone"] ?? '',
+              isForgetPassword: extra?["isForgetPassword"] ?? false,
+              isSignup: extra?["isSignup"] ?? false,
             ),
           );
         },
@@ -102,10 +103,10 @@ abstract class AppRouters {
       GoRoute(
         path: resetPassword,
         pageBuilder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>;
+          final extra = state.extra as Map<String, dynamic>?;
           return CupertinoPage(
             child: ResetPasswordView(
-              email: extra['email'],
+              email: extra?['email'] ?? '',
             ),
           );
         },
@@ -146,12 +147,12 @@ abstract class AppRouters {
           return const CupertinoPage(child: SignupSuccessView());
         },
       ),
-      GoRoute(
-        path: signupLocation,
-        pageBuilder: (context, state) {
-          return const CupertinoPage(child: SignUpLocationView());
-        },
-      ),
+      // GoRoute(
+      //   path: signupLocation,
+      //   pageBuilder: (context, state) {
+      //     return const CupertinoPage(child: SignUpLocationView());
+      //   },
+      // ),
       GoRoute(
         path: termsAndConditions,
         pageBuilder: (context, state) {
@@ -180,6 +181,12 @@ abstract class AppRouters {
         path: myAccount,
         pageBuilder: (context, state) {
           return const CupertinoPage(child: PersonalDataView());
+        },
+      ),
+      GoRoute(
+        path: language,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: LanguageView());
         },
       ),
     ],

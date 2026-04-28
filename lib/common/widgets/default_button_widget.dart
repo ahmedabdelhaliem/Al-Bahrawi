@@ -121,7 +121,7 @@ class DefaultButtonWidget extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: gradient == null
-            ? (isLoading ? ColorManager.greyBorder : color)
+            ? (isLoading ? ColorManager.greyBorder : (color ?? ColorManager.primary))
             : null,
         gradient: isLoading ? null : gradient,
         borderRadius: BorderRadius.circular(radius ?? 12.sp),
@@ -190,7 +190,7 @@ class DefaultButtonWidget extends StatelessWidget {
                                         getBoldStyle(
                                           fontSize: fontSize ?? 13.sp,
                                           color:
-                                              textColor ?? ColorManager.primary,
+                                              textColor ?? ColorManager.white,
                                           height: textHeight,
                                         ),
                                   ),

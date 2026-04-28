@@ -92,46 +92,57 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
           _verifyOtpCubit = context.read<VerifyOtpCubit>();
           _resendOtpCubit = context.read<ResendOtpCubit>();
           return Scaffold(
-            backgroundColor: ColorManager.white,
-            appBar: const DefaultAppBar(height: 0),
-            body: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              children: [
-                SizedBox(height: 40.h),
-                const AuthLogoWidget(),
-                SizedBox(height: 32.h),
-                Text(
-                  AppStrings.verifyCode.tr(),
-                  style: getBoldStyle(
-                    fontSize: 22.sp,
-                    color: ColorManager.textColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 8.h),
-                Text(
-                  AppStrings.enterTheCodeWeSentToYourPhone.tr(),
-                  style: getRegularStyle(
-                    fontSize: 13.sp,
-                    color: ColorManager.greyTextColor,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 12.h),
-                Center(
-                  child: Text(
-                    widget.phone,
-                    style: getSemiBoldStyle(
-                      fontSize: 14.sp,
-                      color: ColorManager.primary,
+            backgroundColor: const Color(0xfff5f5f5),
+            body: SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                    padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+                    decoration: BoxDecoration(
+                      color: ColorManager.white,
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "تأكيد الرمز",
+                          style: getBoldStyle(fontSize: 22.sp, color: const Color(0xff4a5677)),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          "أدخل رمز التحقق المرسل إلى",
+                          style: getRegularStyle(fontSize: 13.sp, color: Colors.grey),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 6.h),
+                        Text(
+                          widget.phone,
+                          style: getBoldStyle(fontSize: 15.sp, color: ColorManager.primary),
+                          textAlign: TextAlign.center,
+                        ),
+                        
+                        SizedBox(height: 30.h),
+                        _buildOtpField(context),
+                        
+                        SizedBox(height: 30.h),
+                        _buildVerifyListener(),
+                        
+                        SizedBox(height: 15.h),
+                        TextButton(
+                          onPressed: () => context.pop(),
+                          child: Text(
+                            "تعديل رقم الهاتف",
+                            style: getBoldStyle(fontSize: 14.sp, color: ColorManager.primary),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                SizedBox(height: 40.h),
-                _buildOtpField(context),
-                SizedBox(height: 40.h),
-                _buildVerifyListener(),
-              ],
+              ),
             ),
           );
         },
@@ -240,10 +251,9 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
                     }
                   },
                   text: AppStrings.verifyCode.tr(),
-                  gradient: ColorManager.primaryGradient,
                   textColor: ColorManager.white,
-                  radius: 40.r,
-                  verticalPadding: 14.h,
+                  radius: 12.r,
+                  verticalPadding: 16.h,
                   isLoading: verifyState.status == Status.loading,
                 ),
                 SizedBox(height: 24.h),

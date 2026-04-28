@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
@@ -58,7 +59,7 @@ class _PersonalDataViewState extends State<PersonalDataView> {
       backgroundColor: ColorManager.white,
       appBar: AppBar(
         title: Text(
-          AppStrings.myAccount, // Adjusted for Meshwar strings
+          AppStrings.myAccount.tr(), // Adjusted for Meshwar strings
           style: TextStyle(
             color: ColorManager.black,
             fontSize: 18.sp,
@@ -129,20 +130,20 @@ class _PersonalDataViewState extends State<PersonalDataView> {
                 child: Column(
                   children: [
                     _buildTextField(
-                      label: "الاسم الكامل",
+                      label: AppStrings.fullName.tr(),
                       controller: _nameController,
                       icon: Iconsax.user,
                     ),
                     SizedBox(height: 20.h),
                     _buildTextField(
-                      label: "البريد الإلكتروني",
+                      label: AppStrings.emailAddress.tr(),
                       controller: _emailController,
                       icon: Iconsax.sms,
                       keyboardType: TextInputType.emailAddress,
                     ),
                     SizedBox(height: 20.h),
                     _buildTextField(
-                      label: "رقم الهاتف",
+                      label: AppStrings.phoneNumber.tr(),
                       controller: _phoneController,
                       icon: Iconsax.call,
                       keyboardType: TextInputType.phone,
@@ -165,7 +166,7 @@ class _PersonalDataViewState extends State<PersonalDataView> {
                           ),
                         ),
                         child: Text(
-                          "حفظ التعديلات",
+                          AppStrings.saveChanges.tr(),
                           style: TextStyle(color: ColorManager.white, fontSize: 16.sp),
                         ),
                       ),
