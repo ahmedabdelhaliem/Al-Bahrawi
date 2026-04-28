@@ -1,11 +1,11 @@
-import 'package:base_project/firebase_options.dart';
+import 'package:al_bahrawi/firebase_options.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:base_project/app/app.dart';
-import 'package:base_project/app/di.dart';
-import 'package:base_project/common/network/dio_helper.dart';
-import 'package:base_project/common/resources/language_manager.dart';
+import 'package:al_bahrawi/app/app.dart';
+import 'package:al_bahrawi/app/di.dart';
+import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/resources/language_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

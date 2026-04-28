@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:base_project/app/app_prefs.dart';
-import 'package:base_project/app/di.dart';
-import 'package:base_project/common/resources/assets_manager.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/values_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/app/di.dart';
+import 'package:al_bahrawi/common/resources/assets_manager.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/values_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
 
 class DefaultFormField extends StatefulWidget {
   final TextEditingController controller;

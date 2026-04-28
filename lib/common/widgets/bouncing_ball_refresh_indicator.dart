@@ -1,4 +1,4 @@
-import 'package:base_project/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:flutter/material.dart';
 class BouncingBallRefreshIndicator extends StatefulWidget {
   final double progress;

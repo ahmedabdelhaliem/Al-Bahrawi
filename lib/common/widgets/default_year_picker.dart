@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
 
 class DefaultYearPicker extends StatefulWidget {
   const DefaultYearPicker({super.key, this.onSelectedYear, this.selectedYear, this.isLastDateAfterNow = false});

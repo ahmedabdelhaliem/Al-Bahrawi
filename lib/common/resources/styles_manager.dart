@@ -1,4 +1,4 @@
-import 'package:base_project/common/resources/font_manager.dart';
+import 'package:al_bahrawi/common/resources/font_manager.dart';
 import 'package:flutter/material.dart';
 
 TextStyle _getTextStyle(

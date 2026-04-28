@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:base_project/app/app_prefs.dart';
-import 'package:base_project/app/di.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/network/dio_helper.dart';
-import 'package:base_project/common/network/end_points.dart';
-import 'package:base_project/features/auth/signup/models/signup_model.dart';
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/app/di.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/network/end_points.dart';
+import 'package:al_bahrawi/features/auth/signup/models/signup_model.dart';
 
 class ProfileCubit extends Cubit<BaseState<SignupModel>> {
   ProfileCubit() : super(const BaseState<SignupModel>());

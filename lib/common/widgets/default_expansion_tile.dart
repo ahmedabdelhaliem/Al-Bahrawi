@@ -1,8 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:base_project/common/resources/assets_manager.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/resources/assets_manager.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';

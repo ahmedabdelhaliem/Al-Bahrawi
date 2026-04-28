@@ -1,15 +1,15 @@
-import 'package:base_project/app/app_functions.dart';
-import 'package:base_project/common/base/base_model.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
-import 'package:base_project/common/widgets/default_button_widget.dart';
-import 'package:base_project/common/widgets/default_error_widget.dart';
-import 'package:base_project/common/widgets/default_form_field.dart';
-import 'package:base_project/common/widgets/default_loading_widget.dart';
-import 'package:base_project/features/auth/signup/models/signup_model.dart';
-import 'package:base_project/features/profile/main%20profile/cubit/profile_cubit.dart';
+import 'package:al_bahrawi/app/app_functions.dart';
+import 'package:al_bahrawi/common/base/base_model.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
+import 'package:al_bahrawi/common/widgets/default_error_widget.dart';
+import 'package:al_bahrawi/common/widgets/default_form_field.dart';
+import 'package:al_bahrawi/common/widgets/default_loading_widget.dart';
+import 'package:al_bahrawi/features/auth/signup/models/signup_model.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/cubit/profile_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +17,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:base_project/features/profile/main%20profile/cubit/update_profile_cubit.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/cubit/update_profile_cubit.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});

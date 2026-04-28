@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/common/widgets/default_app_bar.dart';
-import 'package:base_project/features/privacy_policy/cubit/privacy_policy_cubit.dart';
-import 'package:base_project/features/privacy_policy/models/privacy_policy_model.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/widgets/default_app_bar.dart';
+import 'package:al_bahrawi/features/privacy_policy/cubit/privacy_policy_cubit.dart';
+import 'package:al_bahrawi/features/privacy_policy/models/privacy_policy_model.dart';
 
 enum InfoType{
   privacyPolicy,

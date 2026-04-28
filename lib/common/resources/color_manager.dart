@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class ColorManager {
   ColorManager._();
-  static const Color primary = Color(0xffac0000);
+  static const Color primary = Color(0xffb00003);
   static const Color primaryLight = Color(0xffDDDEFB);
   static const Color green = Color(0xff008000);
-  static const Color successGreen = Color(0xff00ce21);
+  static const Color successGreen = Color(0xff2a9946);
   static const Color blue = Color(0xff010B38);
   static const Color primaryGradientStart = Color(0xffac0000);
   static const Color primaryGradientEnd = Color(0xff0081E9);
@@ -42,10 +42,9 @@ class ColorManager {
   static const Color yellow = Color(0xffF4B400);
   static const Color azureBlue = Color(0xff386BF6);
   static const Color grey2 = Color(0xffB8B8B8);
-  static const List<Color> gradientPrimary = [
-    Color(0xff2563EB),
-    Color(0xff1A4DBF),
-  ];
+  static const Color gold = Color(0xffC5A059);
+  static const Color platinum = Color(0xffE5E4E2);
+  static const List<Color> gradientPrimary = [Color(0xff2563EB), Color(0xff1A4DBF)];
   static const Color dividerColor = Color(0xffd8d8d8);
   static const Color greyText = Color(0xff717579);
 }

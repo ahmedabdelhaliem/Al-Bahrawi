@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:base_project/common/base/base_model.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/network/dio_helper.dart';
-import 'package:base_project/common/network/end_points.dart';
+import 'package:al_bahrawi/common/base/base_model.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/network/end_points.dart';
 
 class UpdateProfileCubit extends Cubit<BaseState<BaseModel>> {
   UpdateProfileCubit() : super(const BaseState<BaseModel>());

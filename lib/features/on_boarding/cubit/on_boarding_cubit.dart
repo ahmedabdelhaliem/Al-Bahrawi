@@ -1,9 +1,9 @@
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/network/dio_helper.dart';
-import 'package:base_project/common/network/end_points.dart';
-import 'package:base_project/common/resources/assets_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/features/on_boarding/model/on_boarding_model.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/network/end_points.dart';
+import 'package:al_bahrawi/common/resources/assets_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/features/on_boarding/model/on_boarding_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

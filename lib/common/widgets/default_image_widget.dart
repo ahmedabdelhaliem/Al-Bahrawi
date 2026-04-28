@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:base_project/common/resources/assets_manager.dart';
-import 'package:base_project/common/widgets/shimmer_container_widget.dart';
+import 'package:al_bahrawi/common/resources/assets_manager.dart';
+import 'package:al_bahrawi/common/widgets/shimmer_container_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';

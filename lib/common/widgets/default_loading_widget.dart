@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-import 'package:base_project/common/resources/assets_manager.dart';
+import 'package:al_bahrawi/common/resources/assets_manager.dart';
 
 class DefaultLoadingWidget extends StatefulWidget {
   final bool applyTopHeight;

@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
-import 'package:base_project/app/app_prefs.dart';
-import 'package:base_project/app/di.dart';
-import 'package:base_project/common/network/failure.dart';
-import 'package:base_project/common/resources/app_router.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/app/di.dart';
+import 'package:al_bahrawi/common/network/failure.dart';
+import 'package:al_bahrawi/common/resources/app_router.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
 
 class ErrorHandler implements Exception {
   late Failure failure;

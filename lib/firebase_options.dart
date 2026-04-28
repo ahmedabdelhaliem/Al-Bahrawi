@@ -50,7 +50,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1012444985183',
     projectId: 'al-bahrawi-92034',
     storageBucket: 'al-bahrawi-92034.firebasestorage.app',
-    iosBundleId: 'tech.brmja.baseProject',
+    iosBundleId: 'tech.brmja.alBahrawi',
   );
 
 }

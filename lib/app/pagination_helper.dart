@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/network/either.dart';
-import 'package:base_project/common/network/failure.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/network/either.dart';
+import 'package:al_bahrawi/common/network/failure.dart';
 
 class PaginationHandler<T, B extends BlocBase<BaseState<T>>> {
   bool isLoadingMore = false;

@@ -1,11 +1,11 @@
-import 'package:base_project/app/pagination_helper.dart';
-import 'package:base_project/common/base/base_state.dart';
+import 'package:al_bahrawi/app/pagination_helper.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:base_project/common/network/dio_helper.dart';
-import 'package:base_project/common/network/either.dart';
-import 'package:base_project/common/network/end_points.dart';
-import 'package:base_project/common/network/failure.dart';
-import 'package:base_project/features/notifications/models/notifications_model.dart';
+import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/network/either.dart';
+import 'package:al_bahrawi/common/network/end_points.dart';
+import 'package:al_bahrawi/common/network/failure.dart';
+import 'package:al_bahrawi/features/notifications/models/notifications_model.dart';
 
 
 class NotificationsCubit extends Cubit<BaseState<NotificationModel>> {

@@ -1,6 +1,6 @@
-import 'package:base_project/common/resources/styles_manager.dart';
-import 'package:base_project/common/widgets/default_image_widget.dart';
-import 'package:base_project/common/widgets/shimmer_container_widget.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/widgets/default_image_widget.dart';
+import 'package:al_bahrawi/common/widgets/shimmer_container_widget.dart';
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import "package:flutter/material.dart";
 import 'package:flutter_screenutil/flutter_screenutil.dart';

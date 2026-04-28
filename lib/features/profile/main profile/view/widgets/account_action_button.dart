@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import '../../model/profile_model.dart';
 
 class AccountActionButton extends StatelessWidget {

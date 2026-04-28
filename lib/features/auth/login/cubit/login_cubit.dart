@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:base_project/app/app_prefs.dart';
-import 'package:base_project/app/di.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/network/dio_helper.dart';
-import 'package:base_project/common/network/end_points.dart';
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/app/di.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/network/end_points.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:base_project/common/resources/values_manager.dart';
-import 'package:base_project/features/auth/login/models/login_model.dart';
-import 'package:base_project/local_notification_and_token.dart';
+import 'package:al_bahrawi/common/resources/values_manager.dart';
+import 'package:al_bahrawi/features/auth/login/models/login_model.dart';
+import 'package:al_bahrawi/local_notification_and_token.dart';
 
 class LoginCubit extends Cubit<BaseState<LoginModel>> {
   LoginCubit() : super(const BaseState<LoginModel>());

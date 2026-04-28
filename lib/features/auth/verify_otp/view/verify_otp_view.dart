@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-import 'package:base_project/app/app_functions.dart';
-import 'package:base_project/common/base/base_model.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/resources/app_router.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
-import 'package:base_project/common/widgets/default_app_bar.dart';
-import 'package:base_project/features/auth/login/view/widgets/auth_logo_widget.dart';
-import 'package:base_project/features/auth/verify_otp/bloc/resend_otp/resend_otp_cubit.dart';
-import 'package:base_project/features/auth/verify_otp/bloc/verify_otp/verify_otp_bloc.dart';
-import 'package:base_project/common/widgets/default_button_widget.dart';
+import 'package:al_bahrawi/app/app_functions.dart';
+import 'package:al_bahrawi/common/base/base_model.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/resources/app_router.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/widgets/default_app_bar.dart';
+import 'package:al_bahrawi/features/auth/login/view/widgets/auth_logo_widget.dart';
+import 'package:al_bahrawi/features/auth/verify_otp/bloc/resend_otp/resend_otp_cubit.dart';
+import 'package:al_bahrawi/features/auth/verify_otp/bloc/verify_otp/verify_otp_bloc.dart';
+import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
 import 'package:pinput/pinput.dart';
 
 const int _resendCooldownSeconds = 120;
@@ -242,13 +242,14 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
               children: [
                 DefaultButtonWidget(
                   onPressed: () {
-                    if (_pinController.text.length == 4) {
-                      _verifyOtpCubit.verifyOtp(
-                        widget.phone,
-                        _pinController.text,
-                        widget.isForgetPassword,
-                      );
-                    }
+                    context.push(AppRouters.signupSuccess);
+                    // if (_pinController.text.length == 4) {
+                    //   _verifyOtpCubit.verifyOtp(
+                    //     widget.phone,
+                    //     _pinController.text,
+                    //     widget.isForgetPassword,
+                    //   );
+                    // }
                   },
                   text: AppStrings.verifyCode.tr(),
                   textColor: ColorManager.white,

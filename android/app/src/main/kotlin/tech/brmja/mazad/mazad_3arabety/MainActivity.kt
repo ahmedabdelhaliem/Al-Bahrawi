@@ -1,4 +1,4 @@
-package tech.brmja.baseProject
+package tech.brmja.alBahrawi
 
 import io.flutter.embedding.android.FlutterActivity
 

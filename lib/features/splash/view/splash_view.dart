@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:base_project/app/app_constants.dart';
-import 'package:base_project/app/app_prefs.dart';
-import 'package:base_project/app/di.dart';
-import 'package:base_project/common/resources/app_router.dart';
-import 'package:base_project/common/resources/assets_manager.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/values_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/app/app_constants.dart';
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/app/di.dart';
+import 'package:al_bahrawi/common/resources/app_router.dart';
+import 'package:al_bahrawi/common/resources/assets_manager.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/values_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';

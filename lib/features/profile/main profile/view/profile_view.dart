@@ -1,13 +1,13 @@
-import 'package:base_project/features/profile/main%20profile/model/profile_data.dart';
-import 'package:base_project/features/profile/main%20profile/cubit/logout_cubit.dart';
-import 'package:base_project/features/profile/main%20profile/view/widgets/account_action_button.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/model/profile_data.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/cubit/logout_cubit.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/view/widgets/account_action_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});

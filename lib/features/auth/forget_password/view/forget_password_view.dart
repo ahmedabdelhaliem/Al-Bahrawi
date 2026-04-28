@@ -1,20 +1,20 @@
 import 'package:go_router/go_router.dart';
-import 'package:base_project/app/app_functions.dart';
-import 'package:base_project/common/base/base_model.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/resources/app_router.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
-import 'package:base_project/common/widgets/default_app_bar.dart';
-import 'package:base_project/common/widgets/default_button_widget.dart';
-import 'package:base_project/common/widgets/default_form_field.dart';
-import 'package:base_project/features/auth/forget_password/bloc/forget_password_cubit.dart';
+import 'package:al_bahrawi/app/app_functions.dart';
+import 'package:al_bahrawi/common/base/base_model.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/resources/app_router.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/widgets/default_app_bar.dart';
+import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
+import 'package:al_bahrawi/common/widgets/default_form_field.dart';
+import 'package:al_bahrawi/features/auth/forget_password/bloc/forget_password_cubit.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_project/features/auth/login/view/widgets/auth_logo_widget.dart';
+import 'package:al_bahrawi/features/auth/login/view/widgets/auth_logo_widget.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 
 class ForgetPasswordView extends StatefulWidget {
@@ -149,9 +149,10 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
       builder: (context, state) {
         return DefaultButtonWidget(
           onPressed: () {
-            if (_formKey.currentState?.validate() ?? false) {
-              _forgetPasswordBloc.forgetPassword(_phoneController.text.trim());
-            }
+            context.push(AppRouters.resetPasswordSuccess);
+            // if (_formKey.currentState?.validate() ?? false) {
+            //   _forgetPasswordBloc.forgetPassword(_phoneController.text.trim());
+            // }
           },
           text: AppStrings.sendCode.tr(),
           textColor: ColorManager.white,

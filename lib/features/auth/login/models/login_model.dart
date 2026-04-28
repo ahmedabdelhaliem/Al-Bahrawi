@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:base_project/features/auth/signup/models/signup_model.dart';
+import 'package:al_bahrawi/features/auth/signup/models/signup_model.dart';
 
 class LoginModel extends Equatable {
   const LoginModel({

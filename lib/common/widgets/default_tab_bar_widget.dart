@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/values_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/values_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
 
 class DefaultTabBarWidget extends StatefulWidget {
   final List<String> tabTitles;

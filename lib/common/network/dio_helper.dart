@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:base_project/app/app_constants.dart';
-import 'package:base_project/app/app_prefs.dart';
-import 'package:base_project/app/di.dart';
+import 'package:al_bahrawi/app/app_constants.dart';
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/app/di.dart';
 import 'package:flutter/foundation.dart';
-import 'package:base_project/common/network/either.dart';
-import 'package:base_project/common/network/error_handler.dart';
-import 'package:base_project/common/network/failure.dart';
+import 'package:al_bahrawi/common/network/either.dart';
+import 'package:al_bahrawi/common/network/error_handler.dart';
+import 'package:al_bahrawi/common/network/failure.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioHelper {

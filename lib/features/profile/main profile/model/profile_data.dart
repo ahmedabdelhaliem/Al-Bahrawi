@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:base_project/common/resources/app_router.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/app_router.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import '../model/profile_model.dart';
 
 class ProfileData {

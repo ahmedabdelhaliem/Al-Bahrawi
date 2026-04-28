@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:base_project/features/auth/forget_password/view/forget_password_view.dart';
-import 'package:base_project/features/auth/login/view/login_view.dart';
-import 'package:base_project/features/auth/reset_password/view/reset_password_view.dart';
-import 'package:base_project/features/auth/signup/view/signup_success_view.dart';
-import 'package:base_project/features/auth/signup/view/signup_view.dart';
-import 'package:base_project/features/auth/verify_otp/view/verify_otp_view.dart';
-import 'package:base_project/features/bottom_nav_bar/view/bottom_nav_bar_view.dart';
-import 'package:base_project/features/images/view/images_view.dart';
-import 'package:base_project/features/notifications/view/notifications_view.dart';
-import 'package:base_project/features/on_boarding/view/on_boarding_view.dart';
-import 'package:base_project/features/splash/view/splash_view.dart';
-import 'package:base_project/features/splash/view/language_view.dart';
-import 'package:base_project/features/profile/help/view/help_view.dart';
-import 'package:base_project/features/profile/technical_support/common%20question/view/common_question_view.dart';
-import 'package:base_project/features/profile/technical_support/main%20%20technical%20support/view/technical_support_view.dart';
-import 'package:base_project/features/profile/terms_and_conditions/view/terms_and_conditions_view.dart';
-import 'package:base_project/features/profile/main%20profile/view/personal_data_view.dart';
+import 'package:al_bahrawi/features/auth/forget_password/view/forget_password_view.dart';
+import 'package:al_bahrawi/features/auth/login/view/login_view.dart';
+import 'package:al_bahrawi/features/auth/reset_password/view/reset_password_view.dart';
+import 'package:al_bahrawi/features/auth/reset_password/view/reset_password_success_view.dart';
+import 'package:al_bahrawi/features/auth/signup/view/signup_success_view.dart';
+import 'package:al_bahrawi/features/auth/signup/view/signup_view.dart';
+import 'package:al_bahrawi/features/auth/verify_otp/view/verify_otp_view.dart';
+import 'package:al_bahrawi/features/bottom_nav_bar/view/bottom_nav_bar_view.dart';
+import 'package:al_bahrawi/features/images/view/images_view.dart';
+import 'package:al_bahrawi/features/notifications/view/notifications_view.dart';
+import 'package:al_bahrawi/features/on_boarding/view/on_boarding_view.dart';
+import 'package:al_bahrawi/features/splash/view/splash_view.dart';
+import 'package:al_bahrawi/features/splash/view/language_view.dart';
+import 'package:al_bahrawi/features/profile/help/view/help_view.dart';
+import 'package:al_bahrawi/features/profile/technical_support/common%20question/view/common_question_view.dart';
+import 'package:al_bahrawi/features/profile/technical_support/main%20%20technical%20support/view/technical_support_view.dart';
+import 'package:al_bahrawi/features/profile/terms_and_conditions/view/terms_and_conditions_view.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/view/personal_data_view.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -29,6 +30,7 @@ abstract class AppRouters {
   static const String forgetPass = '/forgetPass';
   static const String verifyOtp = '/verifyOtp';
   static const String resetPassword = '/resetPassword';
+  static const String resetPasswordSuccess = '/resetPasswordSuccess';
   static const String btmNav = '/btmNav';
   static const String notifications = '/notifications';
   static const String commonQuestion = '/commonQuestion';
@@ -109,6 +111,12 @@ abstract class AppRouters {
               email: extra?['email'] ?? '',
             ),
           );
+        },
+      ),
+      GoRoute(
+        path: resetPasswordSuccess,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: ResetPasswordSuccessView());
         },
       ),
       GoRoute(

@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/network/dio_helper.dart';
-import 'package:base_project/common/network/end_points.dart';
-import 'package:base_project/features/auth/signup/models/countries_cities_model.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/network/end_points.dart';
+import 'package:al_bahrawi/features/auth/signup/models/countries_cities_model.dart';
 
 class CountriesCitiesCubit extends Cubit<BaseState<CountriesCitiesModel>> {
   CountriesCitiesCubit() : super(const BaseState<CountriesCitiesModel>());

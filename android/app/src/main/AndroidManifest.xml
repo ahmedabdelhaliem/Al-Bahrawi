@@ -36,7 +36,7 @@
     <!-- Permissions for url launcher -->
 
     <application
-        android:label="مشوار العاصمة"
+        android:label="alBahrawi"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

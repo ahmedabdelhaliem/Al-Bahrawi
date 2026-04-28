@@ -1,20 +1,18 @@
-import 'package:go_router/go_router.dart';
-import 'package:base_project/app/app_functions.dart';
-import 'package:base_project/common/base/base_model.dart';
-import 'package:base_project/common/base/base_state.dart';
-import 'package:base_project/common/resources/app_router.dart';
-import 'package:base_project/common/resources/color_manager.dart';
-import 'package:base_project/common/resources/strings_manager.dart';
-import 'package:base_project/common/resources/styles_manager.dart';
-import 'package:base_project/common/widgets/default_app_bar.dart';
-import 'package:base_project/common/widgets/default_button_widget.dart';
-import 'package:base_project/common/widgets/default_form_field.dart';
+import 'package:al_bahrawi/app/app_functions.dart';
+import 'package:al_bahrawi/common/base/base_model.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/resources/app_router.dart';
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:al_bahrawi/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
+import 'package:al_bahrawi/common/widgets/default_form_field.dart';
+import 'package:al_bahrawi/features/auth/reset_password/bloc/reset_password_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:base_project/features/auth/login/view/widgets/auth_logo_widget.dart';
-import 'package:base_project/features/auth/reset_password/bloc/reset_password_cubit.dart';
+import 'package:go_router/go_router.dart';
 
 class ResetPasswordView extends StatefulWidget {
   final String email;
@@ -67,7 +65,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 30.h),
-                    
+
                     _fieldLabel("كلمة المرور الجديدة"),
                     DefaultFormField(
                       controller: _passwordController,
@@ -78,9 +76,9 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                       obscureText: true,
                       suffixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
                     ),
-                    
+
                     SizedBox(height: 15.h),
-                    
+
                     _fieldLabel("تأكيد كلمة المرور"),
                     DefaultFormField(
                       controller: _confirmPasswordController,
@@ -91,10 +89,10 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                       obscureText: true,
                       suffixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
                     ),
-                    
+
                     SizedBox(height: 30.h),
                     _resetPasswordButton(context),
-                    
+
                     SizedBox(height: 15.h),
                     TextButton(
                       onPressed: () => context.go(AppRouters.login),
@@ -135,19 +133,21 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
           }
           if (state.status == Status.success) {
             AppFunctions.showsToast(state.data?.message ?? '', ColorManager.successGreen, context);
-            context.go(AppRouters.login);
+            context.go(AppRouters.resetPasswordSuccess);
           }
         },
         builder: (context, state) {
           return DefaultButtonWidget(
             onPressed: () {
-              if (_formKey.currentState?.validate() ?? false) {
-                context.read<ResetPasswordCubit>().resetPassword(
-                      widget.email,
-                      _passwordController.text.trim(),
-                      _confirmPasswordController.text.trim(),
-                    );
-              }
+              context.go(AppRouters.resetPasswordSuccess);
+
+              // if (_formKey.currentState?.validate() ?? false) {
+              //   context.read<ResetPasswordCubit>().resetPassword(
+              //         widget.email,
+              //         _passwordController.text.trim(),
+              //         _confirmPasswordController.text.trim(),
+              //       );
+              // }
             },
             text: AppStrings.save.tr(),
             textColor: ColorManager.white,

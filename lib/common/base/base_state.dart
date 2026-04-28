@@ -1,6 +1,6 @@
 
 import 'package:equatable/equatable.dart';
-import 'package:base_project/common/network/failure.dart';
+import 'package:al_bahrawi/common/network/failure.dart';
 
 enum Status { initial, loading, success, failure, isLoadingMore,custom }
 
