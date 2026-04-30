@@ -19,6 +19,17 @@ import 'package:al_bahrawi/features/profile/technical_support/common%20question/
 import 'package:al_bahrawi/features/profile/technical_support/main%20%20technical%20support/view/technical_support_view.dart';
 import 'package:al_bahrawi/features/profile/terms_and_conditions/view/terms_and_conditions_view.dart';
 import 'package:al_bahrawi/features/profile/main%20profile/view/personal_data_view.dart';
+import 'package:al_bahrawi/features/services/view/service_details_view.dart';
+import 'package:al_bahrawi/features/services/view/request_consultation_view.dart';
+import 'package:al_bahrawi/features/services/view/booking_success_view.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/view/cases_record_view.dart';
+import 'package:al_bahrawi/features/profile/technical_support/main%20%20technical%20support/view/contact_us_view.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/view/about_us_view.dart';
+import 'package:al_bahrawi/features/chat/presentation/view/chat_inbox_view.dart';
+import 'package:al_bahrawi/features/chat/presentation/view/chat_view.dart';
+import 'package:al_bahrawi/features/lawyer_attendance/view/lawyer_attendance_view.dart';
+import 'package:al_bahrawi/features/lawyer_attendance/view/lawyer_checkout_view.dart';
+import 'package:al_bahrawi/features/lawyer_dashboard/view/lawyer_dashboard_view.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -44,10 +55,21 @@ abstract class AppRouters {
   static const String help = '/help';
   static const String myAccount = '/myAccount';
   static const String language = '/language';
+  static const String serviceDetails = '/serviceDetails';
+  static const String requestConsultation = '/requestConsultation';
+  static const String bookingSuccess = '/bookingSuccess';
+  static const String myCases = '/myCases';
+  static const String contactUs = '/contactUs';
+  static const String aboutUs = '/aboutUs';
+  static const String chatInbox = '/chatInbox';
+  static const String chatView = '/chatView';
+  static const String lawyerAttendance = '/lawyerAttendance';
+  static const String lawyerDashboard = '/lawyerDashboard';
+  static const String lawyerCheckout = '/lawyerCheckout';
 
   static final GoRouter router = GoRouter(
     navigatorKey: navigatorKey,
-    initialLocation: root,
+    initialLocation: lawyerAttendance, // Temporarily set as initial route
     routes: [
       GoRoute(
         path: root,
@@ -155,12 +177,6 @@ abstract class AppRouters {
           return const CupertinoPage(child: SignupSuccessView());
         },
       ),
-      // GoRoute(
-      //   path: signupLocation,
-      //   pageBuilder: (context, state) {
-      //     return const CupertinoPage(child: SignUpLocationView());
-      //   },
-      // ),
       GoRoute(
         path: termsAndConditions,
         pageBuilder: (context, state) {
@@ -195,6 +211,62 @@ abstract class AppRouters {
         path: language,
         pageBuilder: (context, state) {
           return const CupertinoPage(child: LanguageView());
+        },
+      ),
+      GoRoute(
+        path: serviceDetails,
+        builder: (context, state) => const ServiceDetailsView(),
+      ),
+      GoRoute(
+        path: requestConsultation,
+        builder: (context, state) => const RequestConsultationView(),
+      ),
+      GoRoute(
+        path: bookingSuccess,
+        builder: (context, state) => const BookingSuccessView(),
+      ),
+      GoRoute(
+        path: myCases,
+        builder: (context, state) => const CasesRecordView(),
+      ),
+      GoRoute(
+        path: contactUs,
+        builder: (context, state) => const ContactUsView(),
+      ),
+      GoRoute(
+        path: aboutUs,
+        builder: (context, state) => const AboutUsView(),
+      ),
+      GoRoute(
+        path: chatInbox,
+        builder: (context, state) => const ChatInboxView(),
+      ),
+      GoRoute(
+        path: chatView,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          return ChatView(
+            chatId: extra['chatId'] as int,
+            supplierName: extra['supplierName'] as String,
+          );
+        },
+      ),
+      GoRoute(
+        path: lawyerAttendance,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: LawyerAttendanceView());
+        },
+      ),
+      GoRoute(
+        path: lawyerDashboard,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: LawyerDashboardView());
+        },
+      ),
+      GoRoute(
+        path: lawyerCheckout,
+        pageBuilder: (context, state) {
+          return const CupertinoPage(child: LawyerCheckoutView());
         },
       ),
     ],

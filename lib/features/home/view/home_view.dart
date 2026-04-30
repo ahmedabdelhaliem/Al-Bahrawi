@@ -2,12 +2,28 @@ import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
+import 'package:al_bahrawi/features/services/view/services_view.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  final PageController _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +35,7 @@ class HomeView extends StatelessWidget {
             _buildHeader(context),
             _buildStatsSection(),
             _buildServicesSection(context),
-            _buildBottomCTA(),
+            // _buildBottomCTA(),
             SizedBox(height: 40.h),
           ],
         ),
@@ -189,7 +205,12 @@ class HomeView extends StatelessWidget {
                 style: getBoldStyle(color: ColorManager.textColor, fontSize: 18.sp),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ServicesView(isPushed: true)),
+                  );
+                },
                 child: Text(
                   AppStrings.viewAll.tr(),
                   style: getBoldStyle(color: ColorManager.primary, fontSize: 14.sp),
@@ -198,76 +219,104 @@ class HomeView extends StatelessWidget {
             ],
           ),
           SizedBox(height: 10.h),
-          _buildServiceCard(
-            AppStrings.taxConsultation.tr(),
-            AppStrings.taxConsultationDesc.tr(),
-            Icons.account_balance,
-            ColorManager.successGreen,
+          ExpandablePageView(
+            controller: _pageController,
+            children: [
+              _buildServiceCard(
+                AppStrings.taxConsultation.tr(),
+                AppStrings.taxConsultationDesc.tr(),
+                Icons.account_balance,
+                const Color(0xff2E7D32),
+                const Color(0xffE8F5E9),
+              ),
+              _buildServiceCard(
+                AppStrings.accounting.tr(),
+                AppStrings.accountingDesc.tr(),
+                Icons.grid_view_rounded,
+                const Color(0xff3F51B5),
+                const Color(0xffE8EAF6),
+              ),
+              _buildServiceCard(
+                AppStrings.companyFormation.tr(),
+                AppStrings.companyFormationDesc.tr(),
+                Icons.business,
+                const Color(0xffE65100),
+                const Color(0xffFFF3E0),
+              ),
+              _buildServiceCard(
+                AppStrings.auditing.tr(),
+                AppStrings.auditingDesc.tr(),
+                Icons.fact_check_rounded,
+                const Color(0xff00695C),
+                const Color(0xffE0F2F1),
+              ),
+            ],
           ),
-          _buildServiceCard(
-            AppStrings.accounting.tr(),
-            AppStrings.accountingDesc.tr(),
-            Icons.grid_view,
-            ColorManager.azureBlue,
+          SizedBox(height: 20.h),
+          SmoothPageIndicator(
+            controller: _pageController,
+            count: 4,
+            effect: ExpandingDotsEffect(
+              dotHeight: 6.h,
+              dotWidth: 10.w,
+              activeDotColor: ColorManager.primary,
+              dotColor: ColorManager.primary.withValues(alpha: 0.2),
+              expansionFactor: 3,
+              spacing: 8.w,
+            ),
           ),
-          _buildServiceCard(
-            AppStrings.companyFormation.tr(),
-            AppStrings.companyFormationDesc.tr(),
-            Icons.business,
-            ColorManager.yellow,
-          ),
-          _buildServiceCard(
-            AppStrings.auditing.tr(),
-            AppStrings.auditingDesc.tr(),
-            Icons.fact_check,
-            ColorManager.successGreen,
-          ),
+          SizedBox(height: 20.h),
         ],
       ),
     );
   }
 
-  Widget _buildServiceCard(String title, String desc, IconData icon, Color iconColor) {
+  Widget _buildServiceCard(
+    String title,
+    String desc,
+    IconData icon,
+    Color iconColor,
+    Color bgColor,
+  ) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8.h),
-      padding: EdgeInsets.all(12.w),
+      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+      padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: ColorManager.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.3), width: 1),
+        borderRadius: BorderRadius.circular(24.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 15,
             offset: const Offset(0, 8),
           ),
         ],
+        border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.4), width: 0.8),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                padding: EdgeInsets.all(10.w),
-                decoration: BoxDecoration(
-                  color: iconColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(icon, color: iconColor, size: 24.w),
-              ),
-            ],
+          Container(
+            padding: EdgeInsets.all(14.w),
+            decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12.r)),
+            child: Icon(icon, color: iconColor, size: 28.w),
           ),
-          SizedBox(height: 10.h),
+          SizedBox(height: 20.h),
           Text(
             title,
             style: getBoldStyle(color: ColorManager.textColor, fontSize: 18.sp),
+            textAlign: TextAlign.center,
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: 10.h),
           Text(
             desc,
-            style: getRegularStyle(color: ColorManager.grey, fontSize: 13.sp),
+            style: getRegularStyle(
+              color: ColorManager.textColor.withValues(alpha: 0.6),
+              fontSize: 13.sp,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -305,12 +354,12 @@ class HomeView extends StatelessWidget {
           DefaultButtonWidget(
             onPressed: () {},
             text: AppStrings.requestConsultationBtn.tr(),
-            color: ColorManager.successGreen,
-            textColor: ColorManager.white,
+            color: ColorManager.white,
+            textColor: ColorManager.blue,
             radius: 12.r,
             isIcon: true,
             textFirst: true,
-            iconBuilder: Icon(Icons.arrow_forward, color: ColorManager.white, size: 20.sp),
+            iconBuilder: Icon(Icons.arrow_forward, color: ColorManager.gold, size: 20.sp),
           ),
         ],
       ),

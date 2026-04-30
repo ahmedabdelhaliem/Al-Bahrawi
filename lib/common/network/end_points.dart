@@ -25,5 +25,10 @@ class EndPoints {
   static const String faqs = '/faq';
   static const String deleteAccount = '/delete/account';
   static const String contactUs = '/contact';
+
+  // Chat
+  static const String chats = '/chats';
+  static String firebaseToken(int id) => '/chats/$id/firebase-token';
+  static String chatMessages(int id) => '/chats/$id/messages';
 }
 

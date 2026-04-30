@@ -12,6 +12,11 @@ class ProfileData {
       route: AppRouters.myAccount,
     ),
     ProfileModel(
+      icon: Icons.assignment_outlined,
+      title: AppStrings.myCases,
+      route: AppRouters.myCases,
+    ),
+    ProfileModel(
       icon: Icons.notifications_none_rounded,
       title: AppStrings.notifications,
       route: AppRouters.notifications,
@@ -21,15 +26,17 @@ class ProfileData {
       title: AppStrings.termsAndConditions,
       route: AppRouters.termsAndConditions,
     ),
+    
+    
     ProfileModel(
-      icon: Icons.help_outline_rounded,
-      title: AppStrings.help,
-      route: AppRouters.help,
+      icon: Icons.chat_bubble_outline_rounded,
+      title: AppStrings.contactUs,
+      route: AppRouters.contactUs,
     ),
     ProfileModel(
-      icon: Icons.headset_mic_rounded,
-      title: AppStrings.technicalSupport,
-      route: AppRouters.technicalSupport,
+      icon: Icons.info_outline_rounded,
+      title: AppStrings.aboutUs,
+      route: AppRouters.aboutUs,
     ),
   ];
 }

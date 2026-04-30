@@ -1,3 +1,5 @@
+import 'package:al_bahrawi/common/resources/color_manager.dart';
+import 'package:al_bahrawi/features/chat/presentation/view/chat_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +8,10 @@ import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:al_bahrawi/features/home/view/home_view.dart';
 import 'package:al_bahrawi/features/services/view/services_view.dart';
+import 'package:al_bahrawi/features/chat/presentation/view/chat_inbox_view.dart';
 import 'package:al_bahrawi/features/profile/main%20profile/view/profile_view.dart';
+import 'package:al_bahrawi/common/resources/assets_manager.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavBarView extends StatefulWidget {
   final int pageIndex;
@@ -26,6 +31,7 @@ class _BottomNavBarViewState extends State<BottomNavBarView> with SingleTickerPr
   final List<Widget> _views = <Widget>[
     const HomeView(),
     const ServicesView(),
+    const ChatInboxView(),
     const ProfileView(),
   ];
 
@@ -58,6 +64,17 @@ class _BottomNavBarViewState extends State<BottomNavBarView> with SingleTickerPr
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: const Color(0xff25D366),
+        shape: const CircleBorder(),
+        child: SvgPicture.asset(
+          IconAssets.whatsapp,
+          colorFilter: const ColorFilter.mode(ColorManager.white, BlendMode.srcIn),
+          width: 30.w,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: FadeTransition(
         opacity: _fadeController,
         child: IndexedStack(
@@ -92,13 +109,9 @@ class _BottomNavBarViewState extends State<BottomNavBarView> with SingleTickerPr
                 AnimatedAlign(
                   duration: const Duration(milliseconds: 350),
                   curve: Curves.easeOutBack,
-                  alignment: _selectedIndex == 0
-                      ? AlignmentDirectional.centerStart
-                      : _selectedIndex == 1
-                          ? AlignmentDirectional.center
-                          : AlignmentDirectional.centerEnd,
+                  alignment: AlignmentDirectional(-1.0 + (_selectedIndex * (2.0 / 3.0)), 0.0),
                   child: FractionallySizedBox(
-                    widthFactor: 0.3,
+                    widthFactor: 0.25,
                     child: Container(
                       height: 45.h,
                       decoration: BoxDecoration(
@@ -125,7 +138,8 @@ class _BottomNavBarViewState extends State<BottomNavBarView> with SingleTickerPr
                   children: [
                     _buildNavItem(0, Icons.home_outlined, AppStrings.home.tr()),
                     _buildNavItem(1, Icons.grid_view_rounded, AppStrings.services.tr()),
-                    _buildNavItem(2, Icons.person_outline, AppStrings.myAccount.tr()),
+                    _buildNavItem(2, Icons.chat_bubble_outline, AppStrings.chatInbox.tr()),
+                    _buildNavItem(3, Icons.person_outline, AppStrings.myAccount.tr()),
                   ],
                 ),
               ],

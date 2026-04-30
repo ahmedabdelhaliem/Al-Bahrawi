@@ -1,12 +1,15 @@
+import 'package:al_bahrawi/common/resources/app_router.dart';
 import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class ServicesView extends StatefulWidget {
-  const ServicesView({super.key});
+  final bool isPushed;
+  const ServicesView({super.key, this.isPushed = false});
 
   @override
   State<ServicesView> createState() => _ServicesViewState();
@@ -25,15 +28,12 @@ class _ServicesViewState extends State<ServicesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildSearchAndFilters(),
-            _buildServicesList(),
-            SizedBox(height: 100.h),
-          ],
-        ),
+      body: Column(
+        children: [
+          _buildHeader(),
+          _buildSearchAndFilters(),
+          Expanded(child: _buildServicesList()),
+        ],
       ),
     );
   }
@@ -63,10 +63,22 @@ class _ServicesViewState extends State<ServicesView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(
-                      AppStrings.ourServices.tr(),
-                      style: getBoldStyle(color: ColorManager.white, fontSize: 26.sp),
-                      textAlign: TextAlign.right,
+                    Row(
+                      children: [
+                        if (widget.isPushed) ...[
+                          IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: const Icon(Icons.arrow_back_ios, color: ColorManager.white),
+                            padding: EdgeInsets.zero,
+                          ),
+                          SizedBox(width: 10.w),
+                        ],
+                        Text(
+                          AppStrings.ourServices.tr(),
+                          style: getBoldStyle(color: ColorManager.white, fontSize: 26.sp),
+                          textAlign: TextAlign.right,
+                        ),
+                      ],
                     ),
                     SizedBox(height: 12.h),
                     Text(
@@ -170,46 +182,52 @@ class _ServicesViewState extends State<ServicesView> {
   }
 
   Widget _buildServicesList() {
-    return Padding(
+    return ListView(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
+      physics: const BouncingScrollPhysics(),
+      children: [
+        Align(
+          alignment: Alignment.centerRight,
+          child: Text(
             AppStrings.availableService.tr(),
             style: getRegularStyle(color: ColorManager.grey, fontSize: 12.sp),
           ),
-          SizedBox(height: 16.h),
-          _buildServiceCard(
-            AppStrings.taxConsultation.tr(),
-            "ضريبي",
-            AppStrings.taxConsultationShortDesc.tr(),
-            Icons.percent,
-            const Color(0xffE8F5E9),
-            const Color(0xff2E7D32),
-          ),
-          _buildServiceCard(
-            "الخدمات المحاسبية",
-            "محاسبة",
-            AppStrings.accountingShortDesc.tr(),
-            Icons.menu_book,
-            const Color(0xffE8F5E9),
-            const Color(0xff2E7D32),
-          ),
-          _buildServiceCard(
-            "تأسيس الشركات",
-            "تأسيس",
-            AppStrings.companyFormationShortDesc.tr(),
-            Icons.business,
-            const Color(0xffE8F5E9),
-            const Color(0xff2E7D32),
-          ),
-        ],
-      ),
+        ),
+        SizedBox(height: 16.h),
+        _buildServiceCard(
+          context,
+          AppStrings.taxConsultation.tr(),
+          "ضريبي",
+          AppStrings.taxConsultationShortDesc.tr(),
+          Icons.percent,
+          const Color(0xffE8F5E9),
+          const Color(0xff2E7D32),
+        ),
+        _buildServiceCard(
+          context,
+          AppStrings.accounting.tr(),
+          "محاسبة",
+          AppStrings.accountingShortDesc.tr(),
+          Icons.account_balance_wallet_outlined,
+          const Color(0xffE3F2FD),
+          const Color(0xff1565C0),
+        ),
+        _buildServiceCard(
+          context,
+          AppStrings.companyFormation.tr(),
+          "تأسيس",
+          AppStrings.companyFormationShortDesc.tr(),
+          Icons.business_center_outlined,
+          const Color(0xffFFF3E0),
+          const Color(0xffEF6C00),
+        ),
+        SizedBox(height: 80.h), // Bottom spacing for visibility
+      ],
     );
   }
 
   Widget _buildServiceCard(
+    BuildContext context,
     String title,
     String category,
     String desc,
@@ -217,52 +235,56 @@ class _ServicesViewState extends State<ServicesView> {
     Color bgColor,
     Color iconColor,
   ) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: ColorManager.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.3), width: 1),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.arrow_back_ios, color: ColorManager.grey, size: 12.w),
-          const Spacer(),
-          Expanded(
-            flex: 8,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  category,
-                  style: getRegularStyle(
-                    color: ColorManager.grey.withValues(alpha: 0.6),
-                    fontSize: 9.sp,
+    return InkWell(
+      onTap: () => context.push(AppRouters.serviceDetails),
+      borderRadius: BorderRadius.circular(16.r),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 12.h),
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: ColorManager.white,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.3), width: 1),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.arrow_back_ios, color: ColorManager.grey, size: 12.w),
+            const Spacer(),
+            Expanded(
+              flex: 8,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    category,
+                    style: getRegularStyle(
+                      color: ColorManager.grey.withValues(alpha: 0.6),
+                      fontSize: 9.sp,
+                    ),
                   ),
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  title,
-                  style: getBoldStyle(color: ColorManager.blue, fontSize: 14.sp),
-                  textAlign: TextAlign.right,
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  desc,
-                  style: getRegularStyle(color: ColorManager.grey, fontSize: 11.sp),
-                  textAlign: TextAlign.right,
-                ),
-              ],
+                  SizedBox(height: 2.h),
+                  Text(
+                    title,
+                    style: getBoldStyle(color: ColorManager.blue, fontSize: 14.sp),
+                    textAlign: TextAlign.right,
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    desc,
+                    style: getRegularStyle(color: ColorManager.grey, fontSize: 11.sp),
+                    textAlign: TextAlign.right,
+                  ),
+                ],
+              ),
             ),
-          ),
-          SizedBox(width: 12.w),
-          Container(
-            padding: EdgeInsets.all(10.w),
-            decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12.r)),
-            child: Icon(icon, color: iconColor, size: 24.w),
-          ),
-        ],
+            SizedBox(width: 12.w),
+            Container(
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12.r)),
+              child: Icon(icon, color: iconColor, size: 24.w),
+            ),
+          ],
+        ),
       ),
     );
   }
