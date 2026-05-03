@@ -173,12 +173,12 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
       textDirection: TextDirection.ltr,
       child: Center(
         child: Pinput(
-          length: 4, // Changed to 4 as per screenshot
+          length: 5, // Changed to 5 as requested
           keyboardType: TextInputType.number,
           controller: _pinController,
           defaultPinTheme: defaultPinTheme,
           focusedPinTheme: focusedPinTheme,
-          separatorBuilder: (index) => SizedBox(width: 16.w),
+          separatorBuilder: (index) => SizedBox(width: 12.w),
           onCompleted: (code) {
             _verifyOtpCubit.verifyOtp(
               widget.phone,
@@ -207,12 +207,11 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
             context.push(
               AppRouters.resetPassword,
               extra: {
-                'email': widget.phone,
+                'phone': widget.phone,
               },
             );
-          } else if (widget.isSignup) {
-            context.go(AppRouters.signupLocation);
           } else {
+            // isSignup=true أو login عادي — كلاهما بيروحوا للرئيسية
             context.go(AppRouters.btmNav, extra: {"refreshKey": UniqueKey()});
           }
         }
@@ -242,14 +241,13 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
               children: [
                 DefaultButtonWidget(
                   onPressed: () {
-                    context.push(AppRouters.signupSuccess);
-                    // if (_pinController.text.length == 4) {
-                    //   _verifyOtpCubit.verifyOtp(
-                    //     widget.phone,
-                    //     _pinController.text,
-                    //     widget.isForgetPassword,
-                    //   );
-                    // }
+                    if (_pinController.text.length == 5) {
+                      _verifyOtpCubit.verifyOtp(
+                        widget.phone,
+                        _pinController.text,
+                        widget.isForgetPassword,
+                      );
+                    }
                   },
                   text: AppStrings.verifyCode.tr(),
                   textColor: ColorManager.white,

@@ -69,7 +69,7 @@ abstract class AppRouters {
 
   static final GoRouter router = GoRouter(
     navigatorKey: navigatorKey,
-    initialLocation: lawyerAttendance, // Temporarily set as initial route
+    initialLocation: root,
     routes: [
       GoRoute(
         path: root,
@@ -130,7 +130,7 @@ abstract class AppRouters {
           final extra = state.extra as Map<String, dynamic>?;
           return CupertinoPage(
             child: ResetPasswordView(
-              email: extra?['email'] ?? '',
+              phone: extra?['phone'] ?? '',
             ),
           );
         },

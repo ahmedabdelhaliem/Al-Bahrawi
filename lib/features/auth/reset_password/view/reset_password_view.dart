@@ -15,8 +15,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class ResetPasswordView extends StatefulWidget {
-  final String email;
-  const ResetPasswordView({super.key, required this.email});
+  final String phone;
+  const ResetPasswordView({super.key, required this.phone});
 
   @override
   State<ResetPasswordView> createState() => _ResetPasswordViewState();
@@ -139,15 +139,13 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
         builder: (context, state) {
           return DefaultButtonWidget(
             onPressed: () {
-              context.go(AppRouters.resetPasswordSuccess);
-
-              // if (_formKey.currentState?.validate() ?? false) {
-              //   context.read<ResetPasswordCubit>().resetPassword(
-              //         widget.email,
-              //         _passwordController.text.trim(),
-              //         _confirmPasswordController.text.trim(),
-              //       );
-              // }
+              if (_formKey.currentState?.validate() ?? false) {
+                context.read<ResetPasswordCubit>().resetPassword(
+                      widget.phone,
+                      _passwordController.text.trim(),
+                      _confirmPasswordController.text.trim(),
+                    );
+              }
             },
             text: AppStrings.save.tr(),
             textColor: ColorManager.white,

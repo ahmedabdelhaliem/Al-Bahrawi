@@ -8,7 +8,7 @@ class ResetPasswordCubit extends Cubit<BaseState<BaseModel>> {
   ResetPasswordCubit() : super(const BaseState<BaseModel>());
 
   Future<void> resetPassword(
-    String email,
+    String phone,
     String password,
     String passwordConfirmation,
     // String otp,
@@ -17,7 +17,7 @@ class ResetPasswordCubit extends Cubit<BaseState<BaseModel>> {
     final result = await DioHelper.postData(
       url: EndPoints.resetPassword,
       data: {
-        "email": email,
+        "phone": phone,
         "password": password,
         "password_confirmation": passwordConfirmation,
         // "otp": otp,

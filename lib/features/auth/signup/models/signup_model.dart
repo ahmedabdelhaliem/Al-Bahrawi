@@ -2,45 +2,45 @@ import 'package:equatable/equatable.dart';
 
 class SignupModel extends Equatable {
   const SignupModel({
-    required this.user,
-    required this.message,
-    required this.code,
+    this.phone,
+    this.message,
+    this.code,
   });
 
-  final UserModel? user;
+  // API returns only phone inside data: { "phone": "..." }
+  final String? phone;
   final String? message;
   final int? code;
 
   SignupModel copyWith({
-    UserModel? data,
+    String? phone,
     String? message,
-    String? type,
     int? code,
   }) {
     return SignupModel(
-      user: data ?? user,
+      phone: phone ?? this.phone,
       message: message ?? this.message,
       code: code ?? this.code,
     );
   }
 
-  factory SignupModel.fromJson(Map<String, dynamic> json){
+  factory SignupModel.fromJson(Map<String, dynamic> json) {
+    final data = json["data"] as Map<String, dynamic>?;
     return SignupModel(
-      user: json["data"] == null ? null : UserModel.fromJson(json["data"]),
-      message: json["message"],
-      code: json["code"],
+      phone: data?["phone"]?.toString(),
+      message: json["message"]?.toString(),
+      code: json["code"] as int?,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    "data": user?.toJson(),
+    "data": {"phone": phone},
     "message": message,
     "code": code,
   };
 
   @override
-  List<Object?> get props => [
-    user, message, code, ];
+  List<Object?> get props => [phone, message, code];
 }
 
 class UserModel extends Equatable {

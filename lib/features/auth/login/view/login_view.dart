@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginView extends StatefulWidget {
   final int pageIndex;
@@ -57,7 +59,9 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocProvider(
+      create: (context) => LoginCubit(),
+      child: Scaffold(
       backgroundColor: const Color(0xfff5f5f5), // Light grey background
       body: SafeArea(
         child: Center(
@@ -194,9 +198,18 @@ class _LoginViewState extends State<LoginView> {
                     SizedBox(height: 20.h),
 
                     // Social Buttons
-                    _socialButton("تسجيل الدخول بواسطة حساب جوجل", Icons.g_mobiledata, Colors.red),
+                    InkWell(
+                      onTap: () => _handleGoogleSignIn(context),
+                      child: _socialButton("تسجيل الدخول بواسطة حساب جوجل", Icons.g_mobiledata, Colors.red),
+                    ),
                     SizedBox(height: 10.h),
-                    _socialButton("تسجيل الدخول بواسطة فيسبوك", Icons.facebook, Colors.blue),
+                    InkWell(
+                      onTap: () {
+                        // TODO: Implement Facebook Sign In
+                        AppFunctions.showsToast("سيتم تفعيل فيسبوك قريباً", ColorManager.primary, context);
+                      },
+                      child: _socialButton("تسجيل الدخول بواسطة فيسبوك", Icons.facebook, Colors.blue),
+                    ),
 
                     SizedBox(height: 20.h),
 
@@ -225,6 +238,7 @@ class _LoginViewState extends State<LoginView> {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -261,40 +275,62 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
+  Future<void> _handleGoogleSignIn(BuildContext context) async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return; // المستخدم أغلق النافذة
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final String? idToken = await userCredential.user?.getIdToken();
+
+      if (idToken != null && mounted) {
+        context.read<LoginCubit>().firebaseLogin(idToken);
+      }
+    } catch (e) {
+      debugPrint("Google Sign In Error: $e");
+      if (mounted) {
+        AppFunctions.showsToast("حدث خطأ أثناء تسجيل الدخول بجوجل", ColorManager.red, context);
+      }
+    }
+  }
+
   Widget _loginButton(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginCubit(),
-      child: BlocConsumer<LoginCubit, BaseState<LoginModel>>(
+    return BlocConsumer<LoginCubit, BaseState<LoginModel>>(
         listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
-          context.go(
-            AppRouters.btmNav,
-            extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
-          );
-
-          // if (state.status == Status.failure) {
-          //   AppFunctions.showsToast(state.errorMessage!, ColorManager.red, context);
-          //   if (state.failure is ActiveAccountFailure) {
-          //     context.push(
-          //       AppRouters.verifyOtp,
-          //       extra: {
-          //         'phone': _countryCode + _phoneController.text.trim(),
-          //         // 'email': _emailController.text,
-          //         'isForgetPassword': false,
-          //       },
-          //     );
-          //   }
-          // }
-          // if (state.status == Status.success) {
-          //   if (widget.pop) {
-          //     context.pop();
-          //   } else {
-          //     context.go(
-          //       AppRouters.btmNav,
-          //       extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
-          //     );
-          //   }
-          // }
+          if (state.status == Status.failure) {
+            AppFunctions.showsToast(state.errorMessage ?? '', ColorManager.red, context);
+            
+            // التحقق من رسالة السيرفر للتحويل لشاشة الـ OTP
+            if (state.errorMessage?.contains("التحقق") == true || state.failure?.status == 415) {
+              context.push(
+                AppRouters.verifyOtp,
+                extra: {
+                  'phone': _countryCode + _phoneController.text.trim(),
+                  'isForgetPassword': false,
+                  'isSignup': false,
+                },
+              );
+            }
+          }
+          if (state.status == Status.success) {
+            if (widget.pop) {
+              context.pop();
+            } else {
+              context.go(
+                AppRouters.btmNav,
+                extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
+              );
+            }
+          }
         },
         builder: (context, state) {
           return DefaultButtonWidget(
@@ -315,8 +351,7 @@ class _LoginViewState extends State<LoginView> {
             isLoading: state.status == Status.loading,
           );
         },
-      ),
-    );
+      );
   }
 
   Widget _signupWidget() {

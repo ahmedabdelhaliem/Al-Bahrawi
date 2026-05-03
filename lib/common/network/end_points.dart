@@ -1,6 +1,7 @@
 class EndPoints {
   static const String onBoarding = '/sliders';
   static const String login = '/login';
+  static const String firebaseLogin = '/firebase-login';
   static const String signup = '/register';
   static const String verifyOTP = '/verify-otp';
   static const String resendOTP = '/resend-otp';

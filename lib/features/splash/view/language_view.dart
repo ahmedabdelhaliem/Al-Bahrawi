@@ -153,7 +153,7 @@ class _LanguageViewState extends State<LanguageView> {
     }
     
     if (mounted) {
-      context.go(AppRouters.onBoarding);
+      context.go(AppRouters.login);
     }
   }
 }

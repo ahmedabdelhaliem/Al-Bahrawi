@@ -29,6 +29,7 @@ class ForgetPasswordView extends StatefulWidget {
 class _ForgetPasswordViewState extends State<ForgetPasswordView> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
+  String _countryCode = "+20";
   late ForgetPasswordCubit _forgetPasswordBloc;
 
   @override
@@ -85,7 +86,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                             padding: EdgeInsets.zero,
                             margin: EdgeInsets.zero,
                             onChanged: (value) {
-                              // We can add _countryCode logic if needed here too
+                              if (value.dialCode != null) _countryCode = value.dialCode!;
                             },
                             initialSelection: 'EG',
                             favorite: const ['EG', 'SA'],
@@ -141,7 +142,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
         }
         if (state.status == Status.success) {
           context.push(AppRouters.verifyOtp, extra: {
-            "phone": _phoneController.text.trim(),
+            "phone": _countryCode + _phoneController.text.trim(),
             "isForgetPassword": true
           });
         }
@@ -149,10 +150,9 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
       builder: (context, state) {
         return DefaultButtonWidget(
           onPressed: () {
-            context.push(AppRouters.resetPasswordSuccess);
-            // if (_formKey.currentState?.validate() ?? false) {
-            //   _forgetPasswordBloc.forgetPassword(_phoneController.text.trim());
-            // }
+            if (_formKey.currentState?.validate() ?? false) {
+              _forgetPasswordBloc.forgetPassword(_countryCode + _phoneController.text.trim());
+            }
           },
           text: AppStrings.sendCode.tr(),
           textColor: ColorManager.white,

@@ -50,10 +50,10 @@ class _EditProfileViewState extends State<EditProfileView> {
   }
 
   void _fillFields(SignupModel profile) {
-    _nameController.text = profile.user?.name ?? '';
-    _emailController.text = profile.user?.email ?? '';
-    _phoneController.text = profile.user?.phone ?? '';
-    _imageUrl = profile.user?.image;
+    _nameController.text = '';
+    _emailController.text = '';
+    _phoneController.text = '';
+    _imageUrl = '';
   }
 
   void _pickImage() async {

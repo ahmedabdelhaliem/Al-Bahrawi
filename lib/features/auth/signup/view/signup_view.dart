@@ -37,6 +37,8 @@ class _SignUpViewState extends State<SignUpView> {
   final TextEditingController _pickupPointController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _birthDateController = TextEditingController();
   CountryModel? _selectedCountry;
   CityModel? _selectedCity;
   String? _selectedWorkplace;
@@ -54,6 +56,8 @@ class _SignUpViewState extends State<SignUpView> {
     _pickupPointController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _emailController.dispose();
+    _birthDateController.dispose();
     super.dispose();
   }
 
@@ -86,6 +90,9 @@ class _SignUpViewState extends State<SignUpView> {
                     const AuthLogoWidget(),
                     SizedBox(height: 20.h),
 
+                    _image(),
+                    SizedBox(height: 20.h),
+
                     // Full Name
                     _fieldLabel("الاسم الكامل"),
                     DefaultFormField(
@@ -102,12 +109,37 @@ class _SignUpViewState extends State<SignUpView> {
                     // Email
                     _fieldLabel("البريد الالكتروني"),
                     DefaultFormField(
-                      controller: _workPlaceController,
+                      controller: _emailController,
                       fillColor: ColorManager.white,
                       borderColor: ColorManager.greyBorder,
                       borderRadius: 12.r,
                       hintText: "ادخل البريد الالكتروني",
                       prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
+                    ),
+
+                    SizedBox(height: 15.h),
+
+                    // Birth Date
+                    _fieldLabel("تاريخ الميلاد"),
+                    DefaultFormField(
+                      controller: _birthDateController,
+                      readOnly: true,
+                      fillColor: ColorManager.white,
+                      borderColor: ColorManager.greyBorder,
+                      borderRadius: 12.r,
+                      hintText: "YYYY-MM-DD",
+                      prefixIcon: const Icon(Icons.calendar_month_outlined, color: Colors.grey),
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime(2000),
+                          firstDate: DateTime(1950),
+                          lastDate: DateTime.now(),
+                        );
+                        if (pickedDate != null) {
+                          _birthDateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+                        }
+                      },
                     ),
 
                     SizedBox(height: 15.h),
@@ -310,44 +342,32 @@ class _SignUpViewState extends State<SignUpView> {
             AppFunctions.showsToast(state.errorMessage ?? '', ColorManager.red, context);
           }
           if (state.status == Status.success) {
-            context.go(
+            // الـ API بيرجع phone في data — نمرره لـ OTP
+            context.push(
               AppRouters.verifyOtp,
-              extra: {'phone': (state.data?.user?.phone ?? ''), 'isForgetPassword': false},
+              extra: {
+                'phone': state.data?.phone ?? (_countryCode + _phoneController.text.trim()),
+                'isForgetPassword': false,
+                'isSignup': true,
+              },
             );
           }
         },
         builder: (context, state) {
           return DefaultButtonWidget(
             onPressed: () {
-              context.go(
-                AppRouters.verifyOtp,
-                extra: {
-                  'phone': '01234567890',
-                  'isForgetPassword': false,
-                  'isSignup': true,
-                },
-              );
-              // if (_userRole == null) {
-              //   AppFunctions.showsToast(AppStrings.chooseUserType.tr(), ColorManager.red, context);
-              // }
-              // if ((_formKey.currentState?.validate() ?? false) && (_userRole != null)) {
-              //   context.read<SignupCubit>().signup(
-              //         name: _fullNameController.text.trim(),
-              //         email: "", // Email removed from UI as per design
-              //         phone: _countryCode + _phoneController.text.trim(),
-              //         password: _passwordController.text.trim(),
-              //         passwordConfirmation: _confirmPasswordController.text.trim(),
-              //         imagePath: _selectedImagePath,
-              //         cityId: _selectedCity?.id,
-              //         countryId: _selectedCountry?.id,
-              //         userRole: _userRole!,
-              //         workPlace: _workPlaceController.text.trim(),
-              //         address: _addressController.text.trim(),
-              //         pickupPoint: _pickupPointController.text.trim(),
-              //         governorateId: _selectedCountry?.id, // Temporary mapping if needed
-              //         districtId: _selectedCity?.id, // Temporary mapping if needed
-              //       );
-              // }
+              if (_formKey.currentState?.validate() ?? false) {
+                context.read<SignupCubit>().signup(
+                  name: _fullNameController.text.trim(),
+                  email: _emailController.text.trim(),
+                  phone: _countryCode + _phoneController.text.trim(),
+                  password: _passwordController.text.trim(),
+                  passwordConfirmation: _confirmPasswordController.text.trim(),
+                  birthDate: _birthDateController.text.trim(),
+                  imagePath: _selectedImagePath,
+                  userRole: _userRole ?? UserRole.passenger,
+                );
+              }
             },
             text: AppStrings.signupNow.tr(),
             textColor: ColorManager.white,

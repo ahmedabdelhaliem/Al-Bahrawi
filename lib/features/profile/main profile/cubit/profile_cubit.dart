@@ -15,9 +15,9 @@ class ProfileCubit extends Cubit<BaseState<SignupModel>> {
     result.fold(
       (failure) => emit(state.copyWith(status: Status.failure, errorMessage: failure.message, failure: failure)),
       (profile) {
-        if(profile.user?.name != null) instance<AppPreferences>().saveUserName(profile.user!.name!);
-        if(profile.user?.phone != null) instance<AppPreferences>().setMobile(profile.user!.phone!);
-        if(profile.user?.image != null) instance<AppPreferences>().saveUserImage(profile.user!.image!);
+        // if(profile.name != null) instance<AppPreferences>().saveUserName(profile.name!);
+        // if(profile.phone != null) instance<AppPreferences>().setMobile(profile.phone!);
+        // if(profile.image != null) instance<AppPreferences>().saveUserImage(profile.image!);
         return emit(state.copyWith(status: Status.success, data: profile));
       },
     );
