@@ -1,10 +1,12 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:al_bahrawi/app/di.dart' as FirebaseFirestore;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:al_bahrawi/app/app_prefs.dart';
 import 'package:al_bahrawi/app/di.dart';
 import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:al_bahrawi/common/network/dio_helper.dart';
 import 'package:al_bahrawi/common/network/end_points.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:al_bahrawi/common/resources/values_manager.dart';
 import 'package:al_bahrawi/features/auth/login/models/login_model.dart';
@@ -15,43 +17,75 @@ class LoginCubit extends Cubit<BaseState<LoginModel>> {
 
   Future<void> login(String phone, String password) async {
     emit(state.copyWith(status: Status.loading));
+
+    // Fetch the token directly if the global variable is null
+    String? currentFcmToken = fcmToken;
+    try {
+      currentFcmToken ??= await FirebaseMessaging.instance.getToken();
+    } catch (e) {
+      debugPrint("Failed to fetch FCM Token: $e");
+    }
+    
+    debugPrint('FCM Token to be sent with login: $currentFcmToken');
+
     final result = await DioHelper.postData<LoginModel>(
       url: EndPoints.login,
       data: {
         "phone": phone,
         "password": password,
-        "fcm_token": fcmToken,
+        "fcm_token": currentFcmToken,
       },
       fromJson: LoginModel.fromJson,
+      isPublic: true,
     );
     result.fold(
       (failure) {
+        debugPrint('❌ Login Failure: ${failure.message}');
         if (!isClosed) {
           emit(state.copyWith(status: Status.failure, failure: failure, errorMessage: failure.message));
         }
       },
-      (success) => _handleLoginSuccess(success),
+      (success) {
+        debugPrint('✅ Login Success: ${success.message}');
+        _handleLoginSuccess(success);
+      },
     );
   }
 
   Future<void> firebaseLogin(String idToken) async {
     emit(state.copyWith(status: Status.loading));
+    
+    // Fetch the token directly if the global variable is null
+    String? currentFcmToken = fcmToken;
+    try {
+      currentFcmToken ??= await FirebaseMessaging.instance.getToken();
+    } catch (e) {
+      debugPrint("Failed to fetch FCM Token: $e");
+    }
+
+    debugPrint('FCM Token to be sent with Firebase Login: $currentFcmToken');
+
     final result = await DioHelper.postData<LoginModel>(
       url: EndPoints.firebaseLogin,
       data: {
         "id_token": idToken,
         "device_name": Platform.isAndroid ? "android" : "ios",
-        "fcm_token": fcmToken,
+        "fcm_token": currentFcmToken,
       },
       fromJson: LoginModel.fromJson,
+      isPublic: true,
     );
     result.fold(
       (failure) {
+        debugPrint('❌ Firebase Login Failure: ${failure.message}');
         if (!isClosed) {
           emit(state.copyWith(status: Status.failure, failure: failure, errorMessage: failure.message));
         }
       },
-      (success) => _handleLoginSuccess(success),
+      (success) {
+        debugPrint('✅ Firebase Login Success: ${success.message}');
+        _handleLoginSuccess(success);
+      },
     );
   }
 
@@ -65,20 +99,28 @@ class LoginCubit extends Cubit<BaseState<LoginModel>> {
       instance<AppPreferences>().setRole((success.data!.user!.role!));
       userRole = instance<AppPreferences>().getRole();
     }
-    registerUserInFirebase();
     if (!isClosed) {
       emit(state.copyWith(status: Status.success, data: success));
     }
   }
-  }
 
-  Future<void> registerUserInFirebase() async
-  {
-    await FirebaseFirestore.instance.collection('users').doc(instance<AppPreferences>().getUserId().toString()).set({
-      'id': instance<AppPreferences>().getUserId(),
-      'name': instance<AppPreferences>().getUserName(),
-      'image': instance<AppPreferences>().getUserImage(),
-      'phone': instance<AppPreferences>().getMobile(),
-    });
-  }
+  Future<void> logout() async {
+    emit(state.copyWith(status: Status.loading));
+    final result = await DioHelper.postData<dynamic>(
+      url: EndPoints.logout,
+      data: {},
+      fromJson: (json) => json,
+    );
 
+    await instance<AppPreferences>().logout();
+
+    result.fold(
+      (failure) {
+        if (!isClosed) emit(state.copyWith(status: Status.success));
+      },
+      (success) {
+        if (!isClosed) emit(state.copyWith(status: Status.success));
+      },
+    );
+  }
+}

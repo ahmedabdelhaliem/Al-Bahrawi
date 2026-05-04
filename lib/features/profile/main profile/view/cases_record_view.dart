@@ -19,7 +19,7 @@ class CasesRecordView extends StatelessWidget {
             child: ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
               physics: const BouncingScrollPhysics(),
-              itemCount: 3, // Dummy count for now
+              itemCount: 5, // Dummy count for now
               itemBuilder: (context, index) => _buildCaseCard(),
             ),
           ),
@@ -54,10 +54,12 @@ class CasesRecordView extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
               ),
               Text(
-                AppStrings.myCases.tr(),
+                AppStrings.casesRecord.tr(),
                 style: getBoldStyle(color: ColorManager.white, fontSize: 22.sp),
               ),
-              const SizedBox(width: 48), // Spacer to center the title if needed, but here title is on right
+              const SizedBox(
+                width: 48,
+              ), // Spacer to center the title if needed, but here title is on right
             ],
           ),
         ],
@@ -72,6 +74,7 @@ class CasesRecordView extends StatelessWidget {
       decoration: BoxDecoration(
         color: ColorManager.white,
         borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: ColorManager.primary.withValues(alpha: 0.05), width: 1),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -109,9 +112,16 @@ class CasesRecordView extends StatelessWidget {
               ),
               SizedBox(width: 16.w),
               Container(
-                padding: EdgeInsets.all(12.w),
+                padding: EdgeInsets.all(14.w),
                 decoration: BoxDecoration(
-                  color: ColorManager.primary.withValues(alpha: 0.05),
+                  gradient: LinearGradient(
+                    colors: [
+                      ColorManager.blue.withValues(alpha: 0.1),
+                      ColorManager.primary.withValues(alpha: 0.15),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.grid_view_rounded, color: ColorManager.primary, size: 24.w),
@@ -125,17 +135,17 @@ class CasesRecordView extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildActionButton(
-                  "معاملة",
+                  AppStrings.chat.tr(),
                   Icons.description_outlined,
-                  ColorManager.primary,
+                  isPrimary: true,
                 ),
               ),
               SizedBox(width: 12.w),
               Expanded(
                 child: _buildActionButton(
-                  "واتساب",
+                  AppStrings.whatsApp.tr(),
                   Icons.chat_bubble_outline_rounded,
-                  ColorManager.primary,
+                  isPrimary: false,
                 ),
               ),
             ],
@@ -145,12 +155,28 @@ class CasesRecordView extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(String label, IconData icon, Color color) {
+  Widget _buildActionButton(String label, IconData icon, {required bool isPrimary}) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(10.r),
+        gradient: isPrimary
+            ? LinearGradient(
+                colors: [ColorManager.blue, ColorManager.primary.withValues(alpha: 0.8)],
+                begin: Alignment.centerRight,
+                end: Alignment.centerLeft,
+              )
+            : null,
+        color: isPrimary ? null : const Color(0xff25D366),
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: (isPrimary ? ColorManager.primary : const Color(0xff25D366)).withValues(
+              alpha: 0.3,
+            ),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

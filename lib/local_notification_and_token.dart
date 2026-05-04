@@ -10,51 +10,70 @@ class GlobalMethods {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 
-  void registerNotification(context) {
+  void registerNotification(BuildContext context) async {
+    // Request Firebase Messaging permissions
+    NotificationSettings settings = await firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
-    firebaseMessaging.requestPermission();
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      debugPrint('User granted notification permission');
+    }
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-        configureLocalNotifications(message, context);
-        showLocalNotification(message.notification ?? const RemoteNotification());
-    });
-
-    firebaseMessaging.getToken().then((token) {
-      if (token != null) {
-        debugPrint('token ================================> $token');
-        fcmToken = token;
-      }
-    }).catchError((error) {
-      // AppFunctions.showsToast(error.toString(), ColorManager.red, context);
-    });
-  }
-
-  void configureLocalNotifications(RemoteMessage message, context) {
-    AndroidInitializationSettings androidInitializationSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    DarwinInitializationSettings iOSInitializationSettings = const DarwinInitializationSettings();
-
-    InitializationSettings initializationSettings = InitializationSettings(
+    // Initialize local notifications
+    const AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iOSInitializationSettings = DarwinInitializationSettings();
+    const InitializationSettings initializationSettings = InitializationSettings(
       android: androidInitializationSettings,
       iOS: iOSInitializationSettings,
     );
 
-    flutterLocalNotificationsPlugin.initialize(
+    await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
-        debugPrint('message ==================> ${message.data.toString()}');
+        debugPrint('Notification clicked');
       },
     );
+
+    // Request Android 13+ specific permission for local notifications
+    final androidPlugin = flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    if (androidPlugin != null) {
+      await androidPlugin.requestNotificationsPermission();
+      
+      // Create the notification channel explicitly (required for Android 8.0+)
+      const AndroidNotificationChannel channel = AndroidNotificationChannel(
+        'albahrawi_channel',
+        'Al-Bahrawi Notifications',
+        description: 'قناة إشعارات تطبيق البهراوي',
+        importance: Importance.max,
+        playSound: true,
+        enableVibration: true,
+      );
+      await androidPlugin.createNotificationChannel(channel);
+      debugPrint('Notification channel created successfully');
+    }
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      debugPrint('Foreground message received: ${message.messageId}');
+      showLocalNotification(message);
+    });
+
+    firebaseMessaging.getToken().then((token) {
+      if (token != null) {
+        debugPrint('FCM Token: $token');
+        fcmToken = token;
+      }
+    });
   }
 
-   void showLocalNotification(RemoteNotification remoteNotification) async {
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-
+  void showLocalNotification(RemoteMessage message) async {
+    // ✅ استخدام نفس الـ instance المهيأ في registerNotification (class field)
     AndroidNotificationDetails androidNotificationDetails =
         const AndroidNotificationDetails(
-      "com.services.fixman",
-      "fixman",
+      "albahrawi_channel",
+      "Al-Bahrawi Notifications",
       playSound: true,
       enableVibration: true,
       importance: Importance.max,
@@ -70,9 +89,9 @@ class GlobalMethods {
     );
 
     await flutterLocalNotificationsPlugin.show(
-      remoteNotification.hashCode,
-      remoteNotification.title,
-      remoteNotification.body,
+      message.hashCode,
+      message.notification?.title ?? message.data['title'] ?? 'إشعار جديد',
+      message.notification?.body ?? message.data['body'] ?? 'لديك إشعار جديد في التطبيق',
       notificationDetails,
       payload: null,
     );

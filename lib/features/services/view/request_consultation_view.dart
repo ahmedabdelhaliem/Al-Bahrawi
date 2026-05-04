@@ -1,15 +1,21 @@
+import 'dart:io';
+import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:al_bahrawi/common/resources/app_router.dart';
 import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
+import 'package:al_bahrawi/features/services/cubit/consultation_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class RequestConsultationView extends StatefulWidget {
-  const RequestConsultationView({super.key});
+  final int serviceId;
+  const RequestConsultationView({super.key, required this.serviceId});
 
   @override
   State<RequestConsultationView> createState() => _RequestConsultationViewState();
@@ -17,28 +23,59 @@ class RequestConsultationView extends StatefulWidget {
 
 class _RequestConsultationViewState extends State<RequestConsultationView> {
   bool isChat = true;
+  final TextEditingController _descriptionController = TextEditingController();
+  File? _selectedFile;
+
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      setState(() {
+        _selectedFile = File(result.files.single.path!);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF9FAFB),
-      body: Column(
-        children: [
-          _buildHeader(context),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  SizedBox(height: 24.h),
-                  _buildFormSection(),
-                  SizedBox(height: 40.h),
-                ],
+    return BlocProvider(
+      create: (context) => ConsultationCubit(),
+      child: BlocListener<ConsultationCubit, BaseState<dynamic>>(
+        listener: (context, state) {
+          if (state.status == Status.success) {
+            context.pushReplacement(AppRouters.bookingSuccess);
+          } else if (state.status == Status.failure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage ?? AppStrings.unKnownError.tr())),
+            );
+          }
+        },
+        child: Scaffold(
+          backgroundColor: const Color(0xffF9FAFB),
+          body: Column(
+            children: [
+              _buildHeader(context),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 24.h),
+                      _buildFormSection(context),
+                      SizedBox(height: 40.h),
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -102,7 +139,7 @@ class _RequestConsultationViewState extends State<RequestConsultationView> {
     );
   }
 
-  Widget _buildFormSection() {
+  Widget _buildFormSection(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -120,7 +157,7 @@ class _RequestConsultationViewState extends State<RequestConsultationView> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           _buildLabel(AppStrings.problemDescription.tr()),
-          _buildTextField(AppStrings.explainChallenges.tr(), maxLines: 4),
+          _buildTextField(AppStrings.explainChallenges.tr(), _descriptionController, maxLines: 4),
           SizedBox(height: 20.h),
           _buildLabel(AppStrings.consultationType.tr()),
           _buildTypeToggle(),
@@ -128,19 +165,37 @@ class _RequestConsultationViewState extends State<RequestConsultationView> {
           _buildLabel(AppStrings.attachFileOptional.tr()),
           _buildUploadArea(),
           SizedBox(height: 30.h),
-          DefaultButtonWidget(
-            text: AppStrings.sendRequest.tr(),
-            onPressed: () => context.push(AppRouters.bookingSuccess),
-            gradient: LinearGradient(
-              colors: [ColorManager.blue, ColorManager.primary.withValues(alpha: 0.9)],
-              begin: Alignment.centerRight,
-              end: Alignment.centerLeft,
-            ),
-            textColor: ColorManager.white,
-            height: 55.h,
-            radius: 16.r,
-            isIcon: true,
-            iconBuilder: Icon(Icons.send_rounded, color: ColorManager.gold, size: 20.w),
+          BlocBuilder<ConsultationCubit, BaseState<dynamic>>(
+            builder: (context, state) {
+              return DefaultButtonWidget(
+                text: AppStrings.sendRequest.tr(),
+                isLoading: state.status == Status.loading,
+                onPressed: () {
+                  if (_descriptionController.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(AppStrings.pleaseEnterDescription.tr())),
+                    );
+                    return;
+                  }
+                  context.read<ConsultationCubit>().requestConsultation(
+                        serviceId: widget.serviceId,
+                        type: isChat ? 'chat' : 'call',
+                        description: _descriptionController.text.trim(),
+                        file: _selectedFile,
+                      );
+                },
+                gradient: LinearGradient(
+                  colors: [ColorManager.blue, ColorManager.primary.withValues(alpha: 0.9)],
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                ),
+                textColor: ColorManager.white,
+                height: 55.h,
+                radius: 16.r,
+                isIcon: state.status != Status.loading,
+                iconBuilder: Icon(Icons.send_rounded, color: ColorManager.gold, size: 20.w),
+              );
+            },
           ),
           SizedBox(height: 20.h),
           Center(
@@ -175,8 +230,9 @@ class _RequestConsultationViewState extends State<RequestConsultationView> {
     );
   }
 
-  Widget _buildTextField(String hint, {int maxLines = 1}) {
+  Widget _buildTextField(String hint, TextEditingController controller, {int maxLines = 1}) {
     return TextField(
+      controller: controller,
       maxLines: maxLines,
       textAlign: TextAlign.right,
       decoration: InputDecoration(
@@ -326,37 +382,45 @@ class _RequestConsultationViewState extends State<RequestConsultationView> {
   }
 
   Widget _buildUploadArea() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 24.h),
-      decoration: BoxDecoration(
-        color: ColorManager.white,
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: ColorManager.primary.withValues(alpha: 0.1),
-          width: 1,
-          style: BorderStyle.solid,
+    return GestureDetector(
+      onTap: _pickFile,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 24.h),
+        decoration: BoxDecoration(
+          color: ColorManager.white,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: ColorManager.primary.withValues(alpha: 0.1),
+            width: 1,
+            style: BorderStyle.solid,
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          ShaderMask(
-            shaderCallback: (bounds) => LinearGradient(
-              colors: [ColorManager.primary, ColorManager.gold],
-            ).createShader(bounds),
-            child: Icon(Icons.cloud_upload_outlined, color: Colors.white, size: 32.w),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            AppStrings.clickToUpload.tr(),
-            style: getBoldStyle(color: ColorManager.blue, fontSize: 14.sp),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            AppStrings.uploadLimit.tr(),
-            style: getRegularStyle(color: ColorManager.grey, fontSize: 11.sp),
-          ),
-        ],
+        child: Column(
+          children: [
+            ShaderMask(
+              shaderCallback: (bounds) => LinearGradient(
+                colors: [ColorManager.primary, ColorManager.gold],
+              ).createShader(bounds),
+              child: Icon(
+                _selectedFile != null ? Icons.file_present : Icons.cloud_upload_outlined,
+                color: Colors.white,
+                size: 32.w,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              _selectedFile != null ? _selectedFile!.path.split('/').last : AppStrings.clickToUpload.tr(),
+              style: getBoldStyle(color: ColorManager.blue, fontSize: 14.sp),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              AppStrings.uploadLimit.tr(),
+              style: getRegularStyle(color: ColorManager.grey, fontSize: 11.sp),
+            ),
+          ],
+        ),
       ),
     );
   }

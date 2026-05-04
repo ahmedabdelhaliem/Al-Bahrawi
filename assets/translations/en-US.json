@@ -4,6 +4,7 @@
   "unKnownError": "Unknown Error",
   "cacheError": "Cache Error",
   "noInternetError": "No Internet Connection",
+  "personalData": "Personal Data",
   "badCertificate": "Bad Certificate",
   "connectionError": "Connection Error",
   "loading": "Loading...",
@@ -209,5 +210,7 @@
   "clickToUpload": "Click to upload files",
   "uploadLimit": "PDF, JPG up to 10MB",
   "sendRequest": "Send Request",
-  "privacyPolicyAgreement": "By clicking send, you agree to our privacy policy."
+  "privacyPolicyAgreement": "By clicking send, you agree to our privacy policy.",
+  "casesRecord": "My Cases",
+  "whatsApp": "WhatsApp"
 }

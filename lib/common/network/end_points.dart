@@ -1,5 +1,5 @@
 class EndPoints {
-  static const String onBoarding = '/sliders';
+  static const String onBoarding = '/welcome-screens';
   static const String login = '/login';
   static const String firebaseLogin = '/firebase-login';
   static const String signup = '/register';
@@ -13,7 +13,7 @@ class EndPoints {
 
   static const String logout = '/logout';
   static const String profile = '/profile';
-  static const String updateProfile = '/profile/update';
+  static const String updateProfile = '/updateProfile';
   static const String notifications = '/notifications';
 
   static const String countriesCities = '/country';
@@ -31,5 +31,9 @@ class EndPoints {
   static const String chats = '/chats';
   static String firebaseToken(int id) => '/chats/$id/firebase-token';
   static String chatMessages(int id) => '/chats/$id/messages';
+
+  static const String services = '/services';
+  static String serviceDetails(int id) => '/services/$id';
+  static const String requestConsultation = '/consultation';
 }
 

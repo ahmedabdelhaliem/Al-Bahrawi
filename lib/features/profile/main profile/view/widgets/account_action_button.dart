@@ -9,13 +9,17 @@ import '../../model/profile_model.dart';
 
 class AccountActionButton extends StatelessWidget {
   final ProfileModel model;
-  const AccountActionButton({super.key, required this.model});
+  final VoidCallback? onRefresh;
+  const AccountActionButton({super.key, required this.model, this.onRefresh});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        context.push(model.route, extra: {'title': model.title});
+      onTap: () async {
+        final result = await context.push(model.route, extra: {'title': model.title});
+        if (result == true && onRefresh != null) {
+          onRefresh!();
+        }
       },
       borderRadius: BorderRadius.circular(50.r),
       child: Container(

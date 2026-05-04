@@ -1,35 +1,34 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:go_router/go_router.dart';
 import 'package:al_bahrawi/features/auth/forget_password/view/forget_password_view.dart';
 import 'package:al_bahrawi/features/auth/login/view/login_view.dart';
-import 'package:al_bahrawi/features/auth/reset_password/view/reset_password_view.dart';
 import 'package:al_bahrawi/features/auth/reset_password/view/reset_password_success_view.dart';
+import 'package:al_bahrawi/features/auth/reset_password/view/reset_password_view.dart';
 import 'package:al_bahrawi/features/auth/signup/view/signup_success_view.dart';
 import 'package:al_bahrawi/features/auth/signup/view/signup_view.dart';
 import 'package:al_bahrawi/features/auth/verify_otp/view/verify_otp_view.dart';
 import 'package:al_bahrawi/features/bottom_nav_bar/view/bottom_nav_bar_view.dart';
-import 'package:al_bahrawi/features/images/view/images_view.dart';
-import 'package:al_bahrawi/features/notifications/view/notifications_view.dart';
-import 'package:al_bahrawi/features/on_boarding/view/on_boarding_view.dart';
-import 'package:al_bahrawi/features/splash/view/splash_view.dart';
-import 'package:al_bahrawi/features/splash/view/language_view.dart';
-import 'package:al_bahrawi/features/profile/help/view/help_view.dart';
-import 'package:al_bahrawi/features/profile/technical_support/common%20question/view/common_question_view.dart';
-import 'package:al_bahrawi/features/profile/technical_support/main%20%20technical%20support/view/technical_support_view.dart';
-import 'package:al_bahrawi/features/profile/terms_and_conditions/view/terms_and_conditions_view.dart';
-import 'package:al_bahrawi/features/profile/main%20profile/view/personal_data_view.dart';
-import 'package:al_bahrawi/features/services/view/service_details_view.dart';
-import 'package:al_bahrawi/features/services/view/request_consultation_view.dart';
-import 'package:al_bahrawi/features/services/view/booking_success_view.dart';
-import 'package:al_bahrawi/features/profile/main%20profile/view/cases_record_view.dart';
-import 'package:al_bahrawi/features/profile/technical_support/main%20%20technical%20support/view/contact_us_view.dart';
-import 'package:al_bahrawi/features/profile/main%20profile/view/about_us_view.dart';
 import 'package:al_bahrawi/features/chat/presentation/view/chat_inbox_view.dart';
 import 'package:al_bahrawi/features/chat/presentation/view/chat_view.dart';
+import 'package:al_bahrawi/features/images/view/images_view.dart';
 import 'package:al_bahrawi/features/lawyer_attendance/view/lawyer_attendance_view.dart';
 import 'package:al_bahrawi/features/lawyer_attendance/view/lawyer_checkout_view.dart';
 import 'package:al_bahrawi/features/lawyer_dashboard/view/lawyer_dashboard_view.dart';
+import 'package:al_bahrawi/features/notifications/view/notifications_view.dart';
+import 'package:al_bahrawi/features/on_boarding/view/on_boarding_view.dart';
+import 'package:al_bahrawi/features/profile/help/view/help_view.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/view/about_us_view.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/view/cases_record_view.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/view/personal_data_view.dart';
+import 'package:al_bahrawi/features/profile/technical_support/common%20question/view/common_question_view.dart';
+import 'package:al_bahrawi/features/profile/technical_support/main%20%20technical%20support/view/contact_us_view.dart';
+import 'package:al_bahrawi/features/profile/technical_support/main%20%20technical%20support/view/technical_support_view.dart';
+import 'package:al_bahrawi/features/profile/terms_and_conditions/view/terms_and_conditions_view.dart';
+import 'package:al_bahrawi/features/services/view/booking_success_view.dart';
+import 'package:al_bahrawi/features/services/view/request_consultation_view.dart';
+import 'package:al_bahrawi/features/services/view/service_details_view.dart';
+import 'package:al_bahrawi/features/splash/view/language_view.dart';
+import 'package:al_bahrawi/features/splash/view/splash_view.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -100,9 +99,7 @@ abstract class AppRouters {
         path: signup,
         pageBuilder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return CupertinoPage(
-            child: SignUpView(isBuyer: extra?["isBuyer"] ?? false),
-          );
+          return CupertinoPage(child: SignUpView(isBuyer: extra?["isBuyer"] ?? false));
         },
       ),
       GoRoute(
@@ -128,11 +125,7 @@ abstract class AppRouters {
         path: resetPassword,
         pageBuilder: (context, state) {
           final extra = state.extra as Map<String, dynamic>?;
-          return CupertinoPage(
-            child: ResetPasswordView(
-              phone: extra?['phone'] ?? '',
-            ),
-          );
+          return CupertinoPage(child: ResetPasswordView(phone: extra?['phone'] ?? ''));
         },
       ),
       GoRoute(
@@ -215,32 +208,23 @@ abstract class AppRouters {
       ),
       GoRoute(
         path: serviceDetails,
-        builder: (context, state) => const ServiceDetailsView(),
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ServiceDetailsView(serviceId: extra?['serviceId'] ?? 0);
+        },
       ),
       GoRoute(
         path: requestConsultation,
-        builder: (context, state) => const RequestConsultationView(),
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return RequestConsultationView(serviceId: extra?['serviceId'] ?? 0);
+        },
       ),
-      GoRoute(
-        path: bookingSuccess,
-        builder: (context, state) => const BookingSuccessView(),
-      ),
-      GoRoute(
-        path: myCases,
-        builder: (context, state) => const CasesRecordView(),
-      ),
-      GoRoute(
-        path: contactUs,
-        builder: (context, state) => const ContactUsView(),
-      ),
-      GoRoute(
-        path: aboutUs,
-        builder: (context, state) => const AboutUsView(),
-      ),
-      GoRoute(
-        path: chatInbox,
-        builder: (context, state) => const ChatInboxView(),
-      ),
+      GoRoute(path: bookingSuccess, builder: (context, state) => const BookingSuccessView()),
+      GoRoute(path: myCases, builder: (context, state) => const CasesRecordView()),
+      GoRoute(path: contactUs, builder: (context, state) => const ContactUsView()),
+      GoRoute(path: aboutUs, builder: (context, state) => const AboutUsView()),
+      GoRoute(path: chatInbox, builder: (context, state) => const ChatInboxView()),
       GoRoute(
         path: chatView,
         builder: (context, state) {

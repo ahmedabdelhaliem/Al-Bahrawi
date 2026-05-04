@@ -1,7 +1,13 @@
 import 'dart:io';
+import 'package:al_bahrawi/app/app_functions.dart';
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/app/di.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/cubit/update_profile_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,6 +27,7 @@ class _PersonalDataViewState extends State<PersonalDataView> {
   late TextEditingController _emailController;
   late TextEditingController _phoneController;
   XFile? _pickedImage;
+  final AppPreferences _appPreferences = instance<AppPreferences>();
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -41,9 +48,9 @@ class _PersonalDataViewState extends State<PersonalDataView> {
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: "User Name");
-    _emailController = TextEditingController(text: "user@example.com");
-    _phoneController = TextEditingController(text: "0123456789");
+    _nameController = TextEditingController(text: _appPreferences.getUserName());
+    _emailController = TextEditingController(text: _appPreferences.getEmail());
+    _phoneController = TextEditingController(text: _appPreferences.getMobile());
   }
 
   @override
@@ -56,50 +63,75 @@ class _PersonalDataViewState extends State<PersonalDataView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF9FAFB),
-      body: Column(
-        children: [
-          _buildHeader(context),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              physics: const BouncingScrollPhysics(),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    SizedBox(height: 30.h),
-                    _buildAvatarSection(),
-                    SizedBox(height: 32.h),
-                    _buildTextField(
-                      label: AppStrings.fullName.tr(),
-                      controller: _nameController,
-                      icon: Iconsax.user,
+    return BlocProvider(
+      create: (context) => UpdateProfileCubit(),
+      child: BlocConsumer<UpdateProfileCubit, BaseState>(
+        listener: (context, state) {
+          if (state.status == Status.failure) {
+            AppFunctions.showsToast(state.errorMessage ?? '', ColorManager.red, context);
+          }
+          if (state.status == Status.success) {
+            // Update local preferences with new data from server response
+            final user = state.data?.data?.user;
+            if (user != null) {
+              if (user.name != null) _appPreferences.saveUserName(user.name!);
+              if (user.email != null) _appPreferences.setEmail(user.email!);
+              if (user.phone != null) _appPreferences.setMobile(user.phone!);
+              if (user.image != null) _appPreferences.saveUserImage(user.image!);
+            }
+            
+            AppFunctions.showsToast("تم تحديث البيانات بنجاح", ColorManager.primary, context);
+            Navigator.pop(context, true);
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: const Color(0xffF9FAFB),
+            body: Column(
+              children: [
+                _buildHeader(context),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w),
+                    physics: const BouncingScrollPhysics(),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30.h),
+                          _buildAvatarSection(),
+                          SizedBox(height: 32.h),
+                          _buildTextField(
+                            label: AppStrings.fullName.tr(),
+                            controller: _nameController,
+                            icon: Iconsax.user,
+                          ),
+                          SizedBox(height: 20.h),
+                          _buildTextField(
+                            label: AppStrings.emailAddress.tr(),
+                            controller: _emailController,
+                            icon: Iconsax.sms,
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          SizedBox(height: 20.h),
+                          _buildTextField(
+                            label: AppStrings.phoneNumber.tr(),
+                            controller: _phoneController,
+                            icon: Iconsax.call,
+                            keyboardType: TextInputType.phone,
+                          ),
+                          SizedBox(height: 40.h),
+                          _buildSaveButton(context, state),
+                          SizedBox(height: 40.h),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 20.h),
-                    _buildTextField(
-                      label: AppStrings.emailAddress.tr(),
-                      controller: _emailController,
-                      icon: Iconsax.sms,
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    SizedBox(height: 20.h),
-                    _buildTextField(
-                      label: AppStrings.phoneNumber.tr(),
-                      controller: _phoneController,
-                      icon: Iconsax.call,
-                      keyboardType: TextInputType.phone,
-                    ),
-                    SizedBox(height: 40.h),
-                    _buildSaveButton(),
-                    SizedBox(height: 40.h),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -130,7 +162,7 @@ class _PersonalDataViewState extends State<PersonalDataView> {
                 onPressed: () => Navigator.pop(context),
               ),
               Text(
-                AppStrings.myAccount.tr(),
+                AppStrings.personalData.tr(),
                 style: getBoldStyle(color: ColorManager.white, fontSize: 22.sp),
               ),
               const SizedBox(width: 48),
@@ -142,6 +174,8 @@ class _PersonalDataViewState extends State<PersonalDataView> {
   }
 
   Widget _buildAvatarSection() {
+    String? currentImageUrl = _appPreferences.getUserImage();
+    
     return GestureDetector(
       onTap: _pickImage,
       child: Stack(
@@ -165,8 +199,12 @@ class _PersonalDataViewState extends State<PersonalDataView> {
               child: CircleAvatar(
                 radius: 65.r,
                 backgroundColor: const Color(0xffF3F4F6),
-                backgroundImage: _pickedImage != null ? FileImage(File(_pickedImage!.path)) : null,
-                child: _pickedImage == null
+                backgroundImage: _pickedImage != null 
+                    ? FileImage(File(_pickedImage!.path)) 
+                    : (currentImageUrl != null && currentImageUrl.isNotEmpty 
+                        ? NetworkImage(currentImageUrl) 
+                        : null) as ImageProvider?,
+                child: (_pickedImage == null && (currentImageUrl == null || currentImageUrl.isEmpty))
                     ? Icon(Iconsax.user, size: 55.sp, color: ColorManager.grey)
                     : null,
               ),
@@ -193,14 +231,21 @@ class _PersonalDataViewState extends State<PersonalDataView> {
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(BuildContext context, BaseState state) {
     return SizedBox(
       width: double.infinity,
       height: 55.h,
       child: ElevatedButton(
-        onPressed: () {
+        onPressed: state.status == Status.loading 
+            ? null 
+            : () {
           if (_formKey.currentState!.validate()) {
-            Navigator.pop(context);
+            context.read<UpdateProfileCubit>().updateProfile(
+              name: _nameController.text.trim(),
+              email: _emailController.text.trim(),
+              phone: _phoneController.text.trim(),
+              image: _pickedImage?.path,
+            );
           }
         },
         style: ElevatedButton.styleFrom(
@@ -211,7 +256,9 @@ class _PersonalDataViewState extends State<PersonalDataView> {
           elevation: 5,
           shadowColor: ColorManager.blue.withValues(alpha: 0.3),
         ),
-        child: Text(
+        child: state.status == Status.loading
+            ? const CircularProgressIndicator(color: ColorManager.white)
+            : Text(
           AppStrings.saveChanges.tr(),
           style: getBoldStyle(color: ColorManager.white, fontSize: 16.sp),
         ),
@@ -243,7 +290,7 @@ class _PersonalDataViewState extends State<PersonalDataView> {
           decoration: InputDecoration(
             prefixIcon: Icon(icon, color: ColorManager.primary, size: 20.sp),
             filled: true,
-            fillColor: ColorManager.lightGrey.withOpacity(0.2),
+            fillColor: ColorManager.lightGrey.withValues(alpha: 0.2),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide.none,
@@ -254,3 +301,4 @@ class _PersonalDataViewState extends State<PersonalDataView> {
     );
   }
 }
+

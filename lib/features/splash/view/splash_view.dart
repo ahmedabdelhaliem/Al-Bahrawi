@@ -14,6 +14,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:al_bahrawi/local_notification_and_token.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -40,6 +41,7 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
   }
 
   Future<void> setupInteractedMessage() async {
+    globalMethods.registerNotification(context);
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
@@ -54,7 +56,11 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
   }
 
   _goNext() async {
-    context.go(AppRouters.language);
+    if (_appPreferences.getToken().isNotEmpty) {
+      context.go(AppRouters.btmNav);
+    } else {
+      context.go(AppRouters.language);
+    }
   }
 
   @override

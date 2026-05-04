@@ -7,12 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1012444985183:android:b6784f5e882c4cf716e8ea",
+        "mobilesdk_app_id": "1:1012444985183:android:ec737ed27b685dd216e8ea",
         "android_client_info": {
           "package_name": "tech.brmja.alBahrawi"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1012444985183-uuvdd2uk1d3tk11to9p59luuqmmovvcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAn4iZ-oA_gHTSbVsT2QBff6T2CD6mxD2Q"
@@ -20,7 +25,71 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012444985183-uuvdd2uk1d3tk11to9p59luuqmmovvcv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1012444985183-tbhf0a83g6psfcqq6j0pgcs5tr9qjhj3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "tech.brmja.baseProject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012444985183:android:b6784f5e882c4cf716e8ea",
+        "android_client_info": {
+          "package_name": "tech.brmja.baseProject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012444985183-rfta0h8maf2f7m8q9o1l71nlf2uupaqr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.brmja.baseProject",
+            "certificate_hash": "7e4bc5ff34f0402cffab62192f96d961fe865ab4"
+          }
+        },
+        {
+          "client_id": "1012444985183-vk266sq1q6l62fcuhttrkioc2l53einj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.brmja.baseProject",
+            "certificate_hash": "abf1a13315f1861fcba063a8caaa8adf3a4ae35d"
+          }
+        },
+        {
+          "client_id": "1012444985183-uuvdd2uk1d3tk11to9p59luuqmmovvcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAn4iZ-oA_gHTSbVsT2QBff6T2CD6mxD2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012444985183-uuvdd2uk1d3tk11to9p59luuqmmovvcv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1012444985183-tbhf0a83g6psfcqq6j0pgcs5tr9qjhj3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "tech.brmja.baseProject"
+              }
+            }
+          ]
         }
       }
     }

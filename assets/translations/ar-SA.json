@@ -4,6 +4,7 @@
   "unKnownError": "خطأ غير معروف",
   "cacheError": "خطأ في ذاكرة التخزين المؤقت",
   "noInternetError": "لا يوجد اتصال بالإنترنت",
+  "personalData": "البيانات الشخصية",
   "badCertificate": "شهادة غير صالحة",
   "connectionError": "خطأ في الاتصال",
   "loading": "جاري التحميل...",
@@ -222,5 +223,7 @@
   "caseName": "اسم القضية",
   "cases": "القضايا",
   "checkoutRegistration": "تسجيل الإنصراف",
-  "register": "تسجيل"
+  "register": "تسجيل",
+  "pleaseEnterDescription": "يرجى إدخال وصف المشكلة",
+  "whatsApp": "واتساب"
 }

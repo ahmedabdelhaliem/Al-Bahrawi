@@ -228,7 +228,6 @@ class AppStrings {
   static const String uploadLimit = "uploadLimit";
   static const String sendRequest = "sendRequest";
   static const String privacyPolicyAgreement = "privacyPolicyAgreement";
-  static const String myCases = "myCases";
   static const String messageHint = "messageHint";
   static const String chatInbox = "chatInbox";
   static const String noMessagesYet = "noMessagesYet";
@@ -243,4 +242,8 @@ class AppStrings {
   static const String cases = "cases";
   static const String checkoutRegistration = "checkoutRegistration";
   static const String register = "register";
+  static const String pleaseEnterDescription = "pleaseEnterDescription";
+
+  static const String whatsApp = "whatsApp";
+  static const String personalData = "personalData";
 }

@@ -4,8 +4,13 @@ import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/widgets/shimmer_container_widget.dart';
+import 'package:al_bahrawi/features/services/cubit/services_cubit.dart';
+import 'package:al_bahrawi/features/services/models/services_model.dart';
 
 class ServicesView extends StatefulWidget {
   final bool isPushed;
@@ -17,6 +22,7 @@ class ServicesView extends StatefulWidget {
 
 class _ServicesViewState extends State<ServicesView> {
   int _selectedFilter = 0;
+  final TextEditingController _searchController = TextEditingController();
   final List<String> _filters = [
     AppStrings.all,
     AppStrings.tax,
@@ -24,17 +30,41 @@ class _ServicesViewState extends State<ServicesView> {
     AppStrings.companyFormation,
   ];
 
+  final List<int?> _filterIds = [
+    0, // All
+    2, // Tax Planning
+    3, // Accounting
+    5, // Company Formation
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initial fetch
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorManager.white,
-      body: Column(
-        children: [
-          _buildHeader(),
-          _buildSearchAndFilters(),
-          Expanded(child: _buildServicesList()),
-        ],
-      ),
+    return BlocProvider(
+      create: (context) => ServicesCubit()..getServices(),
+      child: Builder(builder: (context) {
+        return Scaffold(
+          backgroundColor: ColorManager.white,
+          body: Column(
+            children: [
+              _buildHeader(),
+              _buildSearchAndFilters(context),
+              Expanded(child: _buildServicesList()),
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -99,7 +129,7 @@ class _ServicesViewState extends State<ServicesView> {
     );
   }
 
-  Widget _buildSearchAndFilters() {
+  Widget _buildSearchAndFilters(BuildContext context) {
     return Transform.translate(
       offset: Offset(0, -30.h),
       child: Column(
@@ -130,8 +160,15 @@ class _ServicesViewState extends State<ServicesView> {
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: TextField(
+                    controller: _searchController,
                     textAlign: TextAlign.right,
                     style: getRegularStyle(color: ColorManager.blue, fontSize: 14.sp),
+                    onChanged: (value) {
+                      context.read<ServicesCubit>().getServices(
+                        serviceTypeId: _filterIds[_selectedFilter],
+                        search: value,
+                      );
+                    },
                     decoration: InputDecoration(
                       hintText: AppStrings.searchForService.tr(),
                       hintStyle: getRegularStyle(
@@ -153,7 +190,13 @@ class _ServicesViewState extends State<ServicesView> {
                     children: List.generate(_filters.length, (index) {
                       bool isSelected = _selectedFilter == index;
                       return GestureDetector(
-                        onTap: () => setState(() => _selectedFilter = index),
+                        onTap: () {
+                          setState(() => _selectedFilter = index);
+                          context.read<ServicesCubit>().getServices(
+                            serviceTypeId: _filterIds[index],
+                            search: _searchController.text,
+                          );
+                        },
                         child: Container(
                           margin: EdgeInsets.symmetric(horizontal: 4.w),
                           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
@@ -182,52 +225,120 @@ class _ServicesViewState extends State<ServicesView> {
   }
 
   Widget _buildServicesList() {
-    return ListView(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      physics: const BouncingScrollPhysics(),
-      children: [
-        Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            AppStrings.availableService.tr(),
-            style: getRegularStyle(color: ColorManager.grey, fontSize: 12.sp),
-          ),
-        ),
-        SizedBox(height: 16.h),
-        _buildServiceCard(
-          context,
-          AppStrings.taxConsultation.tr(),
-          "ضريبي",
-          AppStrings.taxConsultationShortDesc.tr(),
-          Icons.percent,
-          const Color(0xffE8F5E9),
-          const Color(0xff2E7D32),
-        ),
-        _buildServiceCard(
-          context,
-          AppStrings.accounting.tr(),
-          "محاسبة",
-          AppStrings.accountingShortDesc.tr(),
-          Icons.account_balance_wallet_outlined,
-          const Color(0xffE3F2FD),
-          const Color(0xff1565C0),
-        ),
-        _buildServiceCard(
-          context,
-          AppStrings.companyFormation.tr(),
-          "تأسيس",
-          AppStrings.companyFormationShortDesc.tr(),
-          Icons.business_center_outlined,
-          const Color(0xffFFF3E0),
-          const Color(0xffEF6C00),
-        ),
-        SizedBox(height: 80.h), // Bottom spacing for visibility
-      ],
+    return BlocBuilder<ServicesCubit, BaseState<ServicesModel>>(
+      builder: (context, state) {
+        if (state.status == Status.loading) {
+          return _buildShimmerList();
+        }
+
+        if (state.status == Status.failure) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(state.errorMessage ?? AppStrings.unKnownError.tr()),
+                SizedBox(height: 10.h),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<ServicesCubit>().getServices(
+                          serviceTypeId: _filterIds[_selectedFilter],
+                          search: _searchController.text,
+                        );
+                  },
+                  child: Text(AppStrings.tryAgain.tr()),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final services = state.data?.data ?? [];
+
+        if (services.isEmpty) {
+          return Center(child: Text(AppStrings.noData.tr()));
+        }
+
+        return ListView.builder(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          physics: const BouncingScrollPhysics(),
+          itemCount: services.length + 2, // Header text + Spacing at bottom
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 16.h),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    AppStrings.availableService.tr(),
+                    style: getRegularStyle(color: ColorManager.grey, fontSize: 12.sp),
+                  ),
+                ),
+              );
+            }
+
+            if (index == services.length + 1) {
+              return SizedBox(height: 80.h);
+            }
+
+            final service = services[index - 1];
+            return _buildServiceCard(
+              context,
+              service.id ?? 0,
+              service.name ?? '',
+              service.serviceType?.name ?? '',
+              service.description ?? '',
+              _getIconForServiceType(service.serviceType?.id),
+              _getBgColorForServiceType(service.serviceType?.id),
+              _getIconColorForServiceType(service.serviceType?.id),
+            );
+          },
+        );
+      },
     );
+  }
+
+  IconData _getIconForServiceType(int? id) {
+    switch (id) {
+      case 2: // Tax
+        return Icons.percent;
+      case 3: // Accounting
+        return Icons.account_balance_wallet_outlined;
+      case 5: // Company Formation
+        return Icons.business_center_outlined;
+      default:
+        return Icons.miscellaneous_services;
+    }
+  }
+
+  Color _getBgColorForServiceType(int? id) {
+    switch (id) {
+      case 2:
+        return const Color(0xffE8F5E9);
+      case 3:
+        return const Color(0xffE3F2FD);
+      case 5:
+        return const Color(0xffFFF3E0);
+      default:
+        return const Color(0xffF5F5F5);
+    }
+  }
+
+  Color _getIconColorForServiceType(int? id) {
+    switch (id) {
+      case 2:
+        return const Color(0xff2E7D32);
+      case 3:
+        return const Color(0xff1565C0);
+      case 5:
+        return const Color(0xffEF6C00);
+      default:
+        return ColorManager.blue;
+    }
   }
 
   Widget _buildServiceCard(
     BuildContext context,
+    int id,
     String title,
     String category,
     String desc,
@@ -236,7 +347,7 @@ class _ServicesViewState extends State<ServicesView> {
     Color iconColor,
   ) {
     return InkWell(
-      onTap: () => context.push(AppRouters.serviceDetails),
+      onTap: () => context.push(AppRouters.serviceDetails, extra: {'serviceId': id}),
       borderRadius: BorderRadius.circular(16.r),
       child: Container(
         margin: EdgeInsets.only(bottom: 12.h),
@@ -286,6 +397,46 @@ class _ServicesViewState extends State<ServicesView> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildShimmerList() {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 8.h),
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            color: ColorManager.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.3), width: 1),
+          ),
+          child: Row(
+            children: [
+              ShimmerContainerWidget(height: 12.h, width: 12.w, radios: 4.r),
+              const Spacer(),
+              Expanded(
+                flex: 8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    ShimmerContainerWidget(height: 10.h, width: 60.w),
+                    SizedBox(height: 8.h),
+                    ShimmerContainerWidget(height: 15.h, width: 150.w),
+                    SizedBox(height: 8.h),
+                    ShimmerContainerWidget(height: 10.h, width: 200.w),
+                  ],
+                ),
+              ),
+              SizedBox(width: 12.w),
+              ShimmerContainerWidget(height: 44.h, width: 44.w, radios: 12.r),
+            ],
+          ),
+        );
+      },
     );
   }
 }

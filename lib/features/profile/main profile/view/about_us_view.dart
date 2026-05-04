@@ -1,8 +1,13 @@
+import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/common/widgets/shimmer_container_widget.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/cubit/about_us_cubit.dart';
+import 'package:al_bahrawi/features/profile/main%20profile/model/about_us_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AboutUsView extends StatelessWidget {
@@ -10,81 +15,149 @@ class AboutUsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xffF9FAFB),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              _buildHeader(context),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 30.h),
-                  physics: const BouncingScrollPhysics(),
-                  child: Container(
-                    padding: EdgeInsets.all(24.w),
-                    decoration: BoxDecoration(
-                      color: ColorManager.white,
-                      borderRadius: BorderRadius.circular(20.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 15,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
+    return BlocProvider(
+      create: (context) => AboutUsCubit()..getAboutUs(),
+      child: Scaffold(
+        backgroundColor: const Color(0xffF9FAFB),
+        body: Column(
+          children: [
+            _buildHeader(context),
+            Expanded(
+              child: BlocBuilder<AboutUsCubit, BaseState<AboutUsModel>>(
+                builder: (context, state) {
+                  if (state.status == Status.loading) {
+                    return _buildShimmerContent();
+                  }
+
+                  if (state.status == Status.failure) {
+                    return Center(child: Text(state.errorMessage ?? AppStrings.unKnownError.tr()));
+                  }
+
+                  final aboutData = state.data?.data;
+
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 30.h),
+                    physics: const BouncingScrollPhysics(),
+                    child: Container(
+                      padding: EdgeInsets.all(24.w),
+                      decoration: BoxDecoration(
+                        color: ColorManager.white,
+                        borderRadius: BorderRadius.circular(20.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          if (aboutData?.banner != null) ...[
+                            Container(
+                              width: double.infinity,
+                              height: 160.h,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    ColorManager.blue.withValues(alpha: 0.05),
+                                    ColorManager.primary.withValues(alpha: 0.1),
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(20.r),
+                                border: Border.all(
+                                    color: ColorManager.primary.withValues(alpha: 0.1),
+                                    width: 1),
+                              ),
+                              child: Stack(
+                                children: [
+                                  Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(20.w),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                        child: Image.network(
+                                          aboutData!.banner!,
+                                          fit: BoxFit.contain,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return ShimmerContainerWidget(
+                                                height: 160.h,
+                                                width: double.infinity);
+                                          },
+                                          errorBuilder: (_, __, ___) => Icon(
+                                              Icons.image_not_supported_outlined,
+                                              color: ColorManager.grey,
+                                              size: 40.w),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: -20,
+                                    top: -20,
+                                    child: CircleAvatar(
+                                      radius: 40.r,
+                                      backgroundColor: ColorManager.gold.withValues(alpha: 0.05),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 24.h),
+                          ],
+                          Text(
+                            aboutData?.title ?? AppStrings.aboutUs.tr(),
+                            style: getBoldStyle(color: ColorManager.blue, fontSize: 18.sp),
+                            textAlign: TextAlign.right,
+                          ),
+                          SizedBox(height: 16.h),
+                          Text(
+                            aboutData?.description ?? "",
+                            style: getRegularStyle(color: ColorManager.greyText, fontSize: 14.sp, height: 1.8),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        _buildSection(
-                          "مرحبا بكم في البحراوي",
-                          "تعتبر شركة ال بحراوي من الشركات الرائدة في تقديم الاستشارات المالية والضريبية وتأسيس الشركات. نحن نفخر بتقديم حلول مبتكرة وشاملة تلبي تطلعات عملائنا وتساهم في نمو أعمالهم واستقرارها المالي.",
-                        ),
-                        const Divider(height: 1, color: Color(0xffF3F4F6)),
-                        SizedBox(height: 24.h),
-                        _buildSection(
-                          "رؤيتنا",
-                          "أن نكون الشريك المالي الأول والموثوق لكافة الشركات والمؤسسات في المنطقة، من خلال تقديم خدمات مهنية تتسم بالشفافية والابتكار، والمساهمة الفعالة في بناء مستقبل مالي مستدام لعملائنا.",
-                        ),
-                        const Divider(height: 1, color: Color(0xffF3F4F6)),
-                        SizedBox(height: 24.h),
-                        _buildSection(
-                          "رسالتنا",
-                          "الالتزام بتقديم أعلى معايير الجودة في الخدمات المحاسبية والضريبية، وتوفير بيئة عمل محفزة لفريقنا لضمان تقديم أفضل الاستشارات التي تساعد عملائنا على اتخاذ قرارات مالية حكيمة ومدروسة.",
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Positioned(
-            bottom: 30.h,
-            left: 24.w,
-            child: GestureDetector(
-              onTap: () {
-                // TODO: Implement WhatsApp redirection
-              },
-              child: Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: const Color(0xff25D366),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xff25D366).withValues(alpha: 0.3),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Icon(Icons.chat_bubble_rounded, color: ColorManager.white, size: 28.w),
+                  );
+                },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmerContent() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 30.h),
+      child: Container(
+        padding: EdgeInsets.all(24.w),
+        decoration: BoxDecoration(
+          color: ColorManager.white,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ShimmerContainerWidget(height: 180.h, width: double.infinity, radios: 16.r),
+            SizedBox(height: 24.h),
+            ShimmerContainerWidget(height: 20.h, width: 150.w),
+            SizedBox(height: 16.h),
+            ShimmerContainerWidget(height: 15.h, width: double.infinity),
+            SizedBox(height: 10.h),
+            ShimmerContainerWidget(height: 15.h, width: double.infinity),
+            SizedBox(height: 10.h),
+            ShimmerContainerWidget(height: 15.h, width: 250.w),
+          ],
+        ),
       ),
     );
   }
@@ -120,28 +193,6 @@ class AboutUsView extends StatelessWidget {
               ),
               const SizedBox(width: 48),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSection(String title, String content) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 24.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            title,
-            style: getBoldStyle(color: ColorManager.blue, fontSize: 18.sp),
-            textAlign: TextAlign.right,
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            content,
-            style: getRegularStyle(color: ColorManager.greyText, fontSize: 14.sp),
-            textAlign: TextAlign.right,
           ),
         ],
       ),

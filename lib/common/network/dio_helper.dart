@@ -41,25 +41,28 @@ class DioHelper {
     }
   }
 
-  static void headers() {
-    dio!.options.headers = {
-      'Content-Type': 'application/json',
+  static Map<String, dynamic> headers(
+      {bool isPublic = false, bool isFormData = false}) {
+    return {
+      if (!isFormData) 'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Accept-Language': _appPreferences.getAppLanguage(),
-      if(_appPreferences.getToken().isNotEmpty) 'Authorization': "Bearer ${_appPreferences.getToken()}",
+      if (!isPublic && _appPreferences.getToken().isNotEmpty)
+        'Authorization': "Bearer ${_appPreferences.getToken()}",
     };
   }
 
-  static Future<Either<Failure, T>>  getData<T>({
+  static Future<Either<Failure, T>> getData<T>({
     required String url,
     Map<String, dynamic>? query,
     required T Function(Map<String, dynamic> json) fromJson,
+    bool isPublic = false,
   }) async {
-    headers();
-      try{
+    try {
       Response response = await dio!.get(
         url,
         queryParameters: query,
+        options: Options(headers: headers(isPublic: isPublic)),
       );
 
       T result = fromJson(response.data);
@@ -74,19 +77,24 @@ class DioHelper {
     required dynamic data,
     Map<String, dynamic>? query,
     required T Function(Map<String, dynamic> json) fromJson,
+    bool isPublic = false,
   }) async {
-    headers();
-      try{
-        Response response = await dio!.post(
-      url,
-      data: data,
-      queryParameters: query,
-    );
-        T result = fromJson(response.data);
-        return Right(result);
-      }catch(e){
-        return Left(ErrorHandler.handle(e).failure);
-      }
+    try {
+      bool isFormData = data is FormData;
+      Response response = await dio!.post(
+        url,
+        data: data,
+        queryParameters: query,
+        options: Options(
+          headers: headers(isPublic: isPublic, isFormData: isFormData),
+          contentType: isFormData ? null : 'application/json',
+        ),
+      );
+      T result = fromJson(response.data);
+      return Right(result);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
   }
 
   static Future<Either<Failure, T>> putData<T>({
@@ -94,32 +102,38 @@ class DioHelper {
     required dynamic data,
     Map<String, dynamic>? query,
     required T Function(Map<String, dynamic> json) fromJson,
+    bool isPublic = false,
   }) async {
-    headers();
-      try{
-        Response response = await dio!.put(
-      url,
-      data: data,
-      queryParameters: query,
-    );
-        T result = fromJson(response.data);
-        return Right(result);
-      }catch(e){
-        return Left(ErrorHandler.handle(e).failure);
-      }
+    try {
+      bool isFormData = data is FormData;
+      Response response = await dio!.put(
+        url,
+        data: data,
+        queryParameters: query,
+        options: Options(
+          headers: headers(isPublic: isPublic, isFormData: isFormData),
+          contentType: isFormData ? null : 'application/json',
+        ),
+      );
+      T result = fromJson(response.data);
+      return Right(result);
+    } catch (e) {
+      return Left(ErrorHandler.handle(e).failure);
+    }
   }
 
   static Future<Either<Failure, T>> deleteData<T>({
     required String url,
     Map<String, dynamic>? query,
     required T Function(Map<String, dynamic> json) fromJson,
+    bool isPublic = false,
   }) async {
-    headers();
-      try{
-        Response response = await dio!.delete(
-      url,
-      queryParameters: query,
-    );
+    try {
+      Response response = await dio!.delete(
+        url,
+        queryParameters: query,
+        options: Options(headers: headers(isPublic: isPublic)),
+      );
         T result = fromJson(response.data);
         return Right(result);
       }catch(e){

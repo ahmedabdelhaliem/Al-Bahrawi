@@ -1,19 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:al_bahrawi/common/resources/app_router.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+
 import '../model/profile_model.dart';
 
 class ProfileData {
   static List<ProfileModel> profileItems = [
-    ProfileModel(
-      icon: Iconsax.user,
-      title: AppStrings.myAccount,
-      route: AppRouters.myAccount,
-    ),
+    ProfileModel(icon: Iconsax.user, title: AppStrings.myAccount, route: AppRouters.myAccount),
     ProfileModel(
       icon: Icons.assignment_outlined,
-      title: AppStrings.myCases,
+      title: AppStrings.casesRecord,
       route: AppRouters.myCases,
     ),
     ProfileModel(
@@ -26,8 +23,12 @@ class ProfileData {
       title: AppStrings.termsAndConditions,
       route: AppRouters.termsAndConditions,
     ),
-    
-    
+
+    ProfileModel(
+      icon: Icons.question_answer_outlined,
+      title: AppStrings.faqs,
+      route: AppRouters.commonQuestion,
+    ),
     ProfileModel(
       icon: Icons.chat_bubble_outline_rounded,
       title: AppStrings.contactUs,

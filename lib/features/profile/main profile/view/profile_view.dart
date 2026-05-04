@@ -1,3 +1,5 @@
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/app/di.dart';
 import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:al_bahrawi/common/resources/app_router.dart';
 import 'package:al_bahrawi/features/profile/main%20profile/model/profile_data.dart';
@@ -40,7 +42,10 @@ class _ProfileViewState extends State<ProfileView> {
                       final item = ProfileData.profileItems[index];
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-                        child: AccountActionButton(model: item),
+                        child: AccountActionButton(
+                          model: item,
+                          onRefresh: () => setState(() {}),
+                        ),
                       );
                     },
                   ),
@@ -60,7 +65,9 @@ class _ProfileViewState extends State<ProfileView> {
     return BlocConsumer<LogoutCubit, BaseState>(
       listener: (context, state) {
         if (state.status == Status.success) {
-          context.go(AppRouters.login);
+          instance<AppPreferences>().logout().then((_) {
+            if (mounted) context.go(AppRouters.login);
+          });
         }
       },
       builder: (context, state) {
@@ -126,11 +133,14 @@ class _ProfileViewState extends State<ProfileView> {
                 children: [
                   Text(
                     "${AppStrings.hello.tr()} 👋",
-                    style: getRegularStyle(color: ColorManager.white.withValues(alpha: 0.8), fontSize: 14.sp),
+                    style: getRegularStyle(
+                        color: ColorManager.white.withValues(alpha: 0.8),
+                        fontSize: 14.sp),
                   ),
                   Text(
-                    "أحمد عبد الحليم", // Placeholder for user name
-                    style: getBoldStyle(color: ColorManager.white, fontSize: 18.sp),
+                    instance<AppPreferences>().getUserName(),
+                    style:
+                        getBoldStyle(color: ColorManager.white, fontSize: 18.sp),
                   ),
                 ],
               ),
@@ -143,17 +153,31 @@ class _ProfileViewState extends State<ProfileView> {
                     decoration: BoxDecoration(
                       color: ColorManager.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
-                      border: Border.all(color: ColorManager.white.withValues(alpha: 0.3), width: 1),
+                      border: Border.all(
+                          color: ColorManager.white.withValues(alpha: 0.3),
+                          width: 1),
                     ),
                     child: CircleAvatar(
                       radius: 35.r,
                       backgroundColor: ColorManager.white,
-                      backgroundImage: null, // Placeholder
-                      child: Icon(Icons.person, color: ColorManager.blue, size: 35.w),
+                      backgroundImage: (instance<AppPreferences>().getUserImage()?.isNotEmpty == true &&
+                                        instance<AppPreferences>().getUserImage()!.length > 40)
+                          ? NetworkImage(instance<AppPreferences>().getUserImage()!)
+                          : null,
+                      child: (instance<AppPreferences>().getUserImage()?.isNotEmpty == true &&
+                              instance<AppPreferences>().getUserImage()!.length > 40)
+                          ? null
+                          : Icon(Icons.person,
+                              color: ColorManager.blue, size: 35.w),
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => context.push(AppRouters.myAccount),
+                    onTap: () async {
+                      final result = await context.push(AppRouters.myAccount);
+                      if (result == true) {
+                        setState(() {}); // Refresh UI with new data from AppPrefs
+                      }
+                    },
                     child: Container(
                       padding: EdgeInsets.all(6.w),
                       decoration: BoxDecoration(

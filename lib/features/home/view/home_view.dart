@@ -1,12 +1,20 @@
+import 'dart:async';
+
+import 'package:al_bahrawi/common/base/base_state.dart';
+import 'package:al_bahrawi/common/resources/app_router.dart';
 import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
-import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
+import 'package:al_bahrawi/common/widgets/shimmer_container_widget.dart';
+import 'package:al_bahrawi/features/services/cubit/services_cubit.dart';
+import 'package:al_bahrawi/features/services/models/services_model.dart';
 import 'package:al_bahrawi/features/services/view/services_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class HomeView extends StatefulWidget {
@@ -18,26 +26,58 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final PageController _pageController = PageController();
+  Timer? _timer;
 
   @override
   void dispose() {
+    _timer?.cancel();
     _pageController.dispose();
     super.dispose();
   }
 
+  void _startAutoScroll(int itemCount) {
+    _timer?.cancel();
+    if (itemCount > 1) {
+      _timer = Timer.periodic(const Duration(seconds: 7), (Timer timer) {
+        if (_pageController.hasClients) {
+          int nextPage = _pageController.page!.toInt() + 1;
+          if (nextPage >= itemCount) {
+            nextPage = 0;
+          }
+          _pageController.animateToPage(
+            nextPage,
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorManager.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildHeader(context),
-            _buildStatsSection(),
-            _buildServicesSection(context),
-            // _buildBottomCTA(),
-            SizedBox(height: 40.h),
-          ],
+    return BlocProvider(
+      create: (context) => ServicesCubit()..getServices(),
+      child: BlocListener<ServicesCubit, BaseState<ServicesModel>>(
+        listener: (context, state) {
+          if (state.status == Status.success) {
+            final services = state.data?.data ?? [];
+            _startAutoScroll(services.length);
+          }
+        },
+        child: Scaffold(
+          backgroundColor: ColorManager.white,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildHeader(context),
+                _buildStatsSection(),
+                _buildServicesSection(context),
+                // _buildBottomCTA(),
+                SizedBox(height: 40.h),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -219,51 +259,49 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
           SizedBox(height: 10.h),
-          ExpandablePageView(
-            controller: _pageController,
-            children: [
-              _buildServiceCard(
-                AppStrings.taxConsultation.tr(),
-                AppStrings.taxConsultationDesc.tr(),
-                Icons.account_balance,
-                const Color(0xff2E7D32),
-                const Color(0xffE8F5E9),
-              ),
-              _buildServiceCard(
-                AppStrings.accounting.tr(),
-                AppStrings.accountingDesc.tr(),
-                Icons.grid_view_rounded,
-                const Color(0xff3F51B5),
-                const Color(0xffE8EAF6),
-              ),
-              _buildServiceCard(
-                AppStrings.companyFormation.tr(),
-                AppStrings.companyFormationDesc.tr(),
-                Icons.business,
-                const Color(0xffE65100),
-                const Color(0xffFFF3E0),
-              ),
-              _buildServiceCard(
-                AppStrings.auditing.tr(),
-                AppStrings.auditingDesc.tr(),
-                Icons.fact_check_rounded,
-                const Color(0xff00695C),
-                const Color(0xffE0F2F1),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          SmoothPageIndicator(
-            controller: _pageController,
-            count: 4,
-            effect: ExpandingDotsEffect(
-              dotHeight: 6.h,
-              dotWidth: 10.w,
-              activeDotColor: ColorManager.primary,
-              dotColor: ColorManager.primary.withValues(alpha: 0.2),
-              expansionFactor: 3,
-              spacing: 8.w,
-            ),
+          BlocBuilder<ServicesCubit, BaseState<ServicesModel>>(
+            builder: (context, state) {
+              if (state.status == Status.loading) {
+                return _buildShimmerServices();
+              }
+
+              final services = state.data?.data ?? [];
+              if (services.isEmpty) return const SizedBox();
+
+              return Column(
+                children: [
+                  ExpandablePageView.builder(
+                    controller: _pageController,
+                    itemCount: services.length,
+                    itemBuilder: (context, index) {
+                      final service = services[index];
+                      return _buildServiceCard(
+                        context,
+                        service.id ?? 0,
+                        service.name ?? '',
+                        service.description ?? '',
+                        _getIconForServiceType(service.serviceType?.id),
+                        _getIconColorForServiceType(service.serviceType?.id),
+                        _getBgColorForServiceType(service.serviceType?.id),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20.h),
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: services.length,
+                    effect: ExpandingDotsEffect(
+                      dotHeight: 6.h,
+                      dotWidth: 10.w,
+                      activeDotColor: ColorManager.primary,
+                      dotColor: ColorManager.primary.withValues(alpha: 0.2),
+                      expansionFactor: 3,
+                      spacing: 8.w,
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           SizedBox(height: 20.h),
         ],
@@ -272,97 +310,130 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildServiceCard(
+    BuildContext context,
+    int id,
     String title,
     String desc,
     IconData icon,
     Color iconColor,
     Color bgColor,
   ) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-      padding: EdgeInsets.all(24.w),
-      decoration: BoxDecoration(
-        color: ColorManager.white,
-        borderRadius: BorderRadius.circular(24.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-        border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.4), width: 0.8),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: EdgeInsets.all(14.w),
-            decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12.r)),
-            child: Icon(icon, color: iconColor, size: 28.w),
-          ),
-          SizedBox(height: 20.h),
-          Text(
-            title,
-            style: getBoldStyle(color: ColorManager.textColor, fontSize: 18.sp),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 10.h),
-          Text(
-            desc,
-            style: getRegularStyle(
-              color: ColorManager.textColor.withValues(alpha: 0.6),
-              fontSize: 13.sp,
+    return InkWell(
+      onTap: () => context.push(AppRouters.serviceDetails, extra: {'serviceId': id}),
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+        padding: EdgeInsets.all(24.w),
+        decoration: BoxDecoration(
+          color: ColorManager.white,
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.04),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
             ),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+          ],
+          border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.4), width: 0.8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(14.w),
+              decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(12.r)),
+              child: Icon(icon, color: iconColor, size: 28.w),
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              title,
+              style: getBoldStyle(color: ColorManager.textColor, fontSize: 18.sp),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 10.h),
+            Text(
+              desc,
+              style: getRegularStyle(
+                color: ColorManager.textColor.withValues(alpha: 0.6),
+                fontSize: 13.sp,
+              ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildBottomCTA() {
-    return Container(
-      margin: EdgeInsets.all(24.w),
-      padding: EdgeInsets.all(24.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [ColorManager.blue, ColorManager.primary.withValues(alpha: 0.8)],
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-        ),
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Column(
-        children: [
-          Text(
-            AppStrings.haveFinancialInquiry.tr(),
-            style: getBoldStyle(color: ColorManager.white, fontSize: 18.sp),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            AppStrings.contactOurConsultants.tr(),
-            style: getRegularStyle(
-              color: ColorManager.white.withValues(alpha: 0.8),
-              fontSize: 12.sp,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 20.h),
-          DefaultButtonWidget(
-            onPressed: () {},
-            text: AppStrings.requestConsultationBtn.tr(),
+  IconData _getIconForServiceType(int? id) {
+    switch (id) {
+      case 2: // Tax
+        return Icons.percent;
+      case 3: // Accounting
+        return Icons.account_balance_wallet_outlined;
+      case 5: // Company Formation
+        return Icons.business_center_outlined;
+      default:
+        return Icons.miscellaneous_services;
+    }
+  }
+
+  Color _getBgColorForServiceType(int? id) {
+    switch (id) {
+      case 2:
+        return const Color(0xffE8F5E9);
+      case 3:
+        return const Color(0xffE3F2FD);
+      case 5:
+        return const Color(0xffFFF3E0);
+      default:
+        return const Color(0xffF5F5F5);
+    }
+  }
+
+  Color _getIconColorForServiceType(int? id) {
+    switch (id) {
+      case 2:
+        return const Color(0xff2E7D32);
+      case 3:
+        return const Color(0xff1565C0);
+      case 5:
+        return const Color(0xffEF6C00);
+      default:
+        return ColorManager.blue;
+    }
+  }
+
+  Widget _buildShimmerServices() {
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+          height: 180.h,
+          width: double.infinity,
+          padding: EdgeInsets.all(24.w),
+          decoration: BoxDecoration(
             color: ColorManager.white,
-            textColor: ColorManager.blue,
-            radius: 12.r,
-            isIcon: true,
-            textFirst: true,
-            iconBuilder: Icon(Icons.arrow_forward, color: ColorManager.gold, size: 20.sp),
+            borderRadius: BorderRadius.circular(24.r),
+            border: Border.all(color: ColorManager.greyBorder.withValues(alpha: 0.4), width: 0.8),
           ),
-        ],
-      ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ShimmerContainerWidget(height: 56.h, width: 56.h, radios: 12.r),
+              SizedBox(height: 20.h),
+              ShimmerContainerWidget(height: 18.h, width: 140.w),
+              SizedBox(height: 10.h),
+              ShimmerContainerWidget(height: 12.h, width: 220.w),
+            ],
+          ),
+        ),
+        SizedBox(height: 20.h),
+        Center(
+          child: ShimmerContainerWidget(height: 6.h, width: 80.w, radios: 3.r),
+        ),
+      ],
     );
   }
 }

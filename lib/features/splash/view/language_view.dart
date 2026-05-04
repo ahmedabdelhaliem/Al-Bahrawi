@@ -153,7 +153,11 @@ class _LanguageViewState extends State<LanguageView> {
     }
     
     if (mounted) {
-      context.go(AppRouters.login);
+      if (_appPreferences.getToken().isNotEmpty) {
+        context.go(AppRouters.btmNav);
+      } else {
+        context.go(AppRouters.login);
+      }
     }
   }
 }

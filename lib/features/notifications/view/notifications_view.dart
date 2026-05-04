@@ -1,9 +1,11 @@
+import 'package:al_bahrawi/common/resources/app_router.dart';
 import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class NotificationsView extends StatelessWidget {
   const NotificationsView({super.key});
@@ -22,43 +24,40 @@ class NotificationsView extends StatelessWidget {
               children: [
                 _buildSectionTitle("اليوم"),
                 _buildNotificationCard(
-                  title: "اسم الاشعار",
-                  desc: "وصف الاشعار",
-                  icon: Icons.grid_view_rounded,
-                  iconColor: ColorManager.grey,
-                  bgColor: ColorManager.grey.withValues(alpha: 0.05),
-                ),
-                _buildNotificationCard(
-                  title: "اسم الاشعار",
-                  desc: "وصف الاشعار",
+                  title: "تم الرد على طلبك",
+                  desc: "تم تحديد التكلفة التقديرية لطلب الاستشارة الخاص بك",
                   icon: Icons.notifications_active_rounded,
                   iconColor: ColorManager.white,
                   bgColor: ColorManager.primary,
+                  onTap: () => context.push(AppRouters.myCases),
                 ),
                 _buildNotificationCard(
-                  title: "اسم الاشعار",
-                  desc: "وصف الاشعار",
+                  title: "تحديث في الطلب",
+                  desc: "المستشار أضاف ملاحظات جديدة على طلبك",
                   icon: Icons.confirmation_number_rounded,
                   iconColor: ColorManager.blue,
                   bgColor: ColorManager.blue.withValues(alpha: 0.05),
+                  onTap: () => context.push(AppRouters.myCases),
                 ),
                 SizedBox(height: 10.h),
                 _buildSectionTitle("أمس"),
                 _buildNotificationCard(
-                  title: "اسم الاشعار",
-                  desc: "وصف الاشعار",
+                  title: "طلب جديد",
+                  desc: "تم استلام طلب الاستشارة بنجاح وهو قيد المراجعة",
                   icon: Icons.grid_view_rounded,
                   iconColor: ColorManager.grey,
                   bgColor: ColorManager.grey.withValues(alpha: 0.05),
+                  onTap: () => context.push(AppRouters.myCases),
                 ),
                 SizedBox(height: 10.h),
                 _buildSectionTitle("20 نوفمبر 2025"),
                 _buildNotificationCard(
-                  title: "اسم الاشعار",
-                  desc: "وصف الاشعار",
+                  title: "مرحباً بك",
+                  desc: "أهلاً بك في تطبيق البحراوي للاستشارات",
                   icon: Icons.grid_view_rounded,
                   iconColor: ColorManager.grey,
                   bgColor: ColorManager.grey.withValues(alpha: 0.05),
+                  onTap: () => context.push(AppRouters.myCases),
                 ),
               ],
             ),
@@ -122,6 +121,7 @@ class NotificationsView extends StatelessWidget {
     required IconData icon,
     required Color iconColor,
     required Color bgColor,
+    VoidCallback? onTap,
   }) {
     return Dismissible(
       key: UniqueKey(),
@@ -134,51 +134,58 @@ class NotificationsView extends StatelessWidget {
         ),
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(left: 20.w),
-        child: Icon(Icons.delete_outline_rounded, color: ColorManager.white, size: 24.w),
+        child: Icon(Icons.delete_outline_rounded,
+            color: ColorManager.white, size: 24.w),
       ),
-      child: Container(
-        margin: EdgeInsets.only(bottom: 16.h),
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: ColorManager.white,
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    title,
-                    style: getBoldStyle(color: ColorManager.blue, fontSize: 15.sp),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    desc,
-                    style: getRegularStyle(color: ColorManager.greyText, fontSize: 12.sp),
-                  ),
-                ],
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16.r),
+        child: Container(
+          margin: EdgeInsets.only(bottom: 16.h),
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: ColorManager.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.02),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
-            ),
-            SizedBox(width: 16.w),
-            Container(
-              padding: EdgeInsets.all(10.w),
-              decoration: BoxDecoration(
-                color: bgColor,
-                shape: BoxShape.circle,
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      title,
+                      style:
+                          getBoldStyle(color: ColorManager.blue, fontSize: 15.sp),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      desc,
+                      style: getRegularStyle(
+                          color: ColorManager.greyText, fontSize: 12.sp),
+                    ),
+                  ],
+                ),
               ),
-              child: Icon(icon, color: iconColor, size: 20.w),
-            ),
-          ],
+              SizedBox(width: 16.w),
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: iconColor, size: 20.w),
+              ),
+            ],
+          ),
         ),
       ),
     );

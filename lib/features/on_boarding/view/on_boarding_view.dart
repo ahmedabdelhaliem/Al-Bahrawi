@@ -54,6 +54,7 @@ class _OnBoardingViewState extends State<OnBoardingView> {
   @override
   void initState() {
     super.initState();
+    instance<OnBoardingCubit>().getOnBoarding();
     instance<AppPreferences>().setOnBoardingScreenViewed();
   }
 
@@ -66,7 +67,16 @@ class _OnBoardingViewState extends State<OnBoardingView> {
         backgroundColor: ColorManager.bg,
         body: BlocBuilder<OnBoardingCubit, BaseState<OnBoardingModel>>(
           builder: (context, state) {
-            final items = _getMockOnBoardingItems();
+            if (state.status == Status.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final items = state.data?.items ?? [];
+
+            if (items.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
             return Stack(
               children: [
                 // Image Section
@@ -81,7 +91,8 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                     onPageChanged: (int index) {
                       _onBoardingCubit.goNext(index, items.length);
                     },
-                    itemBuilder: (context, index) => OnBoardingWidget(item: items[index]),
+                    itemBuilder: (context, index) =>
+                        OnBoardingWidget(item: items[index]),
                     itemCount: items.length,
                   ),
                 ),
