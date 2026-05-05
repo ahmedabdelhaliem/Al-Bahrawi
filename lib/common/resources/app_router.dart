@@ -64,7 +64,7 @@ abstract class AppRouters {
   static const String chatView = '/chatView';
   static const String lawyerAttendance = '/lawyerAttendance';
   static const String lawyerDashboard = '/lawyerDashboard';
-  static const String lawyerCheckout = '/lawyerCheckout';
+      static const String lawyerCheckout = '/lawyerCheckout';
 
   static final GoRouter router = GoRouter(
     navigatorKey: navigatorKey,

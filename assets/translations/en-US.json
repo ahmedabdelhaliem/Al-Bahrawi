@@ -212,5 +212,12 @@
   "sendRequest": "Send Request",
   "privacyPolicyAgreement": "By clicking send, you agree to our privacy policy.",
   "casesRecord": "My Cases",
+  "lawyer": "Lawyer",
+  "attendanceRegistration": "Attendance Registration",
+  "attendance": "Attendance",
+  "myCurrentLocation": "My Current Location",
+  "signIn": "Sign In",
+  "checkout": "Check Out",
+  "notes": "Notes",
   "whatsApp": "WhatsApp"
 }

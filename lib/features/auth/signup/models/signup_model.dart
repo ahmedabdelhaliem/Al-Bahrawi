@@ -43,6 +43,8 @@ class SignupModel extends Equatable {
   List<Object?> get props => [phone, message, code];
 }
 
+enum UserRole { user, employee, admin }
+
 class UserModel extends Equatable {
   const UserModel({
     required this.id,
@@ -50,11 +52,8 @@ class UserModel extends Equatable {
     required this.email,
     required this.phone,
     required this.image,
-    required this.country,
-    required this.city,
-    required this.isSubscribed,
-    required this.subscriptionPrice,
-    required this.subscriptionEndsAt,
+    this.userType,
+    this.isOfficeClient,
     required this.role,
   });
 
@@ -63,11 +62,8 @@ class UserModel extends Equatable {
   final String? email;
   final String? phone;
   final String? image;
-  final int? country;
-  final int? city;
-  final bool? isSubscribed;
-  final num? subscriptionPrice;
-  final String? subscriptionEndsAt;
+  final String? userType;
+  final bool? isOfficeClient;
   final UserRole? role;
 
   UserModel copyWith({
@@ -76,11 +72,8 @@ class UserModel extends Equatable {
     String? email,
     String? phone,
     String? image,
-    int? country,
-    int? city,
-    bool? isSubscribed,
-    num? subscriptionPrice,
-    String? subscriptionEndsAt,
+    String? userType,
+    bool? isOfficeClient,
     UserRole? role,
   }) {
     return UserModel(
@@ -89,48 +82,55 @@ class UserModel extends Equatable {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       image: image ?? this.image,
-      country: country ?? this.country,
-      city: city ?? this.city,
-      isSubscribed: isSubscribed ?? this.isSubscribed,
-      subscriptionPrice: subscriptionPrice ?? this.subscriptionPrice,
-      subscriptionEndsAt: subscriptionEndsAt ?? this.subscriptionEndsAt,
+      userType: userType ?? this.userType,
+      isOfficeClient: isOfficeClient ?? this.isOfficeClient,
       role: role ?? this.role,
     );
   }
 
-  factory UserModel.fromJson(Map<String, dynamic> json){
-    final price = json["subscription_price"];
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    String type = json["user_type"] ?? '';
+    UserRole userRole;
+    if (type == 'employee') {
+      userRole = UserRole.employee;
+    } else if (type == 'admin') {
+      userRole = UserRole.admin;
+    } else {
+      userRole = UserRole.user;
+    }
+
     return UserModel(
       id: json["id"],
       name: json["name"],
       email: json["email"],
       phone: json["phone"],
       image: json["image"],
-      country: json["country"],
-      city: json["city"],
-      isSubscribed: json["is_subscribed"] == true,
-      subscriptionPrice: price is num ? price : (price != null ? num.tryParse(price.toString()) : null),
-      subscriptionEndsAt: json["subscription_ends_at"]?.toString(),
-      role: json["role"] == 'seller' ? UserRole.captain : UserRole.passenger,
+      userType: type,
+      isOfficeClient: json["is_office_client"] == true,
+      role: userRole,
     );
   }
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "email": email,
-    "phone": phone,
-    "image": image,
-    "country": country,
-    "city": city,
-    "is_subscribed": isSubscribed,
-    "subscription_price": subscriptionPrice,
-    "subscription_ends_at": subscriptionEndsAt,
-    "role": role == UserRole.captain ? 'seller' : 'buyer',
-  };
+        "id": id,
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "image": image,
+        "user_type": userType,
+        "is_office_client": isOfficeClient,
+        "role": role?.name,
+      };
 
   @override
-  List<Object?> get props => [id, name, email, phone, image, country, city, isSubscribed, subscriptionPrice, subscriptionEndsAt, role];
+  List<Object?> get props => [
+        id,
+        name,
+        email,
+        phone,
+        image,
+        userType,
+        isOfficeClient,
+        role,
+      ];
 }
-
-enum UserRole {passenger, captain}

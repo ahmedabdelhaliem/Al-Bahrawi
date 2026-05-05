@@ -64,7 +64,7 @@ class _SignUpViewState extends State<SignUpView> {
   @override
   void initState() {
     super.initState();
-    if (widget.isBuyer) _userRole = UserRole.passenger;
+    if (widget.isBuyer) _userRole = UserRole.user;
   }
 
   @override
@@ -365,7 +365,7 @@ class _SignUpViewState extends State<SignUpView> {
                   passwordConfirmation: _confirmPasswordController.text.trim(),
                   birthDate: _birthDateController.text.trim(),
                   imagePath: _selectedImagePath,
-                  userRole: _userRole ?? UserRole.passenger,
+                  userRole: _userRole ?? UserRole.user,
                 );
               }
             },

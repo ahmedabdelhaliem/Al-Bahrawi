@@ -9,6 +9,7 @@ import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/values_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
+import 'package:al_bahrawi/features/auth/signup/models/signup_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +58,12 @@ class _SplashViewState extends State<SplashView> with TickerProviderStateMixin {
 
   _goNext() async {
     if (_appPreferences.getToken().isNotEmpty) {
-      context.go(AppRouters.btmNav);
+      final role = _appPreferences.getUserRole();
+      if (role == UserRole.employee) {
+        context.go(AppRouters.lawyerAttendance);
+      } else {
+        context.go(AppRouters.btmNav);
+      }
     } else {
       context.go(AppRouters.language);
     }

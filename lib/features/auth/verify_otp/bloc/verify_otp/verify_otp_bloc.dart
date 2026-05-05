@@ -37,14 +37,17 @@ class VerifyOtpCubit extends Cubit<BaseState<LoginModel>> {
           (failure) => emit(state.copyWith(status: Status.failure, failure: failure, errorMessage: failure.message)),
           (loginModel) async {
             if(!isForgetPassword) {
-              await Future.wait([
+              await Future.wait<void>([
                 instance<AppPreferences>().saveUserName(loginModel.data?.user?.name ?? ''),
-                if(loginModel.data?.user?.image != null) instance<AppPreferences>().saveUserImage(loginModel.data!.user!.image!),
+                if (loginModel.data?.user?.image != null)
+                  instance<AppPreferences>().saveUserImage(loginModel.data!.user!.image!),
                 instance<AppPreferences>().setUserId(loginModel.data?.user?.id ?? 0),
                 instance<AppPreferences>().setMobile(loginModel.data?.user?.phone ?? ''),
                 instance<AppPreferences>().setEmail(loginModel.data?.user?.email ?? ''),
-                if(loginModel.data?.token != null) instance<AppPreferences>().saveToken(loginModel.data!.token!),
-                if(loginModel.data?.user?.role != null) instance<AppPreferences>().setRole((loginModel.data!.user!.role!)),
+                if (loginModel.data?.token != null)
+                  instance<AppPreferences>().saveToken(loginModel.data!.token!),
+                if (loginModel.data?.user?.role != null)
+                  instance<AppPreferences>().setUserRole((loginModel.data!.user!.role!)),
               ]);
               if(loginModel.data?.user?.role != null) userRole = loginModel.data!.user!.role!;
             }

@@ -35,7 +35,7 @@ class SignupCubit extends Cubit<BaseState<SignupModel>> {
       "password_confirmation": passwordConfirmation,
       "birth_date": birthDate,
       "accept_terms": "1",
-      "role": userRole == UserRole.captain ? 'seller' : 'buyer',
+      "role": userRole == UserRole.employee ? 'employee' : 'user',
       if(imagePath != null) "image": await MultipartFile.fromFile(imagePath),
       if(countryId != null) "country_id": countryId,
       if(cityId != null) "city_id": cityId,

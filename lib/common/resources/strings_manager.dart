@@ -246,4 +246,5 @@ class AppStrings {
 
   static const String whatsApp = "whatsApp";
   static const String personalData = "personalData";
+  static const String notes = "notes";
 }

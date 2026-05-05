@@ -120,12 +120,21 @@ class AppPreferences {
     return _sharedPreferences.getString(prefsKeyUserEmail) ?? '';
   }
 
-  Future<void> setRole(UserRole role) async {
-    _sharedPreferences.setString(prefsKeyUserRole, role == UserRole.captain ? 'captain' : 'passenger');
+  Future<void> setUserRole(UserRole role) async {
+    await _sharedPreferences.setString(prefsKeyUserRole, role.name);
   }
 
-  UserRole getRole() {
-    return _sharedPreferences.getString(prefsKeyUserRole) == 'captain' ? UserRole.captain : UserRole.passenger;
+  UserRole getUserRole() {
+    String roleName = _sharedPreferences.getString(prefsKeyUserRole) ?? 'user';
+    return UserRole.values.firstWhere((e) => e.name == roleName, orElse: () => UserRole.user);
+  }
+
+  Future<void> setIsOfficeClient(bool isOfficeClient) async {
+    await _sharedPreferences.setBool("PREFS_KEY_IS_OFFICE_CLIENT", isOfficeClient);
+  }
+
+  bool isOfficeClient() {
+    return _sharedPreferences.getBool("PREFS_KEY_IS_OFFICE_CLIENT") ?? false;
   }
 
   Future<void> setUserId(int userId) async {
@@ -146,6 +155,7 @@ class AppPreferences {
      _sharedPreferences.remove(prefsKeyUserMobile),
      _sharedPreferences.remove(prefsKeyUserId),
      _sharedPreferences.remove(prefsKeyUserRole),
+     _sharedPreferences.remove("PREFS_KEY_IS_OFFICE_CLIENT"),
     ]);
   }
 

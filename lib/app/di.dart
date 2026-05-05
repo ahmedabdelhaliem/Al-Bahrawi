@@ -1,4 +1,6 @@
 import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/features/lawyer_attendance/cubit/lawyer_attendance_cubit.dart';
+import 'package:al_bahrawi/features/lawyer_dashboard/cubit/lawyer_dashboard_cubit.dart';
 import 'package:al_bahrawi/features/on_boarding/cubit/on_boarding_cubit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
@@ -22,5 +24,6 @@ Future<void> initAppModule() async {
 
   // Singleton Cubits
   instance.registerLazySingleton<OnBoardingCubit>(() => OnBoardingCubit());
+  instance.registerFactory<LawyerDashboardCubit>(() => LawyerDashboardCubit());
+  instance.registerFactory<LawyerAttendanceCubit>(() => LawyerAttendanceCubit());
 }
-

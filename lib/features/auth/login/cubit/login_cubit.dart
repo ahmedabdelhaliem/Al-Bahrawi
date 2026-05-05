@@ -90,14 +90,20 @@ class LoginCubit extends Cubit<BaseState<LoginModel>> {
   }
 
   void _handleLoginSuccess(LoginModel success) {
-    if (success.data?.token != null) instance<AppPreferences>().saveToken(success.data!.token!);
-    if (success.data?.user?.name != null) instance<AppPreferences>().saveUserName(success.data!.user!.name!);
-    if (success.data?.user?.phone != null) instance<AppPreferences>().setMobile(success.data!.user!.phone!);
-    if (success.data?.user?.image != null) instance<AppPreferences>().saveUserImage(success.data!.user!.image!);
-    if (success.data?.user?.id != null) instance<AppPreferences>().setUserId((success.data!.user!.id!));
-    if (success.data?.user?.role != null) {
-      instance<AppPreferences>().setRole((success.data!.user!.role!));
-      userRole = instance<AppPreferences>().getRole();
+    final user = success.data?.user;
+    final token = success.data?.token;
+
+    if (token != null) instance<AppPreferences>().saveToken(token);
+    if (user != null) {
+      if (user.name != null) instance<AppPreferences>().saveUserName(user.name!);
+      if (user.phone != null) instance<AppPreferences>().setMobile(user.phone!);
+      if (user.image != null) instance<AppPreferences>().saveUserImage(user.image!);
+      if (user.id != null) instance<AppPreferences>().setUserId(user.id!);
+      if (user.email != null) instance<AppPreferences>().setEmail(user.email!);
+      if (user.isOfficeClient != null) instance<AppPreferences>().setIsOfficeClient(user.isOfficeClient!);
+      if (user.role != null) {
+        instance<AppPreferences>().setUserRole(user.role!);
+      }
     }
     if (!isClosed) {
       emit(state.copyWith(status: Status.success, data: success));

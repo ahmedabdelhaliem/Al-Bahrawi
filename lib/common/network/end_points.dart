@@ -35,5 +35,7 @@ class EndPoints {
   static const String services = '/services';
   static String serviceDetails(int id) => '/services/$id';
   static const String requestConsultation = '/consultation';
+  static const String employeeAttendance = '/employee-attendance';
+  static const String lawyerTasks = "/tasks";
 }
 

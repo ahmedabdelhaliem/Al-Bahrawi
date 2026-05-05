@@ -1,4 +1,7 @@
 import 'package:al_bahrawi/app/app_functions.dart';
+import 'package:al_bahrawi/app/app_prefs.dart';
+import 'package:al_bahrawi/features/auth/signup/models/signup_model.dart';
+import 'package:al_bahrawi/app/di.dart';
 import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:al_bahrawi/common/resources/app_router.dart';
 import 'package:al_bahrawi/common/resources/color_manager.dart';
@@ -8,6 +11,7 @@ import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
 import 'package:al_bahrawi/common/widgets/default_form_field.dart';
 import 'package:al_bahrawi/features/auth/login/cubit/login_cubit.dart';
 import 'package:al_bahrawi/features/auth/login/models/login_model.dart';
+import 'package:al_bahrawi/features/auth/signup/models/signup_model.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -112,20 +116,21 @@ class _LoginViewState extends State<LoginView> {
                         borderColor: ColorManager.greyBorder,
                         borderRadius: 12.r,
                         hintText: "ادخل رقم الهاتف",
-                        prefixIcon: CountryCodePicker(
-                          padding: EdgeInsets.zero,
-                          margin: EdgeInsets.zero,
-                          onChanged: (value) {
-                            if (value.dialCode != null) _countryCode = value.dialCode!;
-                          },
-                          initialSelection: 'EG',
-                          favorite: const ['EG', 'SA'],
-                          showCountryOnly: false,
-                          showOnlyCountryWhenClosed: false,
-                          alignLeft: false,
-                          dialogTextStyle: getBoldStyle(fontSize: 13.sp, color: ColorManager.black),
-                          showDropDownButton: true,
-                        ),
+                        // prefixIcon: CountryCodePicker(
+                        //   padding: EdgeInsets.zero,
+                        //   margin: EdgeInsets.zero,
+                        //   onChanged: (value) {
+                        //     if (value.dialCode != null) _countryCode = value.dialCode!;
+                        //   },
+                        //   initialSelection: 'EG',
+                        //   favorite: const ['EG', 'SA'],
+                        //   showCountryOnly: false,
+                        //   showOnlyCountryWhenClosed: false,
+                        //   alignLeft: false,
+                        //   dialogTextStyle: getBoldStyle(fontSize: 13.sp, color: ColorManager.black),
+                        //   showDropDownButton: true,
+                        // ),
+                        prefixIcon: const Icon(Icons.phone_outlined, color: Colors.grey),
                       ),
 
                       SizedBox(height: 15.h),
@@ -214,10 +219,7 @@ class _LoginViewState extends State<LoginView> {
                             if (widget.pop) {
                               context.pop();
                             } else {
-                              context.go(
-                                AppRouters.btmNav,
-                                extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
-                              );
+                              _handleNavigation(context);
                             }
                           }
                         },
@@ -380,7 +382,7 @@ class _LoginViewState extends State<LoginView> {
             context.push(
               AppRouters.verifyOtp,
               extra: {
-                'phone': _countryCode + _phoneController.text.trim(),
+                'phone': _phoneController.text.trim(),
                 'isForgetPassword': false,
                 'isSignup': false,
               },
@@ -391,10 +393,7 @@ class _LoginViewState extends State<LoginView> {
           if (widget.pop) {
             context.pop();
           } else {
-            context.go(
-              AppRouters.btmNav,
-              extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
-            );
+            _handleNavigation(context);
           }
         }
       },
@@ -403,7 +402,7 @@ class _LoginViewState extends State<LoginView> {
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {
               context.read<LoginCubit>().login(
-                _countryCode + _phoneController.text.trim(),
+                _phoneController.text.trim(),
                 // _emailController.text,
                 _passwordController.text.trim(),
               );
@@ -462,5 +461,16 @@ class _LoginViewState extends State<LoginView> {
       textStyle: getSemiBoldStyle(fontSize: 12.sp, color: ColorManager.primary),
       onPressed: () => context.push(AppRouters.btmNav, extra: {"refreshKey": UniqueKey()}),
     );
+  }
+  void _handleNavigation(BuildContext context) {
+    final role = instance<AppPreferences>().getUserRole();
+    if (role == UserRole.employee) {
+      context.go(AppRouters.lawyerAttendance);
+    } else {
+      context.go(
+        AppRouters.btmNav,
+        extra: {"refreshKey": UniqueKey(), "pageIndex": widget.pageIndex},
+      );
+    }
   }
 }
