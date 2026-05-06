@@ -6,6 +6,8 @@ import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:al_bahrawi/common/widgets/shimmer_container_widget.dart';
+import 'package:al_bahrawi/features/home/cubit/home_cubit.dart';
+import 'package:al_bahrawi/features/home/models/statistics_model.dart';
 import 'package:al_bahrawi/features/services/cubit/services_cubit.dart';
 import 'package:al_bahrawi/features/services/models/services_model.dart';
 import 'package:al_bahrawi/features/services/view/services_view.dart';
@@ -16,6 +18,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -56,8 +59,11 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ServicesCubit()..getServices(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => ServicesCubit()..getServices()),
+        BlocProvider(create: (context) => HomeCubit()..getStatistics()),
+      ],
       child: BlocListener<ServicesCubit, BaseState<ServicesModel>>(
         listener: (context, state) {
           if (state.status == Status.success) {
@@ -157,42 +163,83 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildStatsSection() {
-    return Transform.translate(
-      offset: Offset(0, -30.h),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: Row(
-          children: [
-            _buildStatCard(
-              "5K+",
-              AppStrings.completedConsultations.tr(),
-              Icons.verified,
-              ColorManager.successGreen,
+    return BlocBuilder<HomeCubit, BaseState<StatisticsModel>>(
+      builder: (context, state) {
+        if (state.status == Status.loading) {
+          return Transform.translate(
+            offset: Offset(0, -30.h),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Row(
+                children: List.generate(
+                  3,
+                  (index) => Expanded(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5.w),
+                      height: 100.h,
+                      decoration: BoxDecoration(
+                        color: ColorManager.white,
+                        borderRadius: BorderRadius.circular(16.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: ShimmerContainerWidget(height: 60.h, width: 60.w, radios: 8.r),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
-            SizedBox(width: 10.w),
-            _buildStatCard(
-              "2K+",
-              AppStrings.satisfiedClients.tr(),
-              Icons.people,
-              ColorManager.azureBlue,
+          );
+        }
+
+        final stats = state.data?.data ?? [];
+        if (stats.isEmpty) return const SizedBox();
+
+        return Transform.translate(
+          offset: Offset(0, -30.h),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Row(
+              children: stats.map((stat) {
+                return _buildStatCard(
+                  stat.count ?? '',
+                  stat.title ?? '',
+                  stat.icon ?? '',
+                  _getStatColor(stat.id),
+                );
+              }).toList(),
             ),
-            SizedBox(width: 10.w),
-            _buildStatCard(
-              "15+",
-              AppStrings.yearsOfExperience.tr(),
-              Icons.military_tech,
-              ColorManager.gold,
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildStatCard(String value, String label, IconData icon, Color iconColor) {
+  Color _getStatColor(int? id) {
+    switch (id) {
+      case 1:
+        return ColorManager.successGreen;
+      case 2:
+        return ColorManager.azureBlue;
+      case 3:
+        return ColorManager.gold;
+      default:
+        return ColorManager.primary;
+    }
+  }
+
+  Widget _buildStatCard(String value, String label, String iconUrl, Color iconColor) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.h),
+        margin: EdgeInsets.symmetric(horizontal: 5.w),
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 4.w),
         decoration: BoxDecoration(
           color: ColorManager.white,
           borderRadius: BorderRadius.circular(16.r),
@@ -213,18 +260,33 @@ class _HomeViewState extends State<HomeView> {
                 color: iconColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: iconColor, size: 20.w),
+              child: CachedNetworkImage(
+                imageUrl: iconUrl,
+                width: 20.w,
+                height: 20.w,
+                color: iconColor,
+                placeholder: (context, url) => SizedBox(
+                  width: 20.w,
+                  height: 20.w,
+                  child: const CircularProgressIndicator(strokeWidth: 2),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.bar_chart, color: iconColor, size: 20.w),
+              ),
             ),
             SizedBox(height: 10.h),
             Text(
               value,
               style: getBoldStyle(color: ColorManager.textColor, fontSize: 16.sp),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
             SizedBox(height: 4.h),
             Text(
               label,
               style: getRegularStyle(color: ColorManager.grey, fontSize: 10.sp),
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

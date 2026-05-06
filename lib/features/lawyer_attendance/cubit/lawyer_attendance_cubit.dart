@@ -9,7 +9,7 @@ class LawyerAttendanceCubit extends Cubit<BaseState<AttendanceModel>> {
 
   Future<void> markAttendance({
     required String action,
-    required String location,
+    String location = "",
     String notes = "",
   }) async {
     emit(state.copyWith(status: Status.loading));

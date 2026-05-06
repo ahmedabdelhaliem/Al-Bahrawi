@@ -37,5 +37,6 @@ class EndPoints {
   static const String requestConsultation = '/consultation';
   static const String employeeAttendance = '/employee-attendance';
   static const String lawyerTasks = "/tasks";
+  static const String statistics = '/statistics';
 }
 
