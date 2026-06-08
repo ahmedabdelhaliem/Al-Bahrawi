@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:al_bahrawi/app/di.dart';
 import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
@@ -12,8 +13,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-
 
 class ChatView extends StatefulWidget {
   final int chatId;
@@ -31,35 +30,17 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     super.initState();
-    // context.read<ChatCubit>().initChat(widget.chatId);
+    _scrollController.addListener(_onScroll);
   }
 
-  final List<MessageModel> dummyMessages = [
-    MessageModel(
-      id: 1,
-      senderType: 'user',
-      senderId: 1,
-      type: 'text',
-      body: 'السلام عليكم، عندي استفسار بخصوص الخدمة.',
-      createdAt: DateTime.now().subtract(const Duration(minutes: 10)).toIso8601String(),
-    ),
-    MessageModel(
-      id: 2,
-      senderType: 'supplier',
-      senderId: 2,
-      type: 'text',
-      body: 'وعليكم السلام ورحمة الله وبركاته، تفضل نحن في خدمتك.',
-      createdAt: DateTime.now().subtract(const Duration(minutes: 9)).toIso8601String(),
-    ),
-    MessageModel(
-      id: 3,
-      senderType: 'user',
-      senderId: 1,
-      type: 'text',
-      body: 'هل يمكنني تغيير موعد الزيارة؟',
-      createdAt: DateTime.now().subtract(const Duration(minutes: 5)).toIso8601String(),
-    ),
-  ];
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      final chatCubit = context.read<ChatCubit>();
+      chatCubit.paginationHandler.fetchData(
+        (page, limit, [params]) => chatCubit.getChatMessages(chatId: widget.chatId, page: page),
+      );
+    }
+  }
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
@@ -91,7 +72,7 @@ class _ChatViewState extends State<ChatView> {
             child: Container(color: Colors.transparent),
           ),
         ),
-        leading:  BackButton(color: ColorManager.black),
+        leading: BackButton(color: ColorManager.black),
         title: Row(
           children: [
             CircleAvatar(
@@ -131,17 +112,36 @@ class _ChatViewState extends State<ChatView> {
             ),
           ),
 
-          ListView.builder(
-            controller: _scrollController,
-            reverse: true, // Show bottom to top (newest at bottom)
-            padding: EdgeInsets.fromLTRB(16.w, 100.h, 16.w, 110.h),
-            itemCount: dummyMessages.length,
-            itemBuilder: (context, index) {
-              // Since it's reversed, we take items from end to start for UI
-              final message = dummyMessages.reversed.toList()[index];
-              return MessageBubble(
-                message: message,
-                isMe: message.senderType == 'user',
+          BlocBuilder<ChatCubit, BaseState<MessageModel>>(
+            builder: (context, state) {
+              if (state.status == Status.loading && state.items.isEmpty) {
+                return const ChatShimmer();
+              }
+
+              if (state.items.isEmpty) {
+                return Center(
+                  child: Text(
+                    'لا توجد رسائل بعد. ابدأ المحادثة الآن!',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: ColorManager.grey,
+                    ),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                controller: _scrollController,
+                reverse: true, // Show bottom to top (newest at bottom)
+                padding: EdgeInsets.fromLTRB(16.w, 100.h, 16.w, 110.h),
+                itemCount: state.items.length,
+                itemBuilder: (context, index) {
+                  final message = state.items[index];
+                  return MessageBubble(
+                    message: message,
+                    isMe: message.senderType == 'user',
+                  );
+                },
               );
             },
           ),
@@ -152,21 +152,7 @@ class _ChatViewState extends State<ChatView> {
             right: 0,
             child: ChatInputField(
               onSend: (text, imagePath) {
-                // context.read<ChatCubit>().sendMessage(widget.chatId, text, imagePath: imagePath);
-                // Force scroll to bottom when user sends a message
-                setState(() {
-                  dummyMessages.add(
-                    MessageModel(
-                      id: DateTime.now().millisecondsSinceEpoch,
-                      senderType: 'user',
-                      senderId: 1,
-                      type: imagePath != null ? 'image' : 'text',
-                      body: text,
-                      attachmentUrl: imagePath, // using local path works for previewing images depending on UI impl
-                      createdAt: DateTime.now().toIso8601String(),
-                    ),
-                  );
-                });
+                context.read<ChatCubit>().sendMessage(widget.chatId, text, imagePath: imagePath);
                 WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
               },
             ),

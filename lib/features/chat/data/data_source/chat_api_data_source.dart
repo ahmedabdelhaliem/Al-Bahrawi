@@ -39,8 +39,14 @@ class ChatApiDataSourceImpl implements ChatApiDataSource {
       url: EndPoints.chatMessages(chatId),
       query: {'page': page, 'limit': 30},
       fromJson: (json) {
-        final List data = json['data']?['messages'] ?? [];
-        return data.map((e) => MessageModel.fromJson(e)).toList();
+        List data = [];
+        if (json['data'] is List) {
+          data = json['data'] as List;
+        } else if (json['data'] is Map) {
+          final dataMap = Map<String, dynamic>.from(json['data'] as Map);
+          data = dataMap['messages'] as List? ?? dataMap['data'] as List? ?? [];
+        }
+        return data.map((e) => MessageModel.fromJson(Map<String, dynamic>.from(e as Map))).toList();
       },
     );
   }
@@ -48,22 +54,33 @@ class ChatApiDataSourceImpl implements ChatApiDataSource {
   @override
   Future<Either<Failure, MessageModel>> sendMessage(int chatId, {String? body, String? imagePath}) async {
     final Map<String, dynamic> data = {};
-    if (body != null) data['body'] = body;
+    
+    // Support new payload format: type, message, file
     if (imagePath != null) {
-      data['image'] = await MultipartFile.fromFile(imagePath);
+      data['type'] = 'image';
+      data['file'] = await MultipartFile.fromFile(imagePath);
+      if (body != null) data['message'] = body;
+    } else {
+      data['type'] = 'text';
+      if (body != null) {
+        data['message'] = body;
+        data['body'] = body; // backward-compatibility support
+      }
     }
 
     return DioHelper.postData(
       url: EndPoints.chatMessages(chatId),
       data: FormData.fromMap(data),
-      fromJson: (json) => MessageModel.fromJson(json['data']),
+      fromJson: (json) {
+        return MessageModel.fromJson(Map<String, dynamic>.from(json['data'] as Map));
+      },
     );
   }
 
   @override
   Future<Either<Failure, List<ChatModel>>> getChats() {
     return DioHelper.getData(
-      url: EndPoints.chats,
+      url: EndPoints.chatConversations,
       fromJson: (json) {
         final List data = json['data'] ?? [];
         return data.map((e) => ChatModel.fromJson(e)).toList();

@@ -29,8 +29,9 @@ class EndPoints {
 
   // Chat
   static const String chats = '/chats';
+  static const String chatConversations = '/chat/conversations';
   static String firebaseToken(int id) => '/chats/$id/firebase-token';
-  static String chatMessages(int id) => '/chats/$id/messages';
+  static String chatMessages(int id) => '/chat/conversations/$id/messages';
 
   static const String services = '/services';
   static String serviceDetails(int id) => '/services/$id';

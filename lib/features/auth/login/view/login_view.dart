@@ -401,8 +401,19 @@ class _LoginViewState extends State<LoginView> {
         return DefaultButtonWidget(
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {
+              String phone = _phoneController.text.trim();
+              if (phone.startsWith('01') && phone.length == 11) {
+                phone = '+2$phone';
+              } else if (phone.startsWith('1') && phone.length == 10) {
+                phone = '+20$phone';
+              } else if (phone.startsWith('00')) {
+                phone = '+' + phone.substring(2);
+              } else if (phone.startsWith('20') && phone.length == 12) {
+                phone = '+$phone';
+              }
+
               context.read<LoginCubit>().login(
-                _phoneController.text.trim(),
+                phone,
                 // _emailController.text,
                 _passwordController.text.trim(),
               );

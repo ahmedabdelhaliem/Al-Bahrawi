@@ -1,3 +1,6 @@
+import 'package:al_bahrawi/app/di.dart';
+import 'package:al_bahrawi/features/chat/presentation/cubit/chat_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:al_bahrawi/features/auth/forget_password/view/forget_password_view.dart';
 import 'package:al_bahrawi/features/auth/login/view/login_view.dart';
 import 'package:al_bahrawi/features/auth/reset_password/view/reset_password_success_view.dart';
@@ -229,9 +232,12 @@ abstract class AppRouters {
         path: chatView,
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>;
-          return ChatView(
-            chatId: extra['chatId'] as int,
-            supplierName: extra['supplierName'] as String,
+          return BlocProvider(
+            create: (context) => instance<ChatCubit>()..initChat(extra['chatId'] as int),
+            child: ChatView(
+              chatId: extra['chatId'] as int,
+              supplierName: extra['supplierName'] as String,
+            ),
           );
         },
       ),

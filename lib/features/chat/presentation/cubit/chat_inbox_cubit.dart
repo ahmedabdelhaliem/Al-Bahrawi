@@ -14,7 +14,11 @@ class ChatInboxCubit extends Cubit<BaseState<ChatModel>> {
     final result = await _chatRepo.getChats();
 
     result.fold(
-      (failure) => emit(state.copyWith(status: Status.failure, failure: failure)),
+      (failure) => emit(state.copyWith(
+        status: Status.failure,
+        failure: failure,
+        errorMessage: failure.message,
+      )),
       (chats) => emit(state.copyWith(status: Status.success, items: chats)),
     );
   }

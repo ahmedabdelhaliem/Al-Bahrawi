@@ -20,15 +20,33 @@ class MessageModel {
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
+    // 1. Parse body / message safely
+    String? messageBody = json['body'] as String? ?? json['message'] as String?;
+
+    // 2. Parse attachmentUrl / file_url safely
+    String? fileUrl = json['attachment_url'] as String? ?? json['file_url'] as String?;
+
+    // 3. Parse sender information safely
+    dynamic sId = json['sender_id'];
+    String? sType = json['sender_type'] as String?;
+    String? sName = json['sender_name'] as String?;
+
+    if (json['sender'] is Map) {
+      final senderMap = Map<String, dynamic>.from(json['sender'] as Map);
+      sId ??= senderMap['id'];
+      sType ??= senderMap['user_type'] as String?;
+      sName ??= senderMap['name'] as String?;
+    }
+
     return MessageModel(
       id: json['id'],
-      senderType: json['sender_type'] as String?,
-      senderId: json['sender_id'],
-      senderName: json['sender_name'] as String?,
-      type: json['type'] as String,
-      body: json['body'] as String?,
-      attachmentUrl: json['attachment_url'] as String?,
-      createdAt: json['created_at'] as String,
+      senderType: sType,
+      senderId: sId,
+      senderName: sName,
+      type: json['type'] as String? ?? 'text',
+      body: messageBody,
+      attachmentUrl: fileUrl,
+      createdAt: json['created_at'] as String? ?? DateTime.now().toIso8601String(),
     );
   }
 
