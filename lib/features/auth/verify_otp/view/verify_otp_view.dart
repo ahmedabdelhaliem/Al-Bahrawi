@@ -106,14 +106,14 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          "تأكيد الرمز",
+                         Text(
+                          AppStrings.verifyCode.tr(),
                           style: getBoldStyle(fontSize: 22.sp, color: const Color(0xff4a5677)),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 10.h),
                         Text(
-                          "أدخل رمز التحقق المرسل إلى",
+                          AppStrings.enterVerificationCodeSentTo.tr(),
                           style: getRegularStyle(fontSize: 13.sp, color: Colors.grey),
                           textAlign: TextAlign.center,
                         ),
@@ -134,7 +134,7 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
                         TextButton(
                           onPressed: () => context.pop(),
                           child: Text(
-                            "تعديل رقم الهاتف",
+                            AppStrings.editPhoneNumber.tr(),
                             style: getBoldStyle(fontSize: 14.sp, color: ColorManager.primary),
                           ),
                         ),

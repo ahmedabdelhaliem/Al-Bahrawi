@@ -94,33 +94,33 @@ class _SignUpViewState extends State<SignUpView> {
                     SizedBox(height: 20.h),
 
                     // Full Name
-                    _fieldLabel("الاسم الكامل"),
+                    _fieldLabel(AppStrings.fullName.tr()),
                     DefaultFormField(
                       controller: _fullNameController,
                       fillColor: ColorManager.white,
                       borderColor: ColorManager.greyBorder,
                       borderRadius: 12.r,
-                      hintText: "ادخل الاسم بالكامل",
+                      hintText: AppStrings.enterFullName.tr(),
                       prefixIcon: const Icon(Icons.person_outline, color: Colors.grey),
                     ),
 
                     SizedBox(height: 15.h),
 
                     // Email
-                    _fieldLabel("البريد الالكتروني"),
+                    _fieldLabel(AppStrings.emailAddress.tr()),
                     DefaultFormField(
                       controller: _emailController,
                       fillColor: ColorManager.white,
                       borderColor: ColorManager.greyBorder,
                       borderRadius: 12.r,
-                      hintText: "ادخل البريد الالكتروني",
+                      hintText: AppStrings.enterEmailAddress.tr(),
                       prefixIcon: const Icon(Icons.email_outlined, color: Colors.grey),
                     ),
 
                     SizedBox(height: 15.h),
 
                     // Birth Date
-                    _fieldLabel("تاريخ الميلاد"),
+                    _fieldLabel(AppStrings.birthDate.tr()),
                     DefaultFormField(
                       controller: _birthDateController,
                       readOnly: true,
@@ -145,14 +145,14 @@ class _SignUpViewState extends State<SignUpView> {
                     SizedBox(height: 15.h),
 
                     // Phone Field
-                    _fieldLabel("رقم الهاتف"),
+                    _fieldLabel(AppStrings.phoneNumber.tr()),
                     DefaultFormField(
                       keyboardType: TextInputType.phone,
                       controller: _phoneController,
                       fillColor: ColorManager.white,
                       borderColor: ColorManager.greyBorder,
                       borderRadius: 12.r,
-                      hintText: "ادخل رقم الهاتف",
+                      hintText: AppStrings.enterPhoneNumber.tr(),
                       prefixIcon: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -181,7 +181,7 @@ class _SignUpViewState extends State<SignUpView> {
                     Padding(
                       padding: EdgeInsets.only(top: 5.h),
                       child: Text(
-                        "يرجى ادخال رقم هاتف فعال لمساعدتنا في التواصل معك",
+                        AppStrings.pleaseEnterValidPhoneForContact.tr(),
                         style: getRegularStyle(fontSize: 10.sp, color: Colors.red),
                         textAlign: TextAlign.right,
                       ),
@@ -190,13 +190,13 @@ class _SignUpViewState extends State<SignUpView> {
                     SizedBox(height: 15.h),
 
                     // Password
-                    _fieldLabel("كلمة السر"),
+                    _fieldLabel(AppStrings.password.tr()),
                     DefaultFormField(
                       controller: _passwordController,
                       fillColor: ColorManager.white,
                       borderColor: ColorManager.greyBorder,
                       borderRadius: 12.r,
-                      hintText: "ادخل كلمة السر",
+                      hintText: AppStrings.enterPassword.tr(),
                       obscureText: true,
                       prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
                       suffixIcon: const Icon(Icons.visibility_off_outlined, color: Colors.grey),
@@ -205,13 +205,13 @@ class _SignUpViewState extends State<SignUpView> {
                     SizedBox(height: 15.h),
 
                     // Confirm Password
-                    _fieldLabel("تأكيد كلمة السر"),
+                    _fieldLabel(AppStrings.confirmPassword.tr()),
                     DefaultFormField(
                       controller: _confirmPasswordController,
                       fillColor: ColorManager.white,
                       borderColor: ColorManager.greyBorder,
                       borderRadius: 12.r,
-                      hintText: "ادخل كلمة السر",
+                      hintText: AppStrings.confirmPasswordHint.tr(),
                       obscureText: true,
                       prefixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
                       suffixIcon: const Icon(Icons.visibility_off_outlined, color: Colors.grey),

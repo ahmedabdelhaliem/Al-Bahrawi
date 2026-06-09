@@ -16,7 +16,7 @@ class LoginCubit extends Cubit<BaseState<LoginModel>> {
   LoginCubit() : super(const BaseState<LoginModel>());
 
   Future<void> login(String phone, String password) async {
-    emit(state.copyWith(status: Status.loading));
+    emit(state.copyWith(status: Status.loading, metadata: const {'isGoogle': false}));
 
     // Fetch the token directly if the global variable is null
     String? currentFcmToken = fcmToken;
@@ -53,7 +53,7 @@ class LoginCubit extends Cubit<BaseState<LoginModel>> {
   }
 
   Future<void> firebaseLogin(String idToken) async {
-    emit(state.copyWith(status: Status.loading));
+    emit(state.copyWith(status: Status.loading, metadata: const {'isGoogle': true}));
     
     // Fetch the token directly if the global variable is null
     String? currentFcmToken = fcmToken;

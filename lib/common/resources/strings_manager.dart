@@ -247,4 +247,47 @@ class AppStrings {
   static const String whatsApp = "whatsApp";
   static const String personalData = "personalData";
   static const String notes = "notes";
+
+  // localized strings
+  static const String lastUpdate = "lastUpdate";
+  static const String messageSentFailed = "messageSentFailed";
+  static const String contactUsSubtitleForm = "contactUsSubtitleForm";
+  static const String messageSubject = "messageSubject";
+  static const String writeSubjectHere = "writeSubjectHere";
+  static const String send = "send";
+  static const String pleaseWriteSubject = "pleaseWriteSubject";
+  static const String pleaseWriteMessage = "pleaseWriteMessage";
+  static const String enterEmailAddress = "enterEmailAddress";
+  static const String birthDate = "birthDate";
+  static const String enterPhoneNumber = "enterPhoneNumber";
+  static const String pleaseEnterValidPhoneForContact = "pleaseEnterValidPhoneForContact";
+  static const String enterPassword = "enterPassword";
+  static const String confirmPasswordHint = "confirmPasswordHint";
+  static const String enterVerificationCodeSentTo = "enterVerificationCodeSentTo";
+  static const String editPhoneNumber = "editPhoneNumber";
+  static const String setNewPassword = "setNewPassword";
+  static const String pleaseEnterNewPassword = "pleaseEnterNewPassword";
+  static const String retypePassword = "retypePassword";
+  static const String welcomeSubtitle = "welcomeSubtitle";
+  static const String rememberMe = "rememberMe";
+  static const String or = "or";
+  static const String loginWithGoogle = "loginWithGoogle";
+  static const String loginFailed = "loginFailed";
+  static const String googleLoginFailed = "googleLoginFailed";
+  static const String forgetPasswordTitle = "forgetPasswordTitle";
+  static const String enterPhoneToReceiveOtp = "enterPhoneToReceiveOtp";
+  static const String today = "today";
+  static const String requestAnswered = "requestAnswered";
+  static const String requestAnsweredDesc = "requestAnsweredDesc";
+  static const String requestUpdate = "requestUpdate";
+  static const String requestUpdateDesc = "requestUpdateDesc";
+  static const String yesterday = "yesterday";
+  static const String newRequest = "newRequest";
+  static const String newRequestDesc = "newRequestDesc";
+  static const String mockDate = "mockDate";
+  static const String welcomeNotificationDesc = "welcomeNotificationDesc";
+  static const String profileUpdatedSuccessfully = "profileUpdatedSuccessfully";
+  static const String lawyerName = "lawyerName";
+  static const String caseNumberPrefix = "caseNumberPrefix";
+  static const String receiptDate = "receiptDate";
 }

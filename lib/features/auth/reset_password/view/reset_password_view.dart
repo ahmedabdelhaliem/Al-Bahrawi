@@ -54,38 +54,38 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      "تعيين كلمة مرور جديدة",
+                      AppStrings.setNewPassword.tr(),
                       style: getBoldStyle(fontSize: 22.sp, color: const Color(0xff4a5677)),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 10.h),
                     Text(
-                      "يرجى إدخال كلمة المرور الجديدة الخاصة بك",
+                      AppStrings.pleaseEnterNewPassword.tr(),
                       style: getRegularStyle(fontSize: 13.sp, color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 30.h),
 
-                    _fieldLabel("كلمة المرور الجديدة"),
+                    _fieldLabel(AppStrings.newPassword.tr()),
                     DefaultFormField(
                       controller: _passwordController,
                       fillColor: ColorManager.white,
                       borderColor: ColorManager.greyBorder,
                       borderRadius: 12.r,
-                      hintText: "ادخل كلمة المرور",
+                      hintText: AppStrings.enterPassword.tr(),
                       obscureText: true,
                       suffixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
                     ),
 
                     SizedBox(height: 15.h),
 
-                    _fieldLabel("تأكيد كلمة المرور"),
+                    _fieldLabel(AppStrings.confirmPassword.tr()),
                     DefaultFormField(
                       controller: _confirmPasswordController,
                       fillColor: ColorManager.white,
                       borderColor: ColorManager.greyBorder,
                       borderRadius: 12.r,
-                      hintText: "اعد كتابة كلمة المرور",
+                      hintText: AppStrings.retypePassword.tr(),
                       obscureText: true,
                       suffixIcon: const Icon(Icons.lock_outline, color: Colors.grey),
                     ),
@@ -97,7 +97,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                     TextButton(
                       onPressed: () => context.go(AppRouters.login),
                       child: Text(
-                        "العودة لتسجيل الدخول",
+                        AppStrings.backToLogin.tr(),
                         style: getBoldStyle(fontSize: 14.sp, color: ColorManager.primary),
                       ),
                     ),

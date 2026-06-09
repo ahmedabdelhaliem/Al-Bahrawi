@@ -94,17 +94,17 @@ class CasesRecordView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "اسم المحامي",
+                      AppStrings.lawyerName.tr(),
                       style: getBoldStyle(color: ColorManager.blue, fontSize: 16.sp),
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      "رقم القضية: #123456",
+                      "${AppStrings.caseNumberPrefix.tr()}: #123456",
                       style: getRegularStyle(color: ColorManager.greyText, fontSize: 13.sp),
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      "تاريخ الاستلام: 20-04-2026",
+                      "${AppStrings.receiptDate.tr()}: 20-04-2026",
                       style: getRegularStyle(color: ColorManager.greyText, fontSize: 13.sp),
                     ),
                   ],

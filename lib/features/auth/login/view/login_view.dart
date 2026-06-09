@@ -42,6 +42,7 @@ class _LoginViewState extends State<LoginView> {
   final TextEditingController _passwordController = TextEditingController();
   // final TextEditingController _emailController = TextEditingController();
   String _countryCode = '+20';
+  bool _isGoogleSdkLoading = false;
 
   @override
   void dispose() {
@@ -86,13 +87,13 @@ class _LoginViewState extends State<LoginView> {
                     children: [
                       // Welcome Texts
                       Text(
-                        "مرحبا بك",
+                        AppStrings.hello.tr(),
                         style: getBoldStyle(fontSize: 26.sp, color: const Color(0xff4a5677)),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(height: 6.h),
                       Text(
-                        "أنشئ حساباً أو قم بتسجيل الدخول لاستكشاف تطبيقنا",
+                        AppStrings.welcomeSubtitle.tr(),
                         style: getRegularStyle(fontSize: 12.sp, color: Colors.grey),
                         textAlign: TextAlign.center,
                       ),
@@ -101,21 +102,21 @@ class _LoginViewState extends State<LoginView> {
 
                       // Login Title
                       Text(
-                        "تسجيل الدخول",
+                        AppStrings.login.tr(),
                         style: getBoldStyle(fontSize: 18.sp, color: ColorManager.black),
                         textAlign: TextAlign.right,
                       ),
                       SizedBox(height: 15.h),
 
                       // Phone Field Label
-                      _fieldLabel("رقم الهاتف"),
+                      _fieldLabel(AppStrings.phoneNumber.tr()),
                       DefaultFormField(
                         keyboardType: TextInputType.phone,
                         controller: _phoneController,
                         fillColor: ColorManager.white,
                         borderColor: ColorManager.greyBorder,
                         borderRadius: 12.r,
-                        hintText: "ادخل رقم الهاتف",
+                        hintText: AppStrings.enterPhoneNumber.tr(),
                         // prefixIcon: CountryCodePicker(
                         //   padding: EdgeInsets.zero,
                         //   margin: EdgeInsets.zero,
@@ -136,7 +137,7 @@ class _LoginViewState extends State<LoginView> {
                       SizedBox(height: 15.h),
 
                       // Password Field Label
-                      _fieldLabel("كلمة المرور"),
+                      _fieldLabel(AppStrings.password.tr()),
                       DefaultFormField(
                         controller: _passwordController,
                         fillColor: ColorManager.white,
@@ -162,14 +163,14 @@ class _LoginViewState extends State<LoginView> {
                           InkWell(
                             onTap: () => context.push(AppRouters.forgetPass),
                             child: Text(
-                              "نسيت كلمة المرور ؟",
+                              AppStrings.forgotPassword.tr(),
                               style: getMediumStyle(fontSize: 12.sp, color: ColorManager.primary),
                             ),
                           ),
                           Row(
                             children: [
                               Text(
-                                "تذكرني دائماً",
+                                AppStrings.rememberMe.tr(),
                                 style: getMediumStyle(fontSize: 12.sp, color: Colors.grey),
                               ),
                               Checkbox(
@@ -195,7 +196,7 @@ class _LoginViewState extends State<LoginView> {
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10.w),
                             child: Text(
-                              "أو",
+                              AppStrings.or.tr(),
                               style: getRegularStyle(fontSize: 14.sp, color: Colors.grey),
                             ),
                           ),
@@ -206,16 +207,28 @@ class _LoginViewState extends State<LoginView> {
 
                       // Social Buttons — Google Sign In
                       BlocConsumer<LoginCubit, BaseState<LoginModel>>(
-                        listenWhen: (previous, current) => previous.status != current.status,
+                        listenWhen: (previous, current) =>
+                            previous.status != current.status &&
+                            current.metadata['isGoogle'] == true,
                         listener: (context, state) {
                           if (state.status == Status.failure) {
+                            if (mounted) {
+                              setState(() {
+                                _isGoogleSdkLoading = false;
+                              });
+                            }
                             AppFunctions.showsToast(
-                              state.errorMessage ?? 'حدث خطأ في تسجيل الدخول',
+                              state.errorMessage ?? AppStrings.loginFailed.tr(),
                               ColorManager.red,
                               context,
                             );
                           }
                           if (state.status == Status.success) {
+                            if (mounted) {
+                              setState(() {
+                                _isGoogleSdkLoading = false;
+                              });
+                            }
                             if (widget.pop) {
                               context.pop();
                             } else {
@@ -224,8 +237,11 @@ class _LoginViewState extends State<LoginView> {
                           }
                         },
                         builder: (context, state) {
+                          final isGoogleLoading = (state.status == Status.loading &&
+                                  state.metadata['isGoogle'] == true) ||
+                              _isGoogleSdkLoading;
                           return GestureDetector(
-                            onTap: state.status == Status.loading
+                            onTap: isGoogleLoading
                                 ? null
                                 : () => _handleGoogleSignIn(context),
                             child: Container(
@@ -242,7 +258,7 @@ class _LoginViewState extends State<LoginView> {
                                   ),
                                 ],
                               ),
-                              child: state.status == Status.loading
+                              child: isGoogleLoading
                                   ? Center(
                                       child: SizedBox(
                                         width: 22.w,
@@ -257,7 +273,7 @@ class _LoginViewState extends State<LoginView> {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          "تسجيل الدخول بواسطة حساب جوجل",
+                                          AppStrings.loginWithGoogle.tr(),
                                           style: getMediumStyle(
                                             fontSize: 13.sp,
                                             color: const Color(0xff4a5677),
@@ -284,13 +300,13 @@ class _LoginViewState extends State<LoginView> {
                           InkWell(
                             onTap: () => context.push(AppRouters.signup),
                             child: Text(
-                              "انشاء حساب جديد",
+                              AppStrings.createNewAccount.tr(),
                               style: getBoldStyle(fontSize: 14.sp, color: ColorManager.primary),
                             ),
                           ),
                           SizedBox(width: 5.w),
                           Text(
-                            "لا تمتلك حساب؟",
+                            AppStrings.dontHaveAccount.tr(),
                             style: getMediumStyle(fontSize: 14.sp, color: Colors.grey),
                           ),
                         ],
@@ -342,11 +358,23 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Future<void> _handleGoogleSignIn(BuildContext context) async {
+    if (mounted) {
+      setState(() {
+        _isGoogleSdkLoading = true;
+      });
+    }
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['email']);
       
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) return; // المستخدم أغلق النافذة
+      if (googleUser == null) {
+        if (mounted) {
+          setState(() {
+            _isGoogleSdkLoading = false;
+          });
+        }
+        return; // المستخدم أغلق النافذة
+      }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -361,18 +389,29 @@ class _LoginViewState extends State<LoginView> {
 
       if (idToken != null && mounted) {
         context.read<LoginCubit>().firebaseLogin(idToken);
+      } else {
+        if (mounted) {
+          setState(() {
+            _isGoogleSdkLoading = false;
+          });
+        }
       }
     } catch (e) {
       debugPrint("Google Sign In Error: $e");
       if (mounted) {
-        AppFunctions.showsToast("حدث خطأ أثناء تسجيل الدخول بجوجل", ColorManager.red, context);
+        setState(() {
+          _isGoogleSdkLoading = false;
+        });
+        AppFunctions.showsToast(AppStrings.googleLoginFailed.tr(), ColorManager.red, context);
       }
     }
   }
 
   Widget _loginButton(BuildContext context) {
     return BlocConsumer<LoginCubit, BaseState<LoginModel>>(
-      listenWhen: (previous, current) => previous.status != current.status,
+      listenWhen: (previous, current) =>
+          previous.status != current.status &&
+          current.metadata['isGoogle'] != true,
       listener: (context, state) {
         if (state.status == Status.failure) {
           AppFunctions.showsToast(state.errorMessage ?? '', ColorManager.red, context);
@@ -398,6 +437,8 @@ class _LoginViewState extends State<LoginView> {
         }
       },
       builder: (context, state) {
+        final isLoginLoading = state.status == Status.loading &&
+            state.metadata['isGoogle'] != true;
         return DefaultButtonWidget(
           onPressed: () {
             if (_formKey.currentState?.validate() ?? false) {
@@ -424,7 +465,7 @@ class _LoginViewState extends State<LoginView> {
           textColor: ColorManager.white,
           radius: 40.r,
           verticalPadding: 14.h,
-          isLoading: state.status == Status.loading,
+          isLoading: isLoginLoading,
         );
       },
     );

@@ -80,7 +80,7 @@ class _PersonalDataViewState extends State<PersonalDataView> {
               if (user.image != null) _appPreferences.saveUserImage(user.image!);
             }
             
-            AppFunctions.showsToast("تم تحديث البيانات بنجاح", ColorManager.primary, context);
+             AppFunctions.showsToast(AppStrings.profileUpdatedSuccessfully.tr(), ColorManager.primary, context);
             Navigator.pop(context, true);
           }
         },

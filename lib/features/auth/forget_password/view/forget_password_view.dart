@@ -62,26 +62,26 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          "نسيت كلمة المرور",
+                          AppStrings.forgetPasswordTitle.tr(),
                           style: getBoldStyle(fontSize: 22.sp, color: const Color(0xff4a5677)),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 10.h),
                         Text(
-                          "ادخل رقم هاتفك لتلقي رمز التحقق",
+                          AppStrings.enterPhoneToReceiveOtp.tr(),
                           style: getRegularStyle(fontSize: 13.sp, color: Colors.grey),
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 30.h),
                         
-                        _fieldLabel("رقم الهاتف"),
+                        _fieldLabel(AppStrings.phoneNumber.tr()),
                         DefaultFormField(
                           keyboardType: TextInputType.phone,
                           controller: _phoneController,
                           fillColor: ColorManager.white,
                           borderColor: ColorManager.greyBorder,
                           borderRadius: 12.r,
-                          hintText: "ادخل رقم الهاتف",
+                          hintText: AppStrings.enterPhoneNumber.tr(),
                           prefixIcon: CountryCodePicker(
                             padding: EdgeInsets.zero,
                             margin: EdgeInsets.zero,
@@ -105,7 +105,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                         TextButton(
                           onPressed: () => context.pop(),
                           child: Text(
-                            "العودة لتسجيل الدخول",
+                            AppStrings.backToLogin.tr(),
                             style: getBoldStyle(fontSize: 14.sp, color: ColorManager.primary),
                           ),
                         ),

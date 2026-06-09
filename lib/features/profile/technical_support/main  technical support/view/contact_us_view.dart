@@ -35,8 +35,8 @@ class _ContactUsViewState extends State<ContactUsView> {
         listener: (context, state) {
           if (state.status == Status.success) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("تم إرسال رسالتك بنجاح"),
+              SnackBar(
+                content: Text(AppStrings.messageSentSuccessfully.tr()),
                 backgroundColor: Colors.green,
               ),
             );
@@ -44,7 +44,7 @@ class _ContactUsViewState extends State<ContactUsView> {
           } else if (state.status == Status.failure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.errorMessage ?? "فشل إرسال الرسالة"),
+                content: Text(state.errorMessage ?? AppStrings.messageSentFailed.tr()),
                 backgroundColor: Colors.red,
               ),
             );
@@ -134,41 +134,41 @@ class _ContactUsViewState extends State<ContactUsView> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            "مرحباً بك",
+            AppStrings.hello.tr(),
             style: getBoldStyle(color: ColorManager.blue, fontSize: 24.sp),
             textAlign: TextAlign.right,
           ),
           SizedBox(height: 12.h),
           Text(
-            "نسعد بتواصلك معنا، يرجى ملء النموذج أدناه وسنعاود الاتصال بك في أقرب وقت ممكن.",
+            AppStrings.contactUsSubtitleForm.tr(),
             style: getRegularStyle(color: ColorManager.greyText, fontSize: 14.sp),
             textAlign: TextAlign.right,
           ),
           SizedBox(height: 24.h),
           const Divider(height: 1, color: Color(0xffF3F4F6)),
           SizedBox(height: 24.h),
-          _buildLabel("عنوان الرسالة"),
-          _buildTextField("اكتب عنوان رسالتك هنا...",
+          _buildLabel(AppStrings.messageSubject.tr()),
+          _buildTextField(AppStrings.writeSubjectHere.tr(),
               controller: _subjectController),
           SizedBox(height: 20.h),
-          _buildLabel("رسالة"),
-          _buildTextField("اكتب رسالتك هنا...",
+          _buildLabel(AppStrings.message.tr()),
+          _buildTextField(AppStrings.messageHint.tr(),
               controller: _messageController, maxLines: 5),
           SizedBox(height: 32.h),
           BlocBuilder<ContactUsCubit, BaseState>(
             builder: (context, state) {
               return DefaultButtonWidget(
-                text: "ارسال",
+                text: AppStrings.send.tr(),
                 onPressed: () {
                   if (_subjectController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("يرجى كتابة عنوان الرسالة")),
+                      SnackBar(content: Text(AppStrings.pleaseWriteSubject.tr())),
                     );
                     return;
                   }
                   if (_messageController.text.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("يرجى كتابة الرسالة")),
+                      SnackBar(content: Text(AppStrings.pleaseWriteMessage.tr())),
                     );
                     return;
                   }

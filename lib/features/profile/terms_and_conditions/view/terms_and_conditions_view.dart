@@ -152,7 +152,7 @@ class TermsAndConditionsView extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  "آخر تحديث: ${terms!.updatedAt}",
+                                  "${AppStrings.lastUpdate.tr()}: ${terms!.updatedAt}",
                                   style: getRegularStyle(
                                       color: ColorManager.grey, fontSize: 11.sp),
                                 ),
