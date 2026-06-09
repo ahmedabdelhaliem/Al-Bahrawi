@@ -160,12 +160,10 @@ class _ProfileViewState extends State<ProfileView> {
                     child: CircleAvatar(
                       radius: 35.r,
                       backgroundColor: ColorManager.white,
-                      backgroundImage: (instance<AppPreferences>().getUserImage()?.isNotEmpty == true &&
-                                        instance<AppPreferences>().getUserImage()!.length > 40)
+                      backgroundImage: (instance<AppPreferences>().getUserImage()?.startsWith('http') == true)
                           ? NetworkImage(instance<AppPreferences>().getUserImage()!)
                           : null,
-                      child: (instance<AppPreferences>().getUserImage()?.isNotEmpty == true &&
-                              instance<AppPreferences>().getUserImage()!.length > 40)
+                      child: (instance<AppPreferences>().getUserImage()?.startsWith('http') == true)
                           ? null
                           : Icon(Icons.person,
                               color: ColorManager.blue, size: 35.w),

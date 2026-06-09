@@ -260,5 +260,16 @@
   "profileUpdatedSuccessfully": "Profile updated successfully",
   "lawyerName": "Lawyer Name",
   "caseNumberPrefix": "Case Number",
-  "receiptDate": "Receipt Date"
+  "receiptDate": "Receipt Date",
+  "statusAnswered": "Answered",
+  "statusUnderReview": "Under Review",
+  "estimatedCost": "Estimated Cost:",
+  "consultantNotes": "Consultant Notes:",
+  "currencyEGP": "EGP",
+  "openChat": "Open Chat",
+  "noTasksFound": "No tasks found",
+  "unknownService": "Unknown Service",
+  "noDescription": "No description",
+  "startChatNow": "No messages yet. Start the conversation now!",
+  "serviceGoals": "Service Goals"
 }

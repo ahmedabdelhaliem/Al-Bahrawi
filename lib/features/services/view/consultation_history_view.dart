@@ -3,37 +3,54 @@ import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:al_bahrawi/common/widgets/shimmer_container_widget.dart';
+import 'package:al_bahrawi/common/widgets/paginated_list_wrapper.dart';
 import 'package:al_bahrawi/features/services/cubit/consultation_cubit.dart';
 import 'package:al_bahrawi/features/services/models/consultation_model.dart';
+import 'package:al_bahrawi/common/resources/app_router.dart';
+import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
-class ConsultationHistoryView extends StatelessWidget {
+class ConsultationHistoryView extends StatefulWidget {
   const ConsultationHistoryView({super.key});
+
+  @override
+  State<ConsultationHistoryView> createState() => _ConsultationHistoryViewState();
+}
+
+class _ConsultationHistoryViewState extends State<ConsultationHistoryView> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ConsultationCubit()..getConsultations(),
+      create: (context) => ConsultationCubit()..loadFirstConsultationsPage(),
       child: Scaffold(
         backgroundColor: const Color(0xffF9FAFB),
         body: Column(
           children: [
             _buildHeader(context),
             Expanded(
-              child: BlocBuilder<ConsultationCubit, BaseState<dynamic>>(
+              child: BlocBuilder<ConsultationCubit, BaseState<ConsultationModel>>(
                 builder: (context, state) {
-                  if (state.status == Status.loading) {
+                  if (state.status == Status.loading && state.items.isEmpty) {
                     return _buildShimmerList();
                   }
 
-                  if (state.status == Status.failure) {
+                  if (state.status == Status.failure && state.items.isEmpty) {
                     return Center(child: Text(state.errorMessage ?? AppStrings.unKnownError.tr()));
                   }
 
-                  final consultations = (state.data as ConsultationsResponseModel?)?.data ?? [];
+                  final consultations = state.items;
 
                   if (consultations.isEmpty) {
                     return Center(
@@ -55,13 +72,23 @@ class ConsultationHistoryView extends StatelessWidget {
                     );
                   }
 
-                  return ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: consultations.length,
-                    itemBuilder: (context, index) {
-                      return _buildConsultationCard(consultations[index]);
-                    },
+                  return PaginatedListWrapper(
+                    scrollController: _scrollController,
+                    paginationHandler: context.read<ConsultationCubit>().paginationHandler,
+                    fetchFunction: (page, limit, [params]) => context.read<ConsultationCubit>().getConsultations(page: page),
+                    child: RefreshIndicator(
+                      onRefresh: () => context.read<ConsultationCubit>().loadFirstConsultationsPage(),
+                      color: ColorManager.primary,
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
+                        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                        itemCount: consultations.length,
+                        itemBuilder: (context, index) {
+                          return _buildConsultationCard(consultations[index]);
+                        },
+                      ),
+                    ),
                   );
                 },
               ),
@@ -148,7 +175,7 @@ class ConsultationHistoryView extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  isResponded ? "تم الرد" : "قيد المراجعة",
+                  isResponded ? AppStrings.statusAnswered.tr() : AppStrings.statusUnderReview.tr(),
                   style: getBoldStyle(
                     color: isResponded ? Colors.green : ColorManager.gold,
                     fontSize: 10.sp,
@@ -180,11 +207,11 @@ class ConsultationHistoryView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "${item.price} ج.م",
+                    "${item.price} ${AppStrings.currencyEGP.tr()}",
                     style: getBoldStyle(color: ColorManager.primary, fontSize: 15.sp),
                   ),
                   Text(
-                    "التكلفة المقدرة:",
+                    AppStrings.estimatedCost.tr(),
                     style: getBoldStyle(color: ColorManager.blue, fontSize: 13.sp),
                   ),
                 ],
@@ -192,7 +219,7 @@ class ConsultationHistoryView extends StatelessWidget {
             if (item.notes != null) ...[
               SizedBox(height: 12.h),
               Text(
-                "ملاحظات المستشار:",
+                AppStrings.consultantNotes.tr(),
                 style: getBoldStyle(color: ColorManager.blue, fontSize: 13.sp),
                 textAlign: TextAlign.right,
               ),
@@ -204,6 +231,32 @@ class ConsultationHistoryView extends StatelessWidget {
               ),
             ],
           ],
+          SizedBox(height: 16.h),
+          const Divider(height: 1, color: Color(0xffF3F4F6)),
+          SizedBox(height: 16.h),
+          Row(
+            children: [
+              Expanded(
+                child: DefaultButtonWidget(
+                  onPressed: () {
+                    if (item.id != null) {
+                      context.push(
+                        AppRouters.chatView,
+                        extra: {
+                          'chatId': item.id,
+                          'supplierName': item.serviceName ?? AppStrings.chat.tr(),
+                        },
+                      );
+                    }
+                  },
+                  text: AppStrings.openChat.tr(),
+                  color: ColorManager.primary,
+                  height: 38.h,
+                  radius: 19.r,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

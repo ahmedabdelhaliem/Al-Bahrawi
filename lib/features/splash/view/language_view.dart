@@ -156,7 +156,11 @@ class _LanguageViewState extends State<LanguageView> {
       if (_appPreferences.getToken().isNotEmpty) {
         context.go(AppRouters.btmNav);
       } else {
-        context.go(AppRouters.login);
+        if (_appPreferences.isOnBoardingScreenViewed()) {
+          context.go(AppRouters.login);
+        } else {
+          context.go(AppRouters.onBoarding);
+        }
       }
     }
   }

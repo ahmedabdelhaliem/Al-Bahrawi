@@ -1,3 +1,4 @@
+import 'package:al_bahrawi/app/app_functions.dart';
 import 'package:al_bahrawi/app/app_prefs.dart';
 import 'package:al_bahrawi/app/di.dart';
 import 'package:al_bahrawi/common/base/base_state.dart';
@@ -8,6 +9,7 @@ import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
 import 'package:al_bahrawi/features/lawyer_dashboard/cubit/lawyer_dashboard_cubit.dart';
 import 'package:al_bahrawi/features/lawyer_dashboard/models/task_model.dart';
+import 'package:al_bahrawi/common/widgets/paginated_list_wrapper.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,11 +25,18 @@ class LawyerDashboardView extends StatefulWidget {
 
 class _LawyerDashboardViewState extends State<LawyerDashboardView> {
   final LawyerDashboardCubit _cubit = instance<LawyerDashboardCubit>();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _cubit.getTasks();
+    _cubit.loadFirstTasksPage();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,24 +61,35 @@ class _LawyerDashboardViewState extends State<LawyerDashboardView> {
               ),
               SizedBox(height: 20.h),
               Expanded(
-                child: BlocBuilder<LawyerDashboardCubit, BaseState<TaskResponse>>(
+                child: BlocBuilder<LawyerDashboardCubit, BaseState<TaskModel>>(
                   builder: (context, state) {
-                    if (state.status == Status.loading) {
+                    if (state.status == Status.loading && state.items.isEmpty) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    if (state.status == Status.failure) {
-                      return Center(child: Text(state.errorMessage ?? 'Error'));
+                    if (state.status == Status.failure && state.items.isEmpty) {
+                      return Center(child: Text(state.errorMessage ?? AppStrings.unKnownError.tr()));
                     }
-                    final tasks = state.data?.data ?? [];
+                    final tasks = state.items;
                     if (tasks.isEmpty) {
-                      return const Center(child: Text('No tasks found'));
+                      return Center(child: Text(AppStrings.noTasksFound.tr()));
                     }
-                    return ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        return _buildCaseCard(context, tasks[index]);
-                      },
+                    return PaginatedListWrapper(
+                      scrollController: _scrollController,
+                      paginationHandler: _cubit.paginationHandler,
+                      fetchFunction: (page, limit, [params]) => _cubit.getTasks(page: page),
+                      child: RefreshIndicator(
+                        onRefresh: () => _cubit.loadFirstTasksPage(),
+                        color: ColorManager.primary,
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 8.h),
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            return _buildCaseCard(context, tasks[index]);
+                          },
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -100,9 +120,9 @@ class _LawyerDashboardViewState extends State<LawyerDashboardView> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: ColorManager.lightBlueSky, width: 2),
-                        image: const DecorationImage(
+                        image: DecorationImage(
                           image: NetworkImage(
-                            'https://ui-avatars.com/api/?name=Sayed+Galal&background=0D8ABC&color=fff&size=150',
+                            'https://ui-avatars.com/api/?name=${Uri.encodeComponent(userName)}&background=0D8ABC&color=fff&size=150',
                           ),
                           fit: BoxFit.cover,
                         ),
@@ -187,7 +207,7 @@ class _LawyerDashboardViewState extends State<LawyerDashboardView> {
             children: [
               Expanded(
                 child: Text(
-                  task.service?.name ?? 'Unknown Service',
+                  task.service?.name ?? AppStrings.unknownService.tr(),
                   style: getBoldStyle(color: ColorManager.blackText, fontSize: 16.sp),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -202,7 +222,7 @@ class _LawyerDashboardViewState extends State<LawyerDashboardView> {
           ),
           SizedBox(height: 8.h),
           Text(
-            task.consultation?.description ?? 'No description',
+            task.consultation?.description ?? AppStrings.noDescription.tr(),
             style: getRegularStyle(color: ColorManager.greyTextColor, fontSize: 13.sp),
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
@@ -239,7 +259,12 @@ class _LawyerDashboardViewState extends State<LawyerDashboardView> {
               Expanded(
                 child: DefaultButtonWidget(
                   onPressed: () {
-                    // Call logic
+                    final phone = task.clientPhone ?? task.assignments.firstOrNull?.employee?.phone;
+                    if (phone != null && phone.isNotEmpty) {
+                      AppFunctions.callNumber(context, phone);
+                    } else {
+                      AppFunctions.showsToast("رقم الهاتف غير متوفر", ColorManager.red, context);
+                    }
                   },
                   text: AppStrings.call.tr(),
                   color: ColorManager.primary,

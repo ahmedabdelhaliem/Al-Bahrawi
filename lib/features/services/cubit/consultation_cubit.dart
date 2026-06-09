@@ -1,13 +1,35 @@
 import 'dart:io';
+import 'package:al_bahrawi/app/pagination_helper.dart';
 import 'package:al_bahrawi/common/base/base_state.dart';
 import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/network/either.dart';
 import 'package:al_bahrawi/common/network/end_points.dart';
+import 'package:al_bahrawi/common/network/failure.dart';
 import 'package:dio/dio.dart';
 import 'package:al_bahrawi/features/services/models/consultation_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ConsultationCubit extends Cubit<BaseState<dynamic>> {
-  ConsultationCubit() : super(const BaseState<dynamic>());
+class ConsultationCubit extends Cubit<BaseState<ConsultationModel>> {
+  ConsultationCubit() : super(const BaseState<ConsultationModel>()) {
+    paginationHandler = PaginationHandler<ConsultationModel, ConsultationCubit>(
+      bloc: this,
+      pageSize: 10,
+    );
+  }
+
+  late final PaginationHandler<ConsultationModel, ConsultationCubit> paginationHandler;
+
+  Future<void> loadFirstConsultationsPage() async {
+    await paginationHandler.loadFirstPage(
+      (page, limit, [params]) => getConsultations(page: page),
+    );
+  }
+
+  Future<void> loadMoreConsultationsPage() async {
+    await paginationHandler.fetchData(
+      (page, limit, [params]) => getConsultations(page: page),
+    );
+  }
 
   Future<void> requestConsultation({
     required int serviceId,
@@ -58,31 +80,14 @@ class ConsultationCubit extends Cubit<BaseState<dynamic>> {
     );
   }
 
-  Future<void> getConsultations() async {
-    emit(state.copyWith(status: Status.loading));
-
+  Future<Either<Failure, List<ConsultationModel>>> getConsultations({required int page}) async {
     final result = await DioHelper.getData<ConsultationsResponseModel>(
-      url: EndPoints.requestConsultation,
+      url: "${EndPoints.requestConsultation}?page=$page",
       fromJson: ConsultationsResponseModel.fromJson,
     );
-
-    result.fold(
-      (failure) {
-        if (!isClosed) {
-          emit(state.copyWith(
-            status: Status.failure,
-            errorMessage: failure.message,
-          ));
-        }
-      },
-      (success) {
-        if (!isClosed) {
-          emit(state.copyWith(
-            status: Status.success,
-            data: success,
-          ));
-        }
-      },
+    return result.fold(
+      (failure) => Left(failure),
+      (success) => Right(success.data ?? []),
     );
   }
 }

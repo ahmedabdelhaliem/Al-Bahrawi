@@ -121,7 +121,7 @@ class _ChatViewState extends State<ChatView> {
               if (state.items.isEmpty) {
                 return Center(
                   child: Text(
-                    'لا توجد رسائل بعد. ابدأ المحادثة الآن!',
+                    AppStrings.startChatNow.tr(),
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: ColorManager.grey,

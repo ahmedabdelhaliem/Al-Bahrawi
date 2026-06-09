@@ -1,9 +1,11 @@
+import 'package:al_bahrawi/app/app_functions.dart';
+import 'package:al_bahrawi/common/network/dio_helper.dart';
+import 'package:al_bahrawi/common/network/end_points.dart';
+import 'package:al_bahrawi/features/bottom_nav_bar/models/settings_model.dart';
 import 'package:al_bahrawi/common/resources/color_manager.dart';
-import 'package:al_bahrawi/features/chat/presentation/view/chat_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:al_bahrawi/common/resources/color_manager.dart';
 import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:al_bahrawi/features/home/view/home_view.dart';
@@ -12,6 +14,7 @@ import 'package:al_bahrawi/features/chat/presentation/view/chat_inbox_view.dart'
 import 'package:al_bahrawi/features/profile/main%20profile/view/profile_view.dart';
 import 'package:al_bahrawi/common/resources/assets_manager.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BottomNavBarView extends StatefulWidget {
   final int pageIndex;
@@ -27,6 +30,7 @@ class BottomNavBarView extends StatefulWidget {
 class _BottomNavBarViewState extends State<BottomNavBarView> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
   late AnimationController _fadeController;
+  String? _whatsappNumber;
 
   final List<Widget> _views = <Widget>[
     const HomeView(),
@@ -43,12 +47,46 @@ class _BottomNavBarViewState extends State<BottomNavBarView> with SingleTickerPr
       vsync: this,
       duration: const Duration(milliseconds: 300),
     )..forward();
+    _fetchSettings();
   }
 
   @override
   void dispose() {
     _fadeController.dispose();
     super.dispose();
+  }
+
+  Future<void> _fetchSettings() async {
+    final response = await DioHelper.getData<SettingsModel>(
+      url: EndPoints.settings,
+      fromJson: SettingsModel.fromJson,
+      isPublic: true,
+    );
+    response.fold(
+      (failure) {
+        debugPrint("Failed to fetch settings: ${failure.message}");
+      },
+      (settings) {
+        if (settings.data != null && settings.data!.isNotEmpty) {
+          setState(() {
+            _whatsappNumber = settings.data!.first.whatsapp;
+          });
+        }
+      },
+    );
+  }
+
+  Future<void> _launchWhatsApp() async {
+    final number = _whatsappNumber ?? "+201000000000";
+    String cleanedNumber = number.replaceAll('+', '').replaceAll(' ', '');
+    final Uri url = Uri.parse("https://wa.me/$cleanedNumber");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) {
+        AppFunctions.showsToast("حدث خطأ أثناء محاولة فتح واتساب", ColorManager.red, context);
+      }
+    }
   }
 
   void _onItemTapped(int index) {
@@ -65,7 +103,7 @@ class _BottomNavBarViewState extends State<BottomNavBarView> with SingleTickerPr
     return Scaffold(
       backgroundColor: ColorManager.white,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: _launchWhatsApp,
         backgroundColor: const Color(0xff25D366),
         shape: const CircleBorder(),
         child: SvgPicture.asset(

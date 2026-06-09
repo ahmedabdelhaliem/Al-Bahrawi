@@ -23,19 +23,6 @@ class ServicesView extends StatefulWidget {
 class _ServicesViewState extends State<ServicesView> {
   int _selectedFilter = 0;
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _filters = [
-    AppStrings.all,
-    AppStrings.tax,
-    AppStrings.accounting,
-    AppStrings.companyFormation,
-  ];
-
-  final List<int?> _filterIds = [
-    0, // All
-    2, // Tax Planning
-    3, // Accounting
-    5, // Company Formation
-  ];
 
   @override
   void initState() {
@@ -130,12 +117,15 @@ class _ServicesViewState extends State<ServicesView> {
   }
 
   Widget _buildSearchAndFilters(BuildContext context) {
-    return Transform.translate(
-      offset: Offset(0, -30.h),
-      child: Column(
-        children: [
-          // White Card containing the Search field
-          Container(
+    return BlocBuilder<ServicesCubit, BaseState<ServicesModel>>(
+      builder: (context, state) {
+        final serviceTypes = List<ServiceTypeModel>.from(state.metadata['serviceTypes'] ?? []);
+        final filters = [AppStrings.all.tr(), ...serviceTypes.map((t) => t.name ?? '')];
+        final filterIds = [0, ...serviceTypes.map((t) => t.id ?? 0)];
+
+        return Transform.translate(
+          offset: Offset(0, -30.h),
+          child: Container(
             margin: EdgeInsets.symmetric(horizontal: 20.w),
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
@@ -164,8 +154,9 @@ class _ServicesViewState extends State<ServicesView> {
                     textAlign: TextAlign.right,
                     style: getRegularStyle(color: ColorManager.blue, fontSize: 14.sp),
                     onChanged: (value) {
+                      final selectedId = _selectedFilter < filterIds.length ? filterIds[_selectedFilter] : 0;
                       context.read<ServicesCubit>().getServices(
-                        serviceTypeId: _filterIds[_selectedFilter],
+                        serviceTypeId: selectedId,
                         search: value,
                       );
                     },
@@ -187,13 +178,13 @@ class _ServicesViewState extends State<ServicesView> {
                   scrollDirection: Axis.horizontal,
                   reverse: true, // For RTL feel
                   child: Row(
-                    children: List.generate(_filters.length, (index) {
+                    children: List.generate(filters.length, (index) {
                       bool isSelected = _selectedFilter == index;
                       return GestureDetector(
                         onTap: () {
                           setState(() => _selectedFilter = index);
                           context.read<ServicesCubit>().getServices(
-                            serviceTypeId: _filterIds[index],
+                            serviceTypeId: filterIds[index],
                             search: _searchController.text,
                           );
                         },
@@ -205,7 +196,7 @@ class _ServicesViewState extends State<ServicesView> {
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Text(
-                            _filters[index].tr(),
+                            filters[index],
                             style: getBoldStyle(
                               color: isSelected ? ColorManager.white : ColorManager.grey,
                               fontSize: 13.sp,
@@ -219,8 +210,8 @@ class _ServicesViewState extends State<ServicesView> {
               ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -240,8 +231,11 @@ class _ServicesViewState extends State<ServicesView> {
                 SizedBox(height: 10.h),
                 ElevatedButton(
                   onPressed: () {
+                    final serviceTypes = List<ServiceTypeModel>.from(state.metadata['serviceTypes'] ?? []);
+                    final filterIds = [0, ...serviceTypes.map((t) => t.id ?? 0)];
+                    final selectedId = _selectedFilter < filterIds.length ? filterIds[_selectedFilter] : 0;
                     context.read<ServicesCubit>().getServices(
-                          serviceTypeId: _filterIds[_selectedFilter],
+                          serviceTypeId: selectedId,
                           search: _searchController.text,
                         );
                   },

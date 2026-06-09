@@ -201,10 +201,10 @@ class _PersonalDataViewState extends State<PersonalDataView> {
                 backgroundColor: const Color(0xffF3F4F6),
                 backgroundImage: _pickedImage != null 
                     ? FileImage(File(_pickedImage!.path)) 
-                    : (currentImageUrl != null && currentImageUrl.isNotEmpty 
+                    : (currentImageUrl != null && currentImageUrl.startsWith('http') 
                         ? NetworkImage(currentImageUrl) 
                         : null) as ImageProvider?,
-                child: (_pickedImage == null && (currentImageUrl == null || currentImageUrl.isEmpty))
+                child: (_pickedImage == null && (currentImageUrl == null || !currentImageUrl.startsWith('http')))
                     ? Icon(Iconsax.user, size: 55.sp, color: ColorManager.grey)
                     : null,
               ),

@@ -290,4 +290,21 @@ class AppStrings {
   static const String lawyerName = "lawyerName";
   static const String caseNumberPrefix = "caseNumberPrefix";
   static const String receiptDate = "receiptDate";
+
+  // consultation history
+  static const String statusAnswered = "statusAnswered";
+  static const String statusUnderReview = "statusUnderReview";
+  static const String estimatedCost = "estimatedCost";
+  static const String consultantNotes = "consultantNotes";
+  static const String currencyEGP = "currencyEGP";
+  static const String openChat = "openChat";
+
+  // lawyer dashboard
+  static const String noTasksFound = "noTasksFound";
+  static const String unknownService = "unknownService";
+  static const String noDescription = "noDescription";
+
+  // chat
+  static const String startChatNow = "startChatNow";
+  static const String serviceGoals = "serviceGoals";
 }

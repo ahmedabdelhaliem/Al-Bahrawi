@@ -41,6 +41,8 @@ class TaskModel extends Equatable {
   final ConsultationInfoModel? consultation;
   final List<TaskFileModel> files;
   final List<AssignmentModel> assignments;
+  final String? clientPhone;
+  final String? clientName;
 
   const TaskModel({
     required this.id,
@@ -53,9 +55,16 @@ class TaskModel extends Equatable {
     this.consultation,
     required this.files,
     required this.assignments,
+    this.clientPhone,
+    this.clientName,
   });
 
   factory TaskModel.fromJson(Map<String, dynamic> json) {
+    final consultationJson = json['consultation'] as Map<String, dynamic>?;
+    final userJson = json['user'] as Map<String, dynamic>? ?? consultationJson?['user'] as Map<String, dynamic>?;
+    final clientPhone = userJson?['phone'] ?? json['client_phone'] ?? consultationJson?['client_phone'] ?? json['phone'];
+    final clientName = userJson?['name'] ?? json['client_name'] ?? consultationJson?['client_name'] ?? json['name'];
+
     return TaskModel(
       id: json['id'] ?? 0,
       status: json['status'] ?? '',
@@ -75,6 +84,8 @@ class TaskModel extends Equatable {
       assignments: (json['assignments'] as List? ?? [])
           .map((e) => AssignmentModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      clientPhone: clientPhone?.toString(),
+      clientName: clientName?.toString(),
     );
   }
 
@@ -90,6 +101,8 @@ class TaskModel extends Equatable {
         consultation,
         files,
         assignments,
+        clientPhone,
+        clientName,
       ];
 }
 

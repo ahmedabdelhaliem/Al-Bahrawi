@@ -36,9 +36,30 @@ class ServicesCubit extends Cubit<BaseState<ServicesModel>> {
       },
       (success) {
         if (!isClosed) {
+          // Extract unique service types on initial load (when no serviceTypeId query filter is set)
+          List<ServiceTypeModel> serviceTypes = [];
+          if (serviceTypeId == null && (search == null || search.isEmpty)) {
+            final seenIds = <int>{};
+            final list = success.data ?? [];
+            for (var service in list) {
+              final type = service.serviceType;
+              if (type != null && type.id != null && !seenIds.contains(type.id)) {
+                seenIds.add(type.id!);
+                serviceTypes.add(type);
+              }
+            }
+          } else {
+            // Keep existing categories if currently filtering
+            serviceTypes = List<ServiceTypeModel>.from(state.metadata['serviceTypes'] ?? []);
+          }
+
           emit(state.copyWith(
             status: Status.success,
             data: success,
+            metadata: {
+              ...state.metadata,
+              'serviceTypes': serviceTypes,
+            },
           ));
         }
       },

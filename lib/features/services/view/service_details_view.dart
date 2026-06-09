@@ -110,7 +110,7 @@ class ServiceDetailsView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    "أهداف الخدمة",
+                                    AppStrings.serviceGoals.tr(),
                                     style: getBoldStyle(color: ColorManager.blue, fontSize: 16.sp),
                                   ),
                                   SizedBox(height: 12.h),

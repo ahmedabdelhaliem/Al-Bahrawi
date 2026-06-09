@@ -41,8 +41,9 @@ class ConsultationsResponseModel {
   int? code;
   String? message;
   List<ConsultationModel>? data;
+  PaginationModel? pagination;
 
-  ConsultationsResponseModel({this.code, this.message, this.data});
+  ConsultationsResponseModel({this.code, this.message, this.data, this.pagination});
 
   ConsultationsResponseModel.fromJson(Map<String, dynamic> json) {
     code = json['code'];
@@ -53,5 +54,24 @@ class ConsultationsResponseModel {
         data!.add(ConsultationModel.fromJson(v));
       });
     }
+    pagination = json['pagination'] != null
+        ? PaginationModel.fromJson(json['pagination'])
+        : null;
+  }
+}
+
+class PaginationModel {
+  int? total;
+  int? currentPage;
+  int? lastPage;
+  int? perPage;
+
+  PaginationModel({this.total, this.currentPage, this.lastPage, this.perPage});
+
+  PaginationModel.fromJson(Map<String, dynamic> json) {
+    total = json['total'];
+    currentPage = json['current_page'];
+    lastPage = json['last_page'];
+    perPage = json['per_page'];
   }
 }

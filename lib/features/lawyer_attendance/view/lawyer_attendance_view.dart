@@ -209,9 +209,9 @@ class _LawyerAttendanceViewState extends State<LawyerAttendanceView> {
 
                     SizedBox(height: 24.h),
 
-                    _buildSectionTitle(AppStrings.notes.tr() ?? "الملاحظات"),
+                    _buildSectionTitle(AppStrings.notes.tr()),
                     SizedBox(height: 8.h),
-                    _buildTextField(controller: _notesController, hintText: "اضف ملاحظاتك هنا..."),
+                    _buildTextField(controller: _notesController, hintText: AppStrings.notes.tr()),
 
                     SizedBox(height: 32.h),
 
@@ -248,14 +248,15 @@ class _LawyerAttendanceViewState extends State<LawyerAttendanceView> {
                     SizedBox(height: 60.h), // Spacer before submit
                     // Submit button (Check In)
                     DefaultButtonWidget(
-                      onPressed: () {
-                        context.push(AppRouters.lawyerDashboard);
-                        // context.read<LawyerAttendanceCubit>().markAttendance(
-                        //   action: "check_in",
-                        //   location: _locationController.text,
-                        //   notes: _notesController.text,
-                        // );
-                      },
+                      onPressed: state.status == Status.loading
+                          ? null
+                          : () {
+                              context.read<LawyerAttendanceCubit>().markAttendance(
+                                    action: "check_in",
+                                    location: _locationController.text,
+                                    notes: _notesController.text,
+                                  );
+                            },
                       text: AppStrings.signIn.tr(),
                       color: ColorManager.primary,
                       height: 55.h,

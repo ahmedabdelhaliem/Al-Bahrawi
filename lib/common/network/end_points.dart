@@ -26,6 +26,7 @@ class EndPoints {
   static const String faqs = '/faq';
   static const String deleteAccount = '/delete/account';
   static const String contactUs = '/contact';
+  static const String settings = '/settings';
 
   // Chat
   static const String chats = '/chats';
@@ -39,5 +40,6 @@ class EndPoints {
   static const String employeeAttendance = '/employee-attendance';
   static const String lawyerTasks = "/tasks";
   static const String statistics = '/statistics';
+  static String markNotificationRead(String id) => '/notifications/$id/read';
 }
 

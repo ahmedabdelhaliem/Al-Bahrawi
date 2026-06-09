@@ -267,5 +267,16 @@
   "profileUpdatedSuccessfully": "تم تحديث البيانات بنجاح",
   "lawyerName": "اسم المحامي",
   "caseNumberPrefix": "رقم القضية",
-  "receiptDate": "تاريخ الاستلام"
+  "receiptDate": "تاريخ الاستلام",
+  "statusAnswered": "تم الرد",
+  "statusUnderReview": "قيد المراجعة",
+  "estimatedCost": "التكلفة المقدرة:",
+  "consultantNotes": "ملاحظات المستشار:",
+  "currencyEGP": "ج.م",
+  "openChat": "فتح المحادثة",
+  "noTasksFound": "لا توجد مهام",
+  "unknownService": "خدمة غير محددة",
+  "noDescription": "لا يوجد وصف",
+  "startChatNow": "لا توجد رسائل بعد. ابدأ المحادثة الآن!",
+  "serviceGoals": "أهداف الخدمة"
 }

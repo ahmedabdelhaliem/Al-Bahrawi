@@ -11,13 +11,13 @@ class NotificationsModel extends Equatable {
   final int? code;
   final String? message;
   final List<NotificationModel> notifications;
-  final NotificationsModelPagination? pagination;
+  final NotificationsPaginationModel? pagination;
 
   NotificationsModel copyWith({
     int? code,
     String? message,
     List<NotificationModel>? data,
-    NotificationsModelPagination? pagination,
+    NotificationsPaginationModel? pagination,
   }) {
     return NotificationsModel(
       code: code ?? this.code,
@@ -32,7 +32,7 @@ class NotificationsModel extends Equatable {
       code: json["code"],
       message: json["message"],
       notifications: json["data"] == null ? [] : List<NotificationModel>.from(json["data"]!.map((x) => NotificationModel.fromJson(x))),
-      pagination: json["pagination"] == null ? null : NotificationsModelPagination.fromJson(json["pagination"]),
+      pagination: json["pagination"] == null ? null : NotificationsPaginationModel.fromJson(json["pagination"]),
     );
   }
 
@@ -54,33 +54,54 @@ class NotificationModel extends Equatable {
     required this.title,
     required this.body,
     required this.createdAt,
+    this.readAt,
+    this.metadata,
   });
 
-  final int? id;
+  final String? id;
   final String? title;
   final String? body;
   final String? createdAt;
+  final String? readAt;
+  final Map<String, dynamic>? metadata;
 
   NotificationModel copyWith({
-    int? id,
+    String? id,
     String? title,
     String? body,
     String? createdAt,
+    String? readAt,
+    Map<String, dynamic>? metadata,
   }) {
     return NotificationModel(
       id: id ?? this.id,
       title: title ?? this.title,
       body: body ?? this.body,
       createdAt: createdAt ?? this.createdAt,
+      readAt: readAt ?? this.readAt,
+      metadata: metadata ?? this.metadata,
+    );
+  }
+
+  NotificationModel copyWithRead(String? readAt) {
+    return NotificationModel(
+      id: id,
+      title: title,
+      body: body,
+      createdAt: createdAt,
+      readAt: readAt,
+      metadata: metadata,
     );
   }
 
   factory NotificationModel.fromJson(Map<String, dynamic> json){
     return NotificationModel(
-      id: json["id"],
+      id: json["id"]?.toString(),
       title: json["title"],
       body: json["body"],
       createdAt: json["created_at"],
+      readAt: json["read_at"],
+      metadata: json["metadata"] is Map<String, dynamic> ? json["metadata"] : null,
     );
   }
 
@@ -89,11 +110,13 @@ class NotificationModel extends Equatable {
     "title": title,
     "body": body,
     "created_at": createdAt,
+    "read_at": readAt,
+    "metadata": metadata,
   };
 
   @override
   List<Object?> get props => [
-    id, title, body, createdAt, ];
+    id, title, body, createdAt, readAt, metadata, ];
 }
 
 class NotificationsModelPagination extends Equatable {

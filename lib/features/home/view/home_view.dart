@@ -130,36 +130,45 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               SizedBox(width: 10.w),
-              InkWell(
-                onTap: () {
-                  context.push(AppRouters.notifications);
-                },
-                borderRadius: BorderRadius.circular(100.r),
-                child: Stack(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(8.w),
-                      decoration: BoxDecoration(
-                        color: ColorManager.white.withValues(alpha: 0.1),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.notifications_none, color: ColorManager.white, size: 24.w),
-                    ),
-                    Positioned(
-                      right: 2,
-                      top: 2,
-                      child: Container(
-                        width: 10.w,
-                        height: 10.w,
-                        decoration: BoxDecoration(
-                          color: ColorManager.primary,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: ColorManager.gold, width: 1.5),
+              BlocBuilder<HomeCubit, BaseState<StatisticsModel>>(
+                builder: (context, state) {
+                  final hasUnread = state.metadata['hasUnread'] == true;
+                  return InkWell(
+                    onTap: () async {
+                      await context.push(AppRouters.notifications);
+                      if (context.mounted) {
+                        context.read<HomeCubit>().getStatistics();
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(100.r),
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(8.w),
+                          decoration: BoxDecoration(
+                            color: ColorManager.white.withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.notifications_none, color: ColorManager.white, size: 24.w),
                         ),
-                      ),
+                        if (hasUnread)
+                          Positioned(
+                            right: 2,
+                            top: 2,
+                            child: Container(
+                              width: 10.w,
+                              height: 10.w,
+                              decoration: BoxDecoration(
+                                color: ColorManager.primary,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: ColorManager.gold, width: 1.5),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),

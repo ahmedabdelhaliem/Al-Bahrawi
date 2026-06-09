@@ -6,6 +6,7 @@ import 'package:al_bahrawi/common/resources/strings_manager.dart';
 import 'package:al_bahrawi/common/resources/styles_manager.dart';
 import 'package:al_bahrawi/common/widgets/default_button_widget.dart';
 import 'package:al_bahrawi/features/services/cubit/consultation_cubit.dart';
+import 'package:al_bahrawi/features/services/models/consultation_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _RequestConsultationViewState extends State<RequestConsultationView> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ConsultationCubit(),
-      child: BlocListener<ConsultationCubit, BaseState<dynamic>>(
+      child: BlocListener<ConsultationCubit, BaseState<ConsultationModel>>(
         listener: (context, state) {
           if (state.status == Status.success) {
             context.pushReplacement(AppRouters.bookingSuccess);
@@ -165,7 +166,7 @@ class _RequestConsultationViewState extends State<RequestConsultationView> {
           _buildLabel(AppStrings.attachFileOptional.tr()),
           _buildUploadArea(),
           SizedBox(height: 30.h),
-          BlocBuilder<ConsultationCubit, BaseState<dynamic>>(
+          BlocBuilder<ConsultationCubit, BaseState<ConsultationModel>>(
             builder: (context, state) {
               return DefaultButtonWidget(
                 text: AppStrings.sendRequest.tr(),
