@@ -271,5 +271,6 @@
   "unknownService": "Unknown Service",
   "noDescription": "No description",
   "startChatNow": "No messages yet. Start the conversation now!",
-  "serviceGoals": "Service Goals"
+  "serviceGoals": "Service Goals",
+  "chatInbox": "Chats"
 }
